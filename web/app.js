@@ -326,6 +326,8 @@
     });
     const placeByExam = {};
     let scored = 0;
+    // A slash is a real separator, as in Elementary/Junior, so the cell may break there.
+    const withBreak = (value) => esc(value).replaceAll("/", "/\u200b");
     document.querySelector("#rankTable tbody").innerHTML = shown.map(({ school: s, result }) => {
       let rank = "–";
       if (result.score != null) {
@@ -335,13 +337,13 @@
         rank = String(placeByExam[key]);
       }
       const detail = result.detail;
-      const tip = detail && detail.acc != null ? `${t("pat_acc")} ${detail.acc} · ${t("pat_exc")} ${detail.exc}` : "";
+      const tip = detail && detail.acc != null ? `${rateText("pat_acc", detail.acc)} · ${rateText("pat_exc", detail.exc)}` : "";
       const nameShown = displayName(s);
-      const name = esc(nameShown);
+      const name = withBreak(nameShown);
       const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
       return `<tr data-id="${esc(s.id)}" class="${String(s.id) === pickedId ? "sel" : ""}"><td class="num">${rank}</td><td>${name}</td>
-        <td>${esc(s.board || "–")}</td><td>${esc(s.cbe_grades || s.grades || "–")}</td>
-        <td class="num" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
+        <td>${esc(s.board || "–")}</td><td>${withBreak(s.cbe_grades || s.grades || "–")}</td>
+        <td class="num score" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
     }).join("");
     const allPrograms = document.querySelector("#programFilter option[value=all]");
     if (allPrograms) allPrograms.textContent = t("filter_all_programs");
@@ -474,9 +476,19 @@
     });
   }
 
+  // The percent mark follows the number: 达标率 96.5%. A missing rate stays a dash.
+  function rateShown(value) {
+    return value == null || value === "" ? "–" : `${value}%`;
+  }
+
+  function rateText(labelKey, value) {
+    return `${t(labelKey)} ${rateShown(value)}`;
+  }
+
   function patLine(label, r) {
     if (!r || r.acc == null) return "";
-    return `<div class="pat">${label}: ${t("pat_acc")} <b>${r.acc}</b> · ${t("pat_exc")} <b>${r.exc ?? "–"}</b>
+    const boldRate = (key, value) => `${t(key)} <b>${rateShown(value)}</b>`;
+    return `<div class="pat">${label}: ${boldRate("pat_acc", r.acc)} · ${boldRate("pat_exc", r.exc)}
       <span class="small">(${r.years.join(", ")})</span></div>`;
   }
 

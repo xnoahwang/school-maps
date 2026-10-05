@@ -1,5 +1,85 @@
 # PLAN.md
 
+## Plan (2026-10-05, centered headers and percent order)
+
+Mode: `autonomous`. Design notes: skipped. Rank headers sit left. The score tip puts the percent mark on the label.
+
+**Goal.** Rank table headers are centered. A score tip reads 达标率 96.5% · 优秀率 88.2%. A missing rate stays a dash, with no percent mark.
+
+**Out of scope.** Score math, column set, commits.
+
+**Done when.** The Chinese page shows centered headers, and the first score cell's tip has the percent mark after each number.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/style.css`, `web/i18n.js`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload and read the first score cell's title.
+
+## Verify (2026-10-05, centered headers and percent order)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=38`: every rank header is center-aligned. The first score tip is `达标率 99.3% · 优秀率 87.5%`. In English it is `Acceptable 99.3% · Excellence 87.5%`.
+
+## Plan (2026-10-05, score tag stays on one line)
+
+Mode: `autonomous`. Design notes: skipped. In the mixed list, the grade mark next to a score wraps in the middle of "6年级".
+
+**Goal.** "6年级" and "9年级" stay beside the score on one line. A missing score still reads as no data.
+
+**Out of scope.** Column set, scoring, the map, commits.
+
+**Done when.** On the Chinese page, the first score cell's grade mark is a single line.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/style.css`, `web/index.html`.
+
+**Verify.** Reload and measure the grade mark in the first score cell.
+
+## Verify (2026-10-05, score tag stays on one line)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=37`: the first score reads "93.4 6年级" on one line, a 9年级 mark is also one line, the year 2025 is inside the list, and the list does not scroll sideways. English shows "93.4 Gr 6" on one line with no sideways scroll.
+
+## Plan (2026-10-05, quiet map chrome)
+
+Mode: `autonomous`. Design notes: this is a map decision, closer to a map search than a rental listing site. The header becomes a thin white bar. The long scoring paragraph leaves the header because the list note and the score popover already say it.
+
+**Goal.** The page reads as a calm map tool: white header, one title, a plain language control, and a quieter list panel. Filters, selection, and the language toggle still work.
+
+**Out of scope.** Scores, zones, the card contents, commits.
+
+**Done when.** The Chinese page has a white header, the language button still switches, and a selected row is still obvious.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `web/style.css`, `web/index.html`.
+
+**Verify.** Reload, switch language, and select a school row.
+
+## Verify (2026-10-05, quiet map chrome)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=35`: header background is white, height 56, and the long subtitle is hidden. Selecting the first row marks it. The language button switches the title to "Calgary school results, ranked" and back.
+
+## Plan (2026-10-05, filter row)
+
+Mode: `autonomous`. Design notes: skipped. The board and grade filters each take a full line. The left pane should put them on one row and use a cleaner control style.
+
+**Goal.** Board and grade sit side by side. The program filter and search stay full width. Controls use a shared rounded style.
+
+**Out of scope.** The map, the card, the table columns, commits.
+
+**Done when.** The Chinese page shows 教育局 and 年级 on one line, and changing either filter still updates the list.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/index.html`, `web/style.css`.
+
+**Verify.** Reload and change the board filter.
+
+## Verify (2026-10-05, filter row)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=34`: 教育局 and 年级 share one row (both top 163). Choosing 公立教育局（CBE） updates the list from 391 to 226 and fills the grade list with CBE ranges.
+
 ## Plan (2026-10-05, official note on the card)
 
 Mode: `autonomous`. Design notes: skipped. The school site stays the website row. The card also needs a way into CBE Find a School, and a line that the official source is the final word.
