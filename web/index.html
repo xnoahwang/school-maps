@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calgary School & Community Explorer</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=20261005ai">
+  <link rel="stylesheet" href="style.css?v=20261005ax">
 </head>
 <body class="rank-first">
   <header>
@@ -81,6 +81,7 @@
           <button type="button" id="scoreSource" class="source-mark" aria-expanded="false" aria-controls="scoreSourcePop">!</button>
         </th>
         <th data-i18n="col_year"></th>
+        <th class="more-col"><span class="visually-hidden" data-i18n="more_zone"></span></th>
       </tr></thead><tbody></tbody></table>
       <table id="commTable"><thead><tr>
         <th data-key="name" data-i18n="col_name"></th>
@@ -89,16 +90,26 @@
         <th data-key="value_score" data-i18n="col_vfm"></th>
       </tr></thead><tbody></tbody></table>
       </div>
+      <aside id="zonePanel" aria-hidden="true">
+        <div class="zone-panel-bar">
+          <h2 id="zonePanelTitle"></h2>
+          <button type="button" id="zonePanelClose" data-i18n="zone_close"></button>
+        </div>
+        <div id="zonePanelBody"></div>
+      </aside>
     </section>
     <section id="map"></section>
     <section id="panel"><p class="hint" data-i18n="click_hint"></p></section>
   </main>
   <div id="scoreSourcePop" hidden>
     <p data-i18n="score_source_body"></p>
+    <p data-i18n="score_source_acc"></p>
+    <p data-i18n="score_source_exc"></p>
     <a href="https://www.alberta.ca/provincial-achievement-tests#jumplinks-3" target="_blank" rel="noopener" data-i18n="score_source_link"></a>
   </div>
+  <div id="termPop" hidden></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="i18n.js?v=20261005ai"></script>
-  <script src="app.js?v=20261005aj"></script>
+  <script src="i18n.js?v=20261005ax"></script>
+  <script src="app.js?v=20261005av"></script>
 </body>
 </html>

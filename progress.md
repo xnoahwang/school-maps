@@ -1,7 +1,7 @@
 # progress.md
 
 ## Current Focus
-The ranking list is a left sidebar called the school filter area. The page is a quiet map tool: a white header, the list on the left, and the map on the right. Clicking a row or a point opens that school's card and draws its CBE attendance zone and walk zone. The website row links to that school's own site. The card also links to CBE Find a School and says the official source is the final word.
+The ranking list is a left sidebar called the school filter area. The page is a quiet map tool: a white header, the list on the left, and the map on the right. Clicking a row or a point opens that school's card and draws its CBE attendance zone and walk zone. The » control on a row slides in a panel with that zone’s assessed values and, from the City’s 2021 community-profile PDFs, income, housing, language, and racialized-population figures. Each figure has a circled exclamation mark that opens its definition. Crime stays “no data”. The website row links to that school's own site. The card also links to CBE Find a School and says the official source is the final word.
 
 ## Completed
 - cursor-prime-cloud rules installed (autonomous mode), and the plan recorded in PLAN.md.
@@ -25,4 +25,4 @@ The ranking list is a left sidebar called the school filter area. The page is a 
 - High schools stay off the list. There is no current diploma file, so they are not ranked or given a grade 10–12 zone.
 
 ## Handoff
-Verify: `.venv\Scripts\python scripts\build_data.py` then `fetch_cbe_directory.py`, `fetch_ab_contacts.py`, `verify.py`, and `fetch_reviews.py`.
+The zone panel is on the page. Each figure has a definition button, including the PAT acceptable and excellence lines. Verify: open `http://127.0.0.1:8765/?lang=zh`, click `»` on a CBE row, then click a circled exclamation mark. Data check: `.venv\Scripts\python scripts\verify.py`.

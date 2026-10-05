@@ -14,6 +14,7 @@
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
                   board: "all", grade: "all", program: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
+  let communityProfiles = {};
   let pickedZoneLayer = null, pickedWalkLayer = null;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
@@ -344,7 +345,8 @@
       const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
       return `<tr data-id="${esc(s.id)}" class="${String(s.id) === pickedId ? "sel" : ""}"><td class="num">${rank}</td><td>${name}</td>
         <td>${esc(s.board || "–")}</td><td>${withBreak(s.cbe_grades || s.grades || "–")}</td>
-        <td class="num score" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
+        <td class="num score" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td>
+        <td class="more"><button type="button" class="more-btn" data-more="${esc(s.id)}" aria-label="${esc(t("more_zone"))}">»</button></td></tr>`;
     }).join("");
     const allPrograms = document.querySelector("#programFilter option[value=all]");
     if (allPrograms) allPrograms.textContent = t("filter_all_programs");
@@ -352,6 +354,8 @@
     document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig())
       .replace("{n}", String(rows.length))
       .replace("{scored}", String(scored));
+    if (panelSchoolId && !shown.some(({ school }) => String(school.id) === panelSchoolId)) closeZonePanel();
+    else if (panelSchoolId) fillZonePanel(panelSchoolId);
     renderRankMap();
   }
 
@@ -574,6 +578,7 @@
   // Same schools as the ranking list. A later filter replaces the points and leaves the view where it is.
   let rankMapFitted = false;
   let pickedId = null;
+  let panelSchoolId = null;
   const markerById = new Map();
   let focusToken = 0;
   function schoolPoint(school) {
@@ -674,6 +679,189 @@
     const programs = [...new Set(attendance.map((f) => f.properties.program))];
     return { attendance, walks, program: programs.join(" · ") };
   }
+  function medianOf(nums) {
+    if (!nums.length) return null;
+    const sorted = [...nums].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  function meanOf(nums) {
+    if (!nums.length) return null;
+    return nums.reduce((sum, n) => sum + n, 0) / nums.length;
+  }
+  // Community lists are stored only on regular-program zones. A program zone with
+  // an empty list falls back to that school's regular zone, and the panel says so.
+  function zoneFacts(school) {
+    const matched = zonesForSchool(school);
+    const picked = chooseZones(school);
+    const withPlaces = (features) => features.filter((f) => (f.properties.places || []).length);
+    let features = withPlaces(picked.attendance);
+    let fromRegular = false;
+    if (!features.length) {
+      features = withPlaces(matched.filter((f) => f.properties.kind === "attendance" && f.properties.program === "Regular" && f.properties.band !== "senior"));
+      fromRegular = features.length > 0;
+    }
+    const byCode = new Map();
+    features.forEach((f) => (f.properties.places || []).forEach((place) => {
+      if (!byCode.has(place.code)) byCode.set(place.code, place);
+    }));
+    const communityByCode = new Map(communities.map((f) => [f.properties.code, f.properties]));
+    const rows = [...byCode.values()].map((place) => ({
+      ...place,
+      community: communityByCode.get(place.code) || null,
+    })).sort((a, b) => a.name.localeCompare(b.name));
+    return { hasZone: picked.attendance.length > 0, fromRegular, rows };
+  }
+  function weightedChildren(rows) {
+    let population = 0;
+    let children = 0;
+    rows.forEach(({ community }) => {
+      if (!community || community.children_pct == null || community.children_count == null || community.children_pct <= 0) return;
+      population += community.children_count / (community.children_pct / 100);
+      children += community.children_count;
+    });
+    return population ? (children / population) * 100 : null;
+  }
+  function moneyFull(value) {
+    return value == null ? null : "$" + Math.round(value).toLocaleString("en-CA");
+  }
+  function pct1(value) {
+    return value == null ? null : value.toFixed(1) + "%";
+  }
+  const GROUP_KEYS = {
+    "South Asian": "group_south_asian", Chinese: "group_chinese", Black: "group_black",
+    Filipino: "group_filipino", Arab: "group_arab", "Latin American": "group_latin",
+    "Southeast Asian": "group_southeast_asian", "West Asian": "group_west_asian",
+    Korean: "group_korean", Japanese: "group_japanese",
+  };
+  const LANG_KEYS = {
+    Mandarin: "lang_mandarin", "Yue (Cantonese)": "lang_yue", Cantonese: "lang_yue",
+    "Tagalog (Pilipino, Filipino)": "lang_tagalog", Korean: "lang_korean", Spanish: "lang_spanish",
+    "Punjabi (Panjabi)": "lang_punjabi", Hindi: "lang_hindi", Arabic: "lang_arabic",
+    Urdu: "lang_urdu", Vietnamese: "lang_vietnamese", "Iranian Persian": "lang_persian",
+    Russian: "lang_russian", Ukrainian: "lang_ukrainian", German: "lang_german",
+    Portuguese: "lang_portuguese", Polish: "lang_polish", Italian: "lang_italian",
+    Gujarati: "lang_gujarati", Tamil: "lang_tamil", Bengali: "lang_bengali",
+    Nepali: "lang_nepali", Japanese: "lang_japanese",
+  };
+  function profileFor(name) {
+    return communityProfiles[contactKey(name)] || null;
+  }
+  function termMark(key) {
+    return `<button type="button" class="source-mark" data-term="${esc(key)}" aria-expanded="false" aria-label="${esc(t("term_label"))}">!</button>`;
+  }
+  function fact(key, value) {
+    if (value == null || value === "") return "";
+    return `<div><dt><span>${esc(t(key))}</span>${termMark(key)}</dt><dd>${esc(String(value))}</dd></div>`;
+  }
+  function pctNum(value) {
+    return value == null ? null : value + "%";
+  }
+  function moneyMonth(amount) {
+    return amount == null ? null : moneyFull(amount) + t("fact_month");
+  }
+  function tenureValue(share, cost) {
+    if (share == null) return null;
+    return cost == null ? pctNum(share) : `${pctNum(share)} · ${moneyMonth(cost)}`;
+  }
+  function chipRow(label, items, keys, minimum) {
+    const chips = (items || [])
+      .filter((item) => item.pct != null && item.pct >= minimum)
+      .sort((a, b) => b.pct - a.pct)
+      .slice(0, 4)
+      .map((item) => `${keys[item.name] ? t(keys[item.name]) : item.name} ${item.pct}%`);
+    if (!chips.length) return "";
+    return `<div class="chip-row"><span class="term-line"><span>${esc(t(label))}</span>${termMark(label)}</span>${chips.map((chip) => `<b>${esc(chip)}</b>`).join("")}</div>`;
+  }
+  function censusFacts(profile, families) {
+    const row = profile || {};
+    return [
+      fact("fact_income", row.median_household_income == null ? null : moneyFull(row.median_household_income)),
+      fact("fact_pop", row.population == null ? null : Number(row.population).toLocaleString("en-CA")),
+      fact("fact_young", pctNum(row.age_0_14_pct)),
+      fact("fact_older", pctNum(row.age_65_plus_pct)),
+      fact("fact_families", families == null ? null : pct1(families)),
+      fact("fact_own", tenureValue(row.owner_pct, row.shelter_owner)),
+      fact("fact_rent", tenureValue(row.renter_pct, row.shelter_renter)),
+      fact("fact_burden", pctNum(row.shelter_30_pct)),
+      fact("fact_immigrant", pctNum(row.immigrant_pct)),
+      fact("fact_racialized", pctNum(row.racialized_pct)),
+      fact("fact_english", pctNum(row.english_home_pct)),
+      fact("fact_degree", pctNum(row.bachelor_pct)),
+      fact("fact_drive", pctNum(row.drive_pct)),
+      fact("fact_transit", pctNum(row.transit_pct)),
+    ].join("");
+  }
+  function censusExtra(profile) {
+    if (!profile) return "";
+    const pdf = profile.pdf ? `<a href="${esc(profile.pdf)}" target="_blank" rel="noopener">${esc(t("census_pdf"))}</a>` : "";
+    return `${chipRow("fact_groups", profile.racialized, GROUP_KEYS, 2)}${chipRow("fact_languages", profile.home_languages, LANG_KEYS, 1)}${pdf}`;
+  }
+  function summaryTile(labelKey, valueHtml, termKey) {
+    const key = termKey || labelKey;
+    return `<div><span class="term-line"><span>${esc(t(labelKey))}</span>${termMark(key)}</span><b>${valueHtml}</b></div>`;
+  }
+  function fillZonePanel(id) {
+    const school = schools.find((s) => String(s.id) === String(id));
+    const title = document.getElementById("zonePanelTitle");
+    const body = document.getElementById("zonePanelBody");
+    if (!school || !title || !body) return;
+    closeTerm();
+    title.textContent = displayName(school);
+    const facts = zoneFacts(school);
+    if (!facts.hasZone && !facts.rows.length) {
+      body.innerHTML = `<p>${esc(t("zone_none"))}</p>${zoneLinks()}`;
+      return;
+    }
+    if (!facts.rows.length) {
+      body.innerHTML = `<p>${esc(t("zone_no_places"))}</p>${zoneLinks()}`;
+      return;
+    }
+    const values = facts.rows.map((row) => row.home_value).filter((value) => value != null);
+    const familyRates = facts.rows.map((row) => row.community && row.community.families_with_children_pct).filter((value) => value != null);
+    const regularNote = facts.fromRegular ? `<p class="note">${esc(t("zone_from_regular"))}</p>` : "";
+    const hasProfile = facts.rows.some((row) => profileFor(row.name));
+    const communityRows = facts.rows.map((row) => {
+      const families = row.community ? row.community.families_with_children_pct : null;
+      const where = row.in_walk ? t("zone_walk") : t("zone_bus");
+      const profile = profileFor(row.name);
+      const headFacts = fact("fact_value", moneyFull(row.home_value) || t("no_data"));
+      return `<li class="place-card"><div class="place-head"><strong>${esc(row.name)}</strong><span class="place-status"><span class="place-tag">${esc(where)}</span>${termMark("walk_zone")}</span></div><dl class="metrics">${headFacts}${censusFacts(profile, families)}</dl>${censusExtra(profile)}</li>`;
+    }).join("");
+    const ethnicityRow = hasProfile ? "" : `<div class="stat"><span class="term-line"><span>${esc(t("ethnicity"))}</span>${termMark("fact_racialized")}</span><b>${esc(t("no_data"))}</b></div>`;
+    body.innerHTML = `${regularNote}
+      <div class="zone-summary">
+        ${summaryTile("summary_median", orNA(moneyFull(medianOf(values))))}
+        ${summaryTile("summary_mean", orNA(moneyFull(meanOf(values))))}
+        ${summaryTile("fact_young", orNA(pct1(weightedChildren(facts.rows))), "summary_young")}
+        ${summaryTile("fact_families", orNA(pct1(meanOf(familyRates))), "summary_families")}
+      </div>
+      <p class="place-kicker">${esc(t("zone_places"))}</p>
+      <ul class="zone-places">${communityRows}</ul>
+      ${ethnicityRow}
+      <div class="stat"><span class="term-line"><span>${esc(t("safety"))}</span>${termMark("safety")}</span><b>${esc(t("no_data"))}</b></div>
+      ${zoneLinks()}`;
+  }
+  function zoneLinks() {
+    return `<p><a href="https://www.calgary.ca/communities/profiles.html" target="_blank" rel="noopener">${esc(t("profile_link"))}</a></p>
+      <p><a href="https://www.calgarypolice.ca/transparency-and-accountability/community-safety-dashboard---monthly-snapshot.html" target="_blank" rel="noopener">${esc(t("crime_link"))}</a></p>`;
+  }
+  function openZonePanel(id) {
+    panelSchoolId = String(id);
+    fillZonePanel(id);
+    const panel = document.getElementById("zonePanel");
+    const body = document.getElementById("zonePanelBody");
+    if (body) body.scrollTop = 0;
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+  }
+  function closeZonePanel() {
+    panelSchoolId = null;
+    const panel = document.getElementById("zonePanel");
+    if (!panel) return;
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+  }
   function programLabel(name) {
     return name === "Regular" ? t("program_regular") : name;
   }
@@ -711,6 +899,8 @@
   // Row clicks and point clicks share this. The list name is plain text; the website link lives on the map card.
   function focusSchool(id, pinToTop) {
     const key = String(id);
+    // » is what opens the panel. Once it is open, the next school click keeps it and switches it.
+    if (panelSchoolId && panelSchoolId !== key) openZonePanel(key);
     const school = schools.find((s) => String(s.id) === key);
     const marker = markerById.get(key);
     const token = ++focusToken;
@@ -896,7 +1086,7 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19, opacity: 0.6 }).addTo(map);
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005ab";
+  const dataUrl = (name) => "data/" + name + "?v=20261005av";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory, contacts]) => {
@@ -908,15 +1098,18 @@
       document.getElementById("unit").value = state.unit;
       document.getElementById("band").value = state.band;
       const zonesPromise = fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }));
-      if (RANK_FIRST) return Promise.all([zonesPromise, Promise.resolve(null)]);
+      const profilesPromise = fetch(dataUrl("community_profiles.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
+      if (RANK_FIRST) return Promise.all([zonesPromise, Promise.resolve(null), profilesPromise]);
       return Promise.all([
         zonesPromise,
         fetch(dataUrl("reviews.json")).then((r) => r.ok ? r.json() : null).catch(() => null),
+        profilesPromise,
       ]);
     })
-    .then(([zoneFc, reviews]) => {
+    .then(([zoneFc, reviews, profiles]) => {
       if (!communities.length) return;
       zones = (zoneFc && zoneFc.features) || [];
+      communityProfiles = (profiles && profiles.communities) || {};
       if (state.unit === "zone" && !zones.length) state.unit = "community";
       attachReviews(reviews);
       if (RANK_FIRST) {
@@ -975,11 +1168,53 @@
   }
   scoreSource.addEventListener("click", (e) => {
     e.stopPropagation();
+    closeTerm();
     setScoreSource(scoreSourcePop.hidden);
   });
   scoreSourcePop.addEventListener("click", (e) => e.stopPropagation());
-  document.addEventListener("click", () => setScoreSource(false));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setScoreSource(false); });
+  const termPop = document.getElementById("termPop");
+  let termButton = null;
+  function closeTerm() {
+    if (!termPop) return;
+    termPop.hidden = true;
+    if (termButton) termButton.setAttribute("aria-expanded", "false");
+    termButton = null;
+  }
+  function openTerm(button) {
+    setScoreSource(false);
+    if (termButton && termButton !== button) termButton.setAttribute("aria-expanded", "false");
+    termButton = button;
+    termPop.textContent = t("term_" + button.dataset.term);
+    termPop.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    const mark = button.getBoundingClientRect();
+    const pop = termPop.getBoundingClientRect();
+    const paneRight = document.getElementById("listPane").getBoundingClientRect().right - 8;
+    let left = mark.left;
+    if (left + pop.width > paneRight) left = paneRight - pop.width;
+    left = Math.max(8, Math.min(left, window.innerWidth - pop.width - 8));
+    let top = mark.bottom + 6;
+    if (top + pop.height > window.innerHeight - 8) top = Math.max(8, mark.top - pop.height - 6);
+    termPop.style.left = left + "px";
+    termPop.style.top = top + "px";
+  }
+  document.getElementById("zonePanelBody").addEventListener("click", (e) => {
+    const button = e.target.closest("[data-term]");
+    if (!button) return;
+    e.stopPropagation();
+    if (termButton === button) closeTerm();
+    else openTerm(button);
+  });
+  termPop.addEventListener("click", (e) => e.stopPropagation());
+  document.getElementById("zonePanelBody").addEventListener("scroll", () => closeTerm());
+  document.addEventListener("click", () => { setScoreSource(false); closeTerm(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    setScoreSource(false);
+    if (termPop && !termPop.hidden) { closeTerm(); return; }
+    closeZonePanel();
+  });
+  document.getElementById("zonePanelClose").addEventListener("click", () => closeZonePanel());
   document.getElementById("rankScroll").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;
@@ -987,8 +1222,11 @@
   });
   document.querySelector("#rankTable tbody").addEventListener("click", (e) => {
     if (e.target.closest("a")) return;
+    const more = e.target.closest("[data-more]");
     const tr = e.target.closest("tr");
-    if (tr && tr.dataset.id) focusSchool(tr.dataset.id);
+    if (!tr || !tr.dataset.id) return;
+    if (more) openZonePanel(tr.dataset.id);
+    focusSchool(tr.dataset.id);
   });
   document.querySelector("#commTable thead").addEventListener("click", (e) => {
     const key = e.target.dataset.key; if (!key) return;

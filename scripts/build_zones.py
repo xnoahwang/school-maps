@@ -2,7 +2,9 @@
 
 Responsibility: turn the KMZ files published by the CBE Find a School tool
 into web/data/zones.geojson, one attendance polygon and one walk zone per
-program that publishes them. Grade 10–12 zones are skipped. The community
+program that publishes them. A community is included when the overlap is at
+least 10% of the zone or of the community, not only when the community's
+representative point falls inside. Grade 10–12 zones are skipped. The community
 choropleth still uses the regular program only. CSSD zones are not in this
 file. Run after scripts/build_data.py.
 """
@@ -19,7 +21,6 @@ from xml.etree import ElementTree as ET
 import requests
 from shapely.geometry import Polygon, shape
 from shapely.ops import unary_union
-from shapely.prepared import prep
 from shapely.validation import make_valid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -34,6 +35,47 @@ QUERY = CBE + "/sys/api/query?structureKeys={key}&pageSize=300&ignoreCurrentSite
 REGULAR_FRAGMENT = "fragment://9d06f92c-6f9e-42bb-a2ce-890215738ecc"
 KML_NS = "{http://www.opengis.net/kml/2.2}"
 USER_AGENT = "school-maps prototype (CBE public zone files)"
+# A boundary sliver can be a few percent of one side and almost nothing of the other.
+OVERLAP_SHARE = 0.10
+
+
+def places_for_zone(zone_geom, walk_geom, communities: list[dict]) -> list[dict]:
+    """Communities this attendance zone covers, with a walk-zone flag.
+
+    The community's representative point is often outside a zone that only
+    covers part of that community. A community counts when the overlap is at
+    least 10% of the zone or of the community. in_walk is true when the walk
+    zone covers at least half of that overlap. Returns [] for an empty zone.
+    """
+    zone_area = zone_geom.area
+    if zone_area <= 0:
+        return []
+    places = []
+    for community in communities:
+        geom = community["geom"]
+        if geom.is_empty or geom.area <= 0 or not zone_geom.intersects(geom):
+            continue
+        try:
+            overlap = zone_geom.intersection(geom)
+        except Exception:
+            continue
+        if overlap.is_empty or overlap.area <= 0:
+            continue
+        if overlap.area / zone_area < OVERLAP_SHARE and overlap.area / geom.area < OVERLAP_SHARE:
+            continue
+        in_walk = False
+        if walk_geom is not None and not walk_geom.is_empty:
+            try:
+                walked = walk_geom.intersection(overlap)
+            except Exception:
+                walked = None
+            in_walk = walked is not None and not walked.is_empty and walked.area >= overlap.area * 0.5
+        places.append({
+            "code": community["code"], "name": community["name"],
+            "home_value": community["home_value"], "in_walk": in_walk,
+        })
+    places.sort(key=lambda place: place["name"])
+    return places
 
 
 def fetch_rows(structure_key: str) -> list[dict]:
@@ -246,22 +288,13 @@ def main(refresh: bool = False) -> int:
             prepared_geom = prepared.buffer(0) if not prepared.is_valid else prepared
         except Exception:
             prepared_geom = attendance
-        ready = prep(prepared_geom)
-        walk_ready = None
-        if walk is not None and not walk.is_empty:
-            walk_ready = prep(walk.buffer(0) if not walk.is_valid else walk)
         places = []
         home = None
-        # Community lists feed the older choropleth. Other programs are drawn only when that school is clicked.
+        # Community lists feed the panel and the older choropleth. Other programs stay empty
+        # and the panel falls back to this school's regular zone.
         if job["program"] == "Regular":
-            for community in communities:
-                if not ready.contains(community["rep"]):
-                    continue
-                in_walk = bool(walk_ready and walk_ready.contains(community["rep"]))
-                places.append({"code": community["code"], "name": community["name"],
-                               "home_value": community["home_value"], "in_walk": in_walk})
-            values = [p["home_value"] for p in places if p["home_value"]]
-            values.sort()
+            places = places_for_zone(prepared_geom, walk if walk is not None and not walk.is_empty else None, communities)
+            values = sorted(p["home_value"] for p in places if p["home_value"])
             home = values[len(values) // 2] if values else None
         code = f"{job['school_code']}-{job['low']}-{job['high']}"
         if job["program"] != "Regular":

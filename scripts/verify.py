@@ -74,6 +74,10 @@ def run_checks() -> list[tuple[str, bool, str]]:
         out.append(("CBE regular attendance zones", len(regular) >= 80, f"{len(regular)} regular of {len(attendance)}"))
         out.append(("CBE walk zones", len(walks) >= 50, f"{len(walks)}"))
         out.append(("elementary attendance zones", len(elem) >= 40, f"{len(elem)}"))
+        coffin = next((f for f in regular if "coffin" in f["properties"].get("name", "").lower()
+                       and f["properties"].get("band") == "elem"), None)
+        coffin_codes = [p.get("code") for p in (coffin or {}).get("properties", {}).get("places") or []]
+        out.append(("Coffin zone includes Brentwood", coffin_codes == ["BRE"], ", ".join(coffin_codes) or "none"))
     ranked = [s for s in schools if "rank_exam" in s]
     out.append(("every school has a rank exam field", len(ranked) == len(schools), f"{len(ranked)}/{len(schools)}"))
     bad_rank = [s["name"] for s in schools if s.get("rank_score") is not None and not 0 <= s["rank_score"] <= 100]
@@ -107,6 +111,24 @@ def run_checks() -> list[tuple[str, bool, str]]:
     bad_span = [s.get("name") for s in dschools
                 if s.get("grade_min") is not None and s.get("grade_max") is not None and s["grade_min"] > s["grade_max"]]
     out.append(("CBE grade spans are ordered", not bad_span, f"{len(bad_span)} reversed"))
+    profiles_path = DATA / "community_profiles.json"
+    if not profiles_path.exists():
+        out.append(("community profiles exist", False, "missing community_profiles.json; run scripts/fetch_community_profiles.py"))
+        return out
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8")).get("communities") or {}
+    out.append(("community profiles cover most communities", len(profiles) >= 150, f"{len(profiles)}"))
+    dalhousie = profiles.get("dalhousie") or {}
+    out.append(("Dalhousie profile matches the 2021 PDF",
+                dalhousie.get("population") == 8530 and dalhousie.get("median_household_income") == 85000
+                and dalhousie.get("racialized_pct") == 38 and dalhousie.get("english_home_pct") == 78,
+                f"pop {dalhousie.get('population')} income {dalhousie.get('median_household_income')}"))
+    pct_fields = ("age_0_14_pct", "age_65_plus_pct", "shelter_30_pct", "immigrant_pct", "owner_pct",
+                  "renter_pct", "racialized_pct", "english_home_pct", "bachelor_pct", "drive_pct", "transit_pct")
+    bad_profile = [name for name, row in profiles.items()
+                   if any(row.get(key) is not None and not 0 <= row[key] <= 100 for key in pct_fields)
+                   or (row.get("population") is not None and row["population"] <= 0)
+                   or (row.get("median_household_income") is not None and row["median_household_income"] <= 0)]
+    out.append(("profile counts stay positive and percents stay in range", not bad_profile, f"{len(bad_profile)} bad"))
     return out
 
 
