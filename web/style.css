@@ -17,7 +17,7 @@ th.sorted::after { content: " ▾"; } th.sorted.asc::after { content: " ▴"; }
 td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; } td.num { text-align: right; }
 tr:hover, tr.sel { background: #e3f0ff; cursor: pointer; }
 .chip { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
-#map { min-height: 300px; }
+#map { min-height: 300px; background: #ebe7e0; }
 #panel { overflow: auto; border-left: 1px solid #d9dee4; padding: 10px 14px; }
 #panel h2 { margin: 0 0 4px; } .hint { color: #66788a; }
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
@@ -28,3 +28,17 @@ tr:hover, tr.sel { background: #e3f0ff; cursor: pointer; }
 .legend { background: #fff; padding: 6px 8px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.3); font-size: 12px; line-height: 18px; }
 .legend i { display: inline-block; width: 16px; height: 12px; margin-right: 4px; vertical-align: middle; }
 @media (max-width: 1000px) { main { grid-template-columns: 1fr; grid-template-rows: 50vh auto auto; } #map { order: -1; } }
+/* The rank list is the page for now. The map stays in the markup and is not shown. */
+body.rank-first main { grid-template-columns: 1fr; }
+body.rank-first #map, body.rank-first #panel, body.rank-first #disclaimer, body.rank-first .controls label, body.rank-first #commTable { display: none; }
+body.rank-first #listPane { border: 0; max-width: 980px; margin: 0 auto; width: 100%; padding: 16px 18px 32px; }
+#rankNote { margin: 0 0 10px; }
+#dirFilters { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 10px; }
+.dir-program select { font: inherit; margin-left: 6px; max-width: 100%; }
+#letterFilters { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+#letterFilters button { font: inherit; min-width: 28px; padding: 2px 6px; border: 1px solid #c4ccd5; background: #fff; border-radius: 4px; cursor: pointer; }
+#letterFilters button.on { background: #12355b; color: #fff; border-color: #12355b; }
+#letterFilters button:disabled { opacity: .35; cursor: default; }
+#rankTable a { color: #12355b; }
+#rankTable { font-size: 14px; }
+#rankTable td { padding: 6px 4px; }

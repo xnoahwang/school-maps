@@ -362,7 +362,10 @@ Mode from `CURSOR_PRIME_CLOUD_MODE` or `.cursor/cursor-prime-cloud-mode` overrid
 Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the plan and verify record.
 
 ### Layout
-- `scripts/build_data.py`: the only place data is downloaded, joined, and scored. Output goes to `web/data/`.
+- `scripts/build_data.py`: official community data is downloaded, joined, and scored. Output goes to `web/data/`.
+- `scripts/build_zones.py`: CBE regular-program attendance areas and walk zones, from the public finder KMZ files. Run it after `build_data.py`.
+- `scripts/fetch_reviews.py`: optional Google/Reddit review layer. Exits 0 without API keys and does not change exam scores.
+- `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program, grade, and letter filters.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure). `scripts/screenshot.py`: headless screenshots.
 - `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en + zh), and any new key must be added to both languages.
 - `data/raw/`: download cache. **Do not commit** (about 50 MB). `web/data/` is generated but committed.
@@ -375,7 +378,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Verify
 ```bash
-.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/screenshot.py
+.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py && .venv/bin/python scripts/screenshot.py
 ```
 
 ### Forbidden zones
