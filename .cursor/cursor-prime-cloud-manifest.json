@@ -1,0 +1,66 @@
+{
+  "name": "cursor-prime-cloud",
+  "package_version": "0.1.0",
+  "upstream": {
+    "repo": "https://github.com/xnoahwang/cursor-prime.git",
+    "commit": "256dd8bdd2b2e3a5e747c8d9be30797894cc268a",
+    "version": "0.3.3"
+  },
+  "mode": "autonomous",
+  "installed_at": "2026-10-05T04:34:05Z",
+  "agents_created": false,
+  "files": [
+    {
+      "path": ".cursor/rules/behavior.mdc",
+      "backup": null
+    },
+    {
+      "path": ".cursor/rules/maintainability.mdc",
+      "backup": null
+    },
+    {
+      "path": ".cursor/rules/cloud-overlay.mdc",
+      "backup": null
+    },
+    {
+      "path": ".cursor/cursor-prime-cloud-mode",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/debug.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/delta.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/grill.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/handoff.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/loop.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/plan.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/submission-init.md",
+      "backup": null
+    },
+    {
+      "path": ".cursor/commands/verify.md",
+      "backup": null
+    },
+    {
+      "path": "AGENTS.md",
+      "backup": null
+    }
+  ]
+}

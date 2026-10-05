@@ -1,0 +1,6 @@
+# Python deps for scripts/ (build_data.py, verify.py, screenshot.py)
+pandas==3.0.6
+openpyxl==3.1.5
+requests==2.34.2
+shapely==2.1.2
+playwright==1.63.0

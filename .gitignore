@@ -1,0 +1,8 @@
+# Download cache (~50 MB), rebuilt by scripts/build_data.py
+data/raw/
+# Local environments and caches
+.venv/
+__pycache__/
+*.pyc
+# cursor-prime-cloud install backups (local only)
+.cursor/cursor-prime-cloud-backups/

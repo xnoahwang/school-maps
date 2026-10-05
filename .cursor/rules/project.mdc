@@ -1,0 +1,12 @@
+---
+description: Project context for the Calgary School & Community Explorer
+alwaysApply: true
+---
+
+# Project
+
+- **Stack:** Python 3.13 (`.venv`: pandas, openpyxl, requests, shapely, playwright) for the data pipeline. Static HTML + vanilla JS + Leaflet 1.9.4 (unpkg CDN) with OSM tiles.
+- **Entry points:** `scripts/build_data.py` (data) → `web/data/*`; `web/index.html` served by `python3 -m http.server 8765 -d web`.
+- **Verify:** `.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/screenshot.py`
+- **Protected paths:** `.cursor/rules/behavior.mdc`, `.cursor/rules/maintainability.mdc`, `.cursor/rules/cloud-overlay.mdc`, the cursor-prime-cloud section of `AGENTS.md`.
+- **Not committed:** `data/raw/`, `.venv/`, `.cursor/cursor-prime-cloud-backups/`.
