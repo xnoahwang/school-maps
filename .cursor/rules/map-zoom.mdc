@@ -1,0 +1,18 @@
+---
+description: Zoom maps by scaling the current picture, never by clearing it
+alwaysApply: false
+---
+# Map zoom
+
+Zoom must keep the picture that is already on screen and scale it. Do not reset the view on each wheel notch or pinch step.
+
+Clearing tiles (`setZoomAround` with `animate: false`, or anything that hits `_resetView`) drops the current image and flashes the map background. That flash is the bug, even when the new tiles arrive quickly.
+
+Do this instead:
+
+- Scale the tiles already drawn (Leaflet zoom animation). While a zoom is in progress, update that animation (`_animateToZoom` / `_animateZoom`) instead of starting a second reset.
+- Let a wheel notch or trackpad event change zoom immediately. Do not lock the gesture and make the next notch wait.
+- Keep `zoomSnap` at `0` so the level can sit between integers. The +/- buttons can still move one whole level.
+- Paint the map container a color close to the basemap, not a contrasting blue, so a one-frame gap is not a blue screen.
+
+`SmoothZoom` in `src/CityMap/CityMapView.tsx` is the reference. Match it for any other Leaflet map in this project.

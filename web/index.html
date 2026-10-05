@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- Calgary School & Community Explorer: static entry page.
+     Layout only; data loading and rendering are in app.js, strings in i18n.js. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calgary School & Community Explorer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="titles"><h1 data-i18n="title"></h1><div class="sub" data-i18n="subtitle"></div></div>
+    <div class="controls">
+      <label><span data-i18n="metric"></span>
+        <select id="metric">
+          <option value="school_score" data-i18n="m_school_score"></option>
+          <option value="elem_score" data-i18n="m_elem_score"></option>
+          <option value="junior_score" data-i18n="m_junior_score"></option>
+          <option value="home_value" data-i18n="m_home_value"></option>
+          <option value="value_score" data-i18n="m_value_score"></option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="showSchools"> <span data-i18n="show_schools"></span></label>
+      <button id="lang"></button>
+    </div>
+  </header>
+  <div id="disclaimer">⚠️ <span data-i18n="disclaimer"></span>
+    <a href="https://www.cbe.ab.ca/find-a-school" target="_blank" data-i18n="cbe_finder"></a> ·
+    <a href="https://www.cssd.ab.ca/schools" target="_blank" data-i18n="cssd_finder"></a>
+  </div>
+  <main>
+    <section id="listPane">
+      <input id="search" type="search">
+      <table id="commTable"><thead><tr>
+        <th data-key="name" data-i18n="col_name"></th>
+        <th data-key="school_score" data-i18n="col_school"></th>
+        <th data-key="home_value" data-i18n="col_value"></th>
+        <th data-key="value_score" data-i18n="col_vfm"></th>
+      </tr></thead><tbody></tbody></table>
+    </section>
+    <section id="map"></section>
+    <section id="panel"><p class="hint" data-i18n="click_hint"></p></section>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+ "pat_years": [
+  2023,
+  2024,
+  2025
+ ],
+ "home_value_basis": "2026 property assessment roll, class RE, property type LI",
+ "stats": {
+  "communities_residential": 223,
+  "schools_total": 506,
+  "schools_in_residential_communities": 471,
+  "schools_elem_or_junior": 423,
+  "pat_matched": 372,
+  "pat_match_rate": 0.879,
+  "pat_matched_by": {
+   "board+name": 366,
+   "name-only": 6
+  },
+  "schools_with_pat_score": 333,
+  "cbe_cssd_pat_schools": 322,
+  "cbe_cssd_pat_schools_matched": 299,
+  "communities_with_school_score": 218,
+  "communities_with_home_value": 215,
+  "residential_accounts_used": 568290,
+  "unmatched_examples": [
+   "Almadina Language Charter Academy, Mountain View Campus",
+   "Banff Trail School",
+   "Banting and Best School",
+   "Bayside School",
+   "Calgary German Language School Society",
+   "Canyon Meadows School",
+   "Chris Akkerman School",
+   "Citadel Park School",
+   "Collingwood School",
+   "Colonel Sanders School",
+   "Copperfield School",
+   "Coventry Hills School",
+   "Cranston School",
+   "Dalhousie School",
+   "Dr. Freda Miller School",
+   "Dr. J. K. Mulloy School",
+   "Edgemont School",
+   "Eric Harvie School",
+   "Eugene Coste School",
+   "Glenmore Christian Academy Elementary",
+   "Green Dome Islamic School",
+   "Hidden Valley School",
+   "Highwood School",
+   "Italian School of Calgary",
+   "James Short Memorial School"
+  ]
+ },
+ "sources_failed": [],
+ "sources": {
+  "communities": "https://data.calgary.ca/d/surr-xmvs",
+  "schools": "https://data.calgary.ca/d/fd9t-tdn2",
+  "pat": "https://www.alberta.ca/system/files/custom_downloaded_images/ed-pat-multiyear-sch-list.xlsx",
+  "parcels": "https://data.calgary.ca/d/4bsw-nn7w",
+  "libraries": "https://data.calgary.ca/d/m9y7-ui7j",
+  "transit": "https://data.calgary.ca/d/muzh-c9qc",
+  "parks": "https://data.calgary.ca/d/kami-qbfh"
+ }
+}
