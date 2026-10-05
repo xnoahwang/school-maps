@@ -712,6 +712,13 @@
     })).sort((a, b) => a.name.localeCompare(b.name));
     return { hasZone: picked.attendance.length > 0, fromRegular, rows };
   }
+  // Private and other non-CBE schools have no attendance zone. The city file
+  // already records which community the school point falls in.
+  function homeCommunity(school) {
+    const code = school && school.community;
+    if (!code) return null;
+    return communities.find((f) => f.properties.code === code) || null;
+  }
   function weightedChildren(rows) {
     let population = 0;
     let children = 0;
@@ -810,7 +817,21 @@
     title.textContent = displayName(school);
     const facts = zoneFacts(school);
     if (!facts.hasZone && !facts.rows.length) {
-      body.innerHTML = `<p>${esc(t("zone_none"))}</p>${zoneLinks()}`;
+      const home = homeCommunity(school);
+      if (!home) {
+        body.innerHTML = `<p>${esc(t("zone_none"))}</p>${zoneLinks()}`;
+        return;
+      }
+      const place = home.properties;
+      const profile = profileFor(place.name);
+      const families = place.families_with_children_pct;
+      const headFacts = fact("fact_value", moneyFull(place.home_value) || t("no_data"));
+      const ethnicityRow = profile ? "" : `<div class="stat"><span class="term-line"><span>${esc(t("ethnicity"))}</span>${termMark("fact_racialized")}</span><b>${esc(t("no_data"))}</b></div>`;
+      body.innerHTML = `<p class="zone-callout">${esc(t("zone_home_only"))}</p>
+        <ul class="zone-places"><li class="place-card"><div class="place-head"><strong>${esc(place.name)}</strong></div><dl class="metrics">${headFacts}${censusFacts(profile, families)}</dl>${censusExtra(profile)}</li></ul>
+        ${ethnicityRow}
+        <div class="stat"><span class="term-line"><span>${esc(t("safety"))}</span>${termMark("safety")}</span><b>${esc(t("no_data"))}</b></div>
+        ${zoneLinks()}`;
       return;
     }
     if (!facts.rows.length) {
@@ -874,14 +895,24 @@
   function drawSchoolZone(school) {
     clearSchoolZone();
     const picked = chooseZones(school);
-    if (!picked.attendance.length) return false;
+    const box = document.getElementById("zoneKey");
+    if (!picked.attendance.length) {
+      const home = homeCommunity(school);
+      if (!home) return false;
+      const homeStyle = { color: "#0f6b4c", weight: 2, fillColor: "#1f8a5b", fillOpacity: 0.22 };
+      pickedZoneLayer = L.geoJSON(home, { pane: "zonePane", style: homeStyle }).addTo(map);
+      if (box) {
+        box.innerHTML = `<div class="zone-program">${esc(home.properties.name)}</div><div><i class="home"></i>${esc(t("zone_home_community"))}</div>`;
+        box.hidden = false;
+      }
+      return true;
+    }
     const areaStyle = { color: "#12355b", weight: 2, fillColor: "#2f6fad", fillOpacity: 0.28 };
     const walkStyle = { color: "#c45c26", weight: 2.5, dashArray: "6 4", fillColor: "#f5a623", fillOpacity: 0.2 };
     pickedZoneLayer = L.geoJSON({ type: "FeatureCollection", features: picked.attendance }, { pane: "zonePane", style: areaStyle }).addTo(map);
     if (picked.walks.length) {
       pickedWalkLayer = L.geoJSON({ type: "FeatureCollection", features: picked.walks }, { pane: "zonePane", style: walkStyle }).addTo(map);
     }
-    const box = document.getElementById("zoneKey");
     if (box) {
       const title = picked.program.split(" · ").map((name) => esc(programLabel(name))).join(" · ");
       box.innerHTML = `<div class="zone-program">${title}</div><div><i class="area"></i>${esc(t("attendance_zone"))}</div><div><i class="walk"></i>${esc(t("walk_zone"))}</div>`;

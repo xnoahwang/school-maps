@@ -2,6 +2,48 @@
 
 Older plans and verify receipts are in git history. This file keeps the current record only.
 
+## Plan (2026-10-05, home-community notice)
+
+Mode: `autonomous`. Design notes: skipped. The sentence under a school with no CBE zone is gray 12.5px body text, so it disappears under the school name.
+
+**Goal.** That sentence sits in a tinted callout at the top of the panel, larger and darker than the figure labels.
+
+**Out of scope.** Rewording the sentence, changing the community outline, and a git commit.
+
+**Done when.** On Master's Academy the Chinese sentence is in a visible callout, and Briar Hill’s zone panel has no such callout.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/style.css`, `web/index.html`.
+
+**Verify.** Open the Chinese Master's Academy panel and read the callout.
+
+## Verify (2026-10-05, home-community notice)
+
+On the Chinese Master's Academy panel the sentence is a 15px bold callout on a cream background with an orange bar. Briar Hill’s panel was not given that class.
+
+
+## Plan (2026-10-05, school community outline)
+
+Mode: `autonomous`. Design notes: skipped. Master's Academy has no CBE attendance zone, so the panel only says so. The school point sits in Garrison Woods (`GAW`).
+
+**Goal.** A school with no published CBE attendance zone draws the community its point falls in, and the panel names that community. A school that already has a zone is unchanged.
+
+**Out of scope.** Inventing an attendance zone, drawing every community a private school might serve, and a git commit.
+
+**Done when.** Opening Master's Academy draws Garrison Woods and the Chinese panel says the outline is the community where the school is, not a CBE zone. A school with no community match still shows the old “no zone” line.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/i18n.js`, `web/style.css`, `web/index.html`, `README.md`, `progress.md`.
+
+**Verify.** Open the Chinese page, search Master's Academy, open its panel, and confirm Garrison Woods is drawn. `node --check web/app.js` and `node --check web/i18n.js`.
+
+## Verify (2026-10-05, school community outline)
+
+`node --check web/app.js` and `node --check web/i18n.js` both exited 0. On the Chinese page, Master's Academy draws Garrison Woods in green and the panel says the outline is the community where the school is. Briar Hill School still shows its CBE attendance zone and walk zone.
+
+
 ## Plan (2026-10-05, cut scores)
 
 Mode: `autonomous`. Design notes: skipped. The score note names the acceptable and excellence rates, and does not say where those lines sit. They are not a fixed 60 and 90.
