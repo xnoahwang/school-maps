@@ -8,9 +8,9 @@ The page opens on a **school ranking list**. The map is still in the project and
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
 - High schools are omitted. No current school-level Diploma file is public.
 
-The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used by the community map data below. Schools with no published result stay at the bottom and are not numbered.
+The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used by the community map data below. Schools with no published result stay at the bottom and are not numbered. The circle beside the score heading opens this explanation and links to Alberta's [PAT results page](https://www.alberta.ca/provincial-achievement-tests#jumplinks-3), under Multiyear results (by school).
 
-CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters: board first (including All), then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program and by the first letter of the name. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label.
+CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters, and both open on All: board first, then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program and by the first letter of the name. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label.
 
 The map data, when brought back, shows every residential community as a choropleth, coloured by one of these metrics:
 

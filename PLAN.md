@@ -1,5 +1,69 @@
 # PLAN.md
 
+## Plan (2026-10-05, default filters are All)
+
+Mode: `autonomous`. Design notes: skipped. The screenshot is board All and grade All.
+
+**Goal.** The page opens with both dropdowns on All. Program and letter stay on All, which they already do.
+
+**Out of scope.** Changing what All ranks, the map, commits.
+
+**Done when.** A fresh load shows 全部 for board and 全部 for grade.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload and read the two dropdown values.
+
+## Plan (2026-10-05, school name only)
+
+Mode: `autonomous`. Design notes: skipped. The second line under each school name is the phone and the CBE program label.
+
+**Goal.** The ranking list shows the school name only. If the school has a website, the name stays a link. Phone and program labels such as Regular (K-6) are not printed under the name.
+
+**Out of scope.** The program filter, the grade column, the map panel, commits.
+
+**Done when.** Briar Hill’s row is the linked name, with no phone and no Regular line.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload the list and check the first school row.
+
+## Plan (2026-10-05, score source is the PAT page)
+
+Mode: `autonomous`. Design notes: skipped. The circle still explains the score. The link is the Alberta page the user opened, not the workbook file.
+
+**Goal.** The score note links to https://www.alberta.ca/provincial-achievement-tests#jumplinks-3 in both languages. The anchor is the “PAT results by school and authority” section.
+
+**Out of scope.** The score itself, the pipeline download, commits.
+
+**Done when.** The open note links to that page, and the Chinese and English labels name the page.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/i18n.js`, `web/app.js`.
+
+**Verify.** Reload, open the note, and check the link address in both languages.
+
+## Plan (2026-10-05, score source mark)
+
+Mode: `autonomous`. Design notes: skipped. The mark sits on the score column and opens on click.
+
+**Goal.** Put a circle with an exclamation mark beside the score heading. A click shows where the number comes from: Alberta's Multiyear results (by school), and that the score is (acceptable % + excellence %) / 2 for the newest year. A second click, a click outside, or Escape closes it. English and 中文 both have the text.
+
+**Out of scope.** Changing the score, the map, Diploma, screenshots, commits.
+
+**Done when.** The mark is on the score heading, the note names the school workbook and links to it, and both languages show that note.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/i18n.js`, `web/app.js`, `web/style.css`.
+
+**Verify.** Reload the ranking page, open and close the note, and switch language.
+
 ## Plan (2026-10-05, two-level grade filter)
 
 Mode: `autonomous`. Design notes: the grade control is two dropdowns. The first is the authority, including All. The second lists only the grades that authority actually has.

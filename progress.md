@@ -1,7 +1,7 @@
 # progress.md
 
 ## Current Focus
-The ranking list filters by board first, including All, then by the grades that board offers. High schools are omitted until a current Diploma file is public.
+The ranking list opens with both filters on All. The score heading still has a circle that opens Alberta's PAT results page.
 
 ## Completed
 - cursor-prime-cloud rules installed (autonomous mode), and the plan recorded in PLAN.md.

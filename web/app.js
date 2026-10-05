@@ -11,7 +11,7 @@
   const state = { lang: params.get("lang") === "zh" ? "zh" : "en", metric: params.get("metric") || "school_score",
                   sortKey: "school_score", sortAsc: false, selected: params.get("zone") || params.get("community"), query: "",
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
-                  board: "cbe", grade: "K-6", program: "all", letter: "all" };
+                  board: "all", grade: "all", program: "all", letter: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
@@ -49,6 +49,8 @@
   function applyI18n() {
     document.documentElement.lang = state.lang === "zh" ? "zh-CN" : "en";
     document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
+    const scoreSource = document.getElementById("scoreSource");
+    if (scoreSource) scoreSource.setAttribute("aria-label", t("score_source_label"));
     document.getElementById("search").placeholder = RANK_FIRST ? t("search_school") : (state.unit === "zone" ? t("search_zone") : t("search"));
     document.getElementById("lang").textContent = t("lang_btn");
     document.title = t("title");
@@ -337,9 +339,8 @@
       const tip = detail && detail.acc != null ? `${t("pat_acc")} ${detail.acc} · ${t("pat_exc")} ${detail.exc}` : "";
       const nameShown = displayName(s);
       const name = s.website ? `<a href="${esc(s.website)}" target="_blank" rel="noopener">${esc(nameShown)}</a>` : esc(nameShown);
-      const extra = [s.phone, (s.cbe_programs || []).map((p) => p.label).join(", ")].filter(Boolean).join(" · ");
       const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
-      return `<tr><td class="num">${rank}</td><td>${name}${extra ? `<div class="small">${esc(extra)}</div>` : ""}</td>
+      return `<tr><td class="num">${rank}</td><td>${name}</td>
         <td>${esc(s.board || "–")}</td><td>${esc(s.cbe_grades || s.grades || "–")}</td>
         <td class="num" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
     }).join("");
@@ -631,7 +632,7 @@
     maxZoom: 19, opacity: 0.6 }).addTo(map);
   }
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005j";
+  const dataUrl = (name) => "data/" + name + "?v=20261005o";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory]) => {
@@ -703,6 +704,31 @@
       renderRank();
     });
   }
+  const scoreSource = document.getElementById("scoreSource");
+  const scoreSourcePop = document.getElementById("scoreSourcePop");
+  function placeScoreSource() {
+    const mark = scoreSource.getBoundingClientRect();
+    const pop = scoreSourcePop.getBoundingClientRect();
+    let left = mark.right - pop.width;
+    left = Math.max(8, Math.min(left, window.innerWidth - pop.width - 8));
+    let top = mark.bottom + 6;
+    if (top + pop.height > window.innerHeight - 8) top = Math.max(8, mark.top - pop.height - 6);
+    scoreSourcePop.style.left = left + "px";
+    scoreSourcePop.style.top = top + "px";
+  }
+  function setScoreSource(open) {
+    scoreSourcePop.hidden = !open;
+    scoreSource.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) placeScoreSource();
+  }
+  scoreSource.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setScoreSource(scoreSourcePop.hidden);
+  });
+  scoreSourcePop.addEventListener("click", (e) => e.stopPropagation());
+  document.addEventListener("click", () => setScoreSource(false));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setScoreSource(false); });
+  document.getElementById("listPane").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;
     if (RANK_FIRST) renderRank(); else renderTable();

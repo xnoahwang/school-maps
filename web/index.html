@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calgary School & Community Explorer</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=20261005j">
+  <link rel="stylesheet" href="style.css?v=20261005m">
 </head>
 <body class="rank-first">
   <header>
@@ -71,7 +71,10 @@
         <th data-i18n="col_school_name"></th>
         <th data-i18n="col_board"></th>
         <th data-i18n="col_grades"></th>
-        <th data-i18n="col_score"></th>
+        <th class="score-col">
+          <span data-i18n="col_score"></span>
+          <button type="button" id="scoreSource" class="source-mark" aria-expanded="false" aria-controls="scoreSourcePop">!</button>
+        </th>
         <th data-i18n="col_year"></th>
       </tr></thead><tbody></tbody></table>
       <table id="commTable"><thead><tr>
@@ -84,8 +87,12 @@
     <section id="map"></section>
     <section id="panel"><p class="hint" data-i18n="click_hint"></p></section>
   </main>
+  <div id="scoreSourcePop" hidden>
+    <p data-i18n="score_source_body"></p>
+    <a href="https://www.alberta.ca/provincial-achievement-tests#jumplinks-3" target="_blank" rel="noopener" data-i18n="score_source_link"></a>
+  </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="i18n.js?v=20261005j"></script>
-  <script src="app.js?v=20261005j"></script>
+  <script src="i18n.js?v=20261005m"></script>
+  <script src="app.js?v=20261005o"></script>
 </body>
 </html>
