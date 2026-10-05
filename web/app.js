@@ -402,6 +402,47 @@
     fillBoardFilter();
   }
 
+  // Same rules as build_data.normalize_name, so a name match uses the key the contact file stored.
+  const NAME_STOP = new Set(["the", "school", "of", "and", "campus"]);
+  function contactKey(name) {
+    let text = String(name || "").toLowerCase().replace(/&/g, " and ");
+    text = text.replace(/\bst\.?\s/g, "saint ");
+    text = text.replace(/[^a-z0-9 ]+/g, " ");
+    return text.split(/\s+/).filter((word) => word && !NAME_STOP.has(word)).join(" ");
+  }
+  function contactCode(value) {
+    const text = String(value == null ? "" : value).replace(/\.0$/, "").trim();
+    if (!text) return "";
+    return text.replace(/^0+/, "") || "0";
+  }
+  function mergeContacts(payload) {
+    const rows = (payload && payload.schools) || [];
+    const byKey = new Map();
+    const ambiguous = new Set();
+    const byCode = new Map();
+    rows.forEach((row) => {
+      const code = contactCode(row.code);
+      if (code) byCode.set(code, row);
+      if (!row.key || ambiguous.has(row.key)) return;
+      const prev = byKey.get(row.key);
+      if (!prev) {
+        byKey.set(row.key, row);
+        return;
+      }
+      if ((prev.website || "") !== (row.website || "") || (prev.phone || "") !== (row.phone || "")) {
+        byKey.delete(row.key);
+        ambiguous.add(row.key);
+      }
+    });
+    schools.forEach((school) => {
+      // The exam code is the same Alberta school code. A shared name (two St. Matthew schools) is not guessed.
+      const row = byCode.get(contactCode(school.pat_code)) || byKey.get(contactKey(school.name));
+      if (!row) return;
+      if (!school.phone && row.phone) school.phone = row.phone;
+      if (!school.website && row.website) school.website = row.website;
+    });
+  }
+
   function sourceHref(entry) {
     if (!entry) return "#";
     return typeof entry === "string" ? entry : (entry.url || "#");
@@ -533,12 +574,14 @@
   function schoolPopupHtml(school) {
     const result = listedResult(school);
     const name = displayName(school);
-    const title = school.website
-      ? `<a href="${esc(school.website)}" target="_blank" rel="noopener">${esc(name)}</a>`
-      : esc(name);
     const phoneDigits = String(school.phone || "").replace(/[^\d+]/g, "");
     const phone = phoneDigits
       ? `<a href="tel:${esc(phoneDigits)}">${esc(school.phone)}</a>`
+      : `<span class="na">${t("no_data")}</span>`;
+    let siteHost = school.website || "";
+    try { siteHost = new URL(school.website).host.replace(/^www\./, ""); } catch (e) { /* keep the stored text */ }
+    const site = school.website
+      ? `<a href="${esc(school.website)}" target="_blank" rel="noopener">${esc(siteHost)}</a>`
       : `<span class="na">${t("no_data")}</span>`;
     const address = school.address ? esc(school.address) : `<span class="na">${t("no_data")}</span>`;
     const exam = result.exam === "pat9" ? t("grade9") : result.exam === "pat6" ? t("grade6") : "";
@@ -548,7 +591,8 @@
     const programs = (school.program_names || []).filter(Boolean);
     const programLine = programs.length ? `<div><span class="k">${esc(t("filter_program"))}</span>${esc(programs.join(", "))}</div>` : "";
     const enrol = school.enrolment == null ? "" : `<div><span class="k">${esc(t("enrolment"))}</span>${Number(school.enrolment).toLocaleString()}</div>`;
-    return `<div class="school-pop"><strong>${title}</strong>
+    return `<div class="school-pop"><strong>${esc(name)}</strong>
+      <div><span class="k">${esc(t("website"))}</span>${site}</div>
       <div><span class="k">${esc(t("phone"))}</span>${phone}</div>
       <div><span class="k">${esc(t("address"))}</span>${address}</div>
       <div><span class="k">${esc(t("board"))}</span>${esc(school.board || "–")}</div>
@@ -747,12 +791,13 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19, opacity: 0.6 }).addTo(map);
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005q";
-  Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json"].map((name) => fetch(dataUrl(name)).then((r) => {
+  const dataUrl = (name) => "data/" + name + "?v=20261005z";
+  Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
-    .then(([fc, sch, m, directory]) => {
+    .then(([fc, sch, m, directory, contacts]) => {
       communities = fc.features; schools = sch; meta = m;
       mergeDirectory(directory);
+      mergeContacts(contacts);
       communities.forEach((f) => { f.properties.review_score = null; });
       document.getElementById("metric").value = state.metric;
       document.getElementById("unit").value = state.unit;

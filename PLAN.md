@@ -1,5 +1,52 @@
 # PLAN.md
 
+## Plan (2026-10-05, plain card title)
+
+Mode: `autonomous`. Design notes: skipped. The card title and the website row both linked to the same official site.
+
+**Goal.** The school name on the card is plain text. The website row stays the only link to that site.
+
+**Out of scope.** The website row, the phone link, the list, commits.
+
+**Done when.** Opening Brentwood (or any school with a site) shows an unlinked title and one website link.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/index.html`, `README.md`.
+
+**Verify.** Reload, open a school card, and confirm the title is not an anchor.
+
+## Verify (2026-10-05, plain card title)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=29`: Brentwood School's title is plain text (`strong` HTML is `Brentwood School`). The only site link is `https://brentwood.cbe.ab.ca/`. The phone link remains.
+
+## Plan (2026-10-05, official school links)
+
+Mode: `autonomous`. Design notes: skipped. The city school file has no phone or website. Only CBE schools get those from the CBE directory, so a Palliser school such as Master's Academy shows "no data". Alberta's public school directory lists the official site and phone.
+
+**Goal.** Fill a missing phone and website from that directory. The card shows the official site above the phone. A school the directory does not publish stays "no data".
+
+**Out of scope.** Guessing a site that is not in the file, attendance areas, commits.
+
+**Done when.** Master's Academy's card links to its published site and shows its published phone.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `AGENTS.md`, `.cursor/rules/project.mdc`, `scripts/fetch_ab_contacts.py`, `web/data/ab_contacts.json`, `web/app.js`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** Reload and open Master's Academy. The card has the official link and a phone.
+
+## Verify (2026-10-05, official school links)
+
+```
+$ .venv\Scripts\python.exe scripts\fetch_ab_contacts.py
+ab contacts: 650 schools, 569 with a website, as of 2026-10-04
+$ node --check web/app.js
+exit 0
+```
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=28`: Master's Academy card links to `http://www.masters.ab.ca/` and shows phone `(403) 242-7034`. Briar Hill still uses `https://briarhill.cbe.ab.ca/` and `403-777-6140`. Glenmore Christian Academy Junior High has no published site, so the website line is 无数据 and the phone is `(403) 254-9051`.
+
 ## Plan (2026-10-05, selected row under the header)
 
 Mode: `autonomous`. Design notes: skipped. The sticky column header covers the row the map click scrolled to, so the highlighted school is not the first one you see.

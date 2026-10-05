@@ -2,7 +2,7 @@
 
 A local prototype for **immigrant / newcomer parents in Calgary** who know little about how schools and communities compare.
 
-The page opens with a left sidebar, the school filter area, holding the ranking list. The map on the right draws one point for each school in that list. With every filter on All, that is every listed school. A board, grade, program, or search filter draws only the schools still in the list. Click a row, including the school name, to move the map to that school and open its card (phone, address, board, grades, and score). Click a point for the same card. The name on the card links to the school website. A missing phone or address is "no data". Attendance areas are not on this map yet.
+The page opens with a left sidebar, the school filter area, holding the ranking list. The map on the right draws one point for each school in that list. With every filter on All, that is every listed school. A board, grade, program, or search filter draws only the schools still in the list. Click a row, including the school name, to move the map to that school and open its card (official website, phone, address, board, grades, and score). Click a point for the same card. The website row on the card is the link to the school site. The school name itself is plain text. A missing website, phone, or address is "no data". Attendance areas are not on this map yet.
 
 - CBE schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest). Other schools are grouped by authority: Catholic, charter, francophone, other public boards, and private.
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
@@ -10,7 +10,7 @@ The page opens with a left sidebar, the school filter area, holding the ranking 
 
 The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used by the community map data below. Schools with no published result stay at the bottom and are not numbered. The circle beside the score heading opens this explanation and links to Alberta's [PAT results page](https://www.alberta.ca/provincial-achievement-tests#jumplinks-3), under Multiyear results (by school).
 
-CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters, and both open on All: board first, then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label.
+CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters, and both open on All: board first, then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label. Their official website and phone, when published, come from Alberta's [school directory](https://open.alberta.ca/opendata/alberta-education-schools-and-authorities). `scripts/fetch_ab_contacts.py` refreshes that file. It fills a phone or website only when the school does not already have one, and it does not invent a site the file left blank.
 
 The community view is not on this page. Its data still colours every residential community as a choropleth, by one of these metrics:
 
@@ -123,6 +123,8 @@ As-of dates for each downloaded source are in `web/data/meta.json` (`sources.*.a
 scripts/build_data.py   data pipeline (download + cache + scoring) -> web/data/
 scripts/build_zones.py  CBE regular attendance + walk zones -> web/data/zones.geojson
 scripts/verify.py       data sanity checks
+scripts/fetch_cbe_directory.py  CBE directory -> web/data/cbe_directory.json
+scripts/fetch_ab_contacts.py  Alberta school phone and website -> web/data/ab_contacts.json
 scripts/fetch_reviews.py  optional Google/Reddit reviews -> web/data/reviews.json (skips without keys)
 scripts/screenshot.py   headless screenshots -> screenshots/
 web/index.html, app.js, i18n.js, style.css   static front end (Leaflet via unpkg CDN)

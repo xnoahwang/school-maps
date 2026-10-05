@@ -1,0 +1,4557 @@
+{
+ "source": "https://open.alberta.ca/opendata/alberta-education-schools-and-authorities",
+ "file": "https://education.alberta.ca/media/1626669/authority_and_school.xlsx",
+ "as_of": "2026-10-04",
+ "schools": [
+  {
+   "code": "12",
+   "name": "FFCA High School Campus",
+   "key": "ffca high",
+   "phone": "(403) 243-3316",
+   "website": "https://nhs.ffca-calgary.com/"
+  },
+  {
+   "code": "13",
+   "name": "The Chinese Academy",
+   "key": "chinese academy",
+   "phone": "(403) 777-7663",
+   "website": "http://www.chineseacademy.ca"
+  },
+  {
+   "code": "21",
+   "name": "Webber Academy",
+   "key": "webber academy",
+   "phone": "(403) 277-4700",
+   "website": null
+  },
+  {
+   "code": "30",
+   "name": "Master's Academy",
+   "key": "master s academy",
+   "phone": "(403) 242-7034",
+   "website": "http://www.masters.ab.ca"
+  },
+  {
+   "code": "32",
+   "name": "Janus Academy",
+   "key": "janus academy",
+   "phone": "(403) 262-3333",
+   "website": "http://www.janusacademy.org"
+  },
+  {
+   "code": "119",
+   "name": "Britannia Children's Center",
+   "key": "britannia children s center",
+   "phone": "(403) 255-8664",
+   "website": "http://Montessoricentres.ca"
+  },
+  {
+   "code": "135",
+   "name": "Providence Children's Centre",
+   "key": "providence children s centre",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "209",
+   "name": "Foothills Creative Beginnings",
+   "key": "foothills creative beginnings",
+   "phone": "(403) 300-5543",
+   "website": "https://creativebeginnings.ca/"
+  },
+  {
+   "code": "212",
+   "name": "Sprout’s Academy",
+   "key": "sprout s academy",
+   "phone": "(403) 253-2291",
+   "website": "http://www.autism.ca"
+  },
+  {
+   "code": "230",
+   "name": "The PREP Society",
+   "key": "prep society",
+   "phone": "(403) 282-5011",
+   "website": null
+  },
+  {
+   "code": "249",
+   "name": "Renfrew Educational Services-Janice McTighe Centre",
+   "key": "renfrew educational services janice mctighe centre",
+   "phone": "(587) 287-5746",
+   "website": "http://www.renfreweducation.org"
+  },
+  {
+   "code": "250",
+   "name": "Renfrew Thomas W. Buchanan Centre",
+   "key": "renfrew thomas w buchanan centre",
+   "phone": "(587) 287-5746",
+   "website": "http://www.renfreweducation.org"
+  },
+  {
+   "code": "251",
+   "name": "University Day Care Centre",
+   "key": "university day care centre",
+   "phone": "(403) 210-7682",
+   "website": "https://www.ucalgary.ca/child-care/home"
+  },
+  {
+   "code": "254",
+   "name": "Montessori School of Calgary",
+   "key": "montessori calgary",
+   "phone": "(403) 229-1011",
+   "website": "http://www.montessorischoolofcalgary.com"
+  },
+  {
+   "code": "263",
+   "name": "Foothills Alliance ECS",
+   "key": "foothills alliance ecs",
+   "phone": "(403) 547-2193",
+   "website": "http://school.foothillsalliance.com"
+  },
+  {
+   "code": "264",
+   "name": "Marlborough Day Nursery Ltd.",
+   "key": "marlborough day nursery ltd",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "280",
+   "name": "Renfrew Educational Services - Child Development Centre",
+   "key": "renfrew educational services child development centre",
+   "phone": "(587) 287-5746",
+   "website": "http://www.renfreweducation.org"
+  },
+  {
+   "code": "281",
+   "name": "Renfrew Educational Services - Park Place Centre",
+   "key": "renfrew educational services park place centre",
+   "phone": "(403) 291-5038",
+   "website": "http://www.renfreweducation.org"
+  },
+  {
+   "code": "284",
+   "name": "Getting Ready For Inclusion To",
+   "key": "getting ready for inclusion to",
+   "phone": "(403) 215-2444",
+   "website": "http://www.gritcalgarysociety.com"
+  },
+  {
+   "code": "285",
+   "name": "The Heartland Agency",
+   "key": "heartland agency",
+   "phone": "(403) 541-0277",
+   "website": null
+  },
+  {
+   "code": "302",
+   "name": "Pacekids Programs South",
+   "key": "pacekids programs south",
+   "phone": "(403) 234-7876",
+   "website": "http://www.pacekids.ca"
+  },
+  {
+   "code": "308",
+   "name": "Mountain View Academy",
+   "key": "mountain view academy",
+   "phone": "(403) 217-4346",
+   "website": null
+  },
+  {
+   "code": "313",
+   "name": "Monsignor J. S. Smith School",
+   "key": "monsignor j s smith",
+   "phone": "(403) 500-2069",
+   "website": "http://www.cssd.ab.ca/schools/msgrsmith"
+  },
+  {
+   "code": "333",
+   "name": "Ascension of Our Lord",
+   "key": "ascension our lord",
+   "phone": "(403) 500-2075",
+   "website": "http://www.cssd.ab.ca/schools/ascension"
+  },
+  {
+   "code": "335",
+   "name": "Connect Charter School",
+   "key": "connect charter",
+   "phone": "(403) 282-2890",
+   "website": "http://www.connectcharter.ca"
+  },
+  {
+   "code": "348",
+   "name": "Midsun School",
+   "key": "midsun",
+   "phone": "(403) 777-6430",
+   "website": "http://school.cbe.ab.ca/school/midsun/"
+  },
+  {
+   "code": "374",
+   "name": "Carousel Children's Centre",
+   "key": "carousel children s centre",
+   "phone": "(403) 255-8664",
+   "website": "http://MontessoriCentres.ca"
+  },
+  {
+   "code": "387",
+   "name": "The Hamptons School",
+   "key": "hamptons",
+   "phone": "(403) 777-7300",
+   "website": "https://thehamptons.cbe.ab.ca/"
+  },
+  {
+   "code": "389",
+   "name": "Holy Angels School",
+   "key": "holy angels",
+   "phone": "(403) 500-2101",
+   "website": "http://www.cssd.ab.ca/schools/holyangel"
+  },
+  {
+   "code": "390",
+   "name": "St. Ambrose School",
+   "key": "saint ambrose",
+   "phone": "(403) 500-2100",
+   "website": "http://stambrose.cssd.ab.ca"
+  },
+  {
+   "code": "428",
+   "name": "Edge School",
+   "key": "edge",
+   "phone": "(403) 246-6432",
+   "website": "http://edgeschool.com"
+  },
+  {
+   "code": "432",
+   "name": "New Heights School and Learning Services",
+   "key": "new heights learning services",
+   "phone": "(403) 240-1312",
+   "website": "http://www.newheightscalgary.com"
+  },
+  {
+   "code": "437",
+   "name": "Renfrew Educational Services-Bowness Centre",
+   "key": "renfrew educational services bowness centre",
+   "phone": "(587) 287-5746",
+   "website": "http://www.renfreweducation.org"
+  },
+  {
+   "code": "442",
+   "name": "Alpine Children's Centre",
+   "key": "alpine children s centre",
+   "phone": "(403) 255-8664",
+   "website": "http://MontessoriCentres.ca"
+  },
+  {
+   "code": "443",
+   "name": "Bonavista Children's Centre",
+   "key": "bonavista children s centre",
+   "phone": "(403) 255-8664",
+   "website": "http://MontessoriCentres.ca"
+  },
+  {
+   "code": "478",
+   "name": "Eastside Christian Academy",
+   "key": "eastside christian academy",
+   "phone": "(403) 569-1003",
+   "website": null
+  },
+  {
+   "code": "521",
+   "name": "Tiny Treasures Ellenwood",
+   "key": "tiny treasures ellenwood",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "535",
+   "name": "Hidden Valley School",
+   "key": "hidden valley",
+   "phone": "(403) 777-7236",
+   "website": "http://school.cbe.ab.ca/school/HiddenValley/Pages/"
+  },
+  {
+   "code": "536",
+   "name": "Crossing Park School",
+   "key": "crossing park",
+   "phone": "(403) 777-7195",
+   "website": "http://school.cbe.ab.ca/school/crossingpark/Pages/"
+  },
+  {
+   "code": "537",
+   "name": "Battalion Park School",
+   "key": "battalion park",
+   "phone": "(403) 777-7187",
+   "website": "http://school.cbe.ab.ca/school/battalionpark/Pages"
+  },
+  {
+   "code": "538",
+   "name": "Monterey Park School",
+   "key": "monterey park",
+   "phone": "(403) 777-7233",
+   "website": "http://school.cbe.ab.ca/school/montereypark"
+  },
+  {
+   "code": "581",
+   "name": "Bishop O'Byrne High School",
+   "key": "bishop o byrne high",
+   "phone": "(403) 500-2103",
+   "website": "http://www.cssd.ab.ca/schools/bishopobyrne"
+  },
+  {
+   "code": "588",
+   "name": "St. Elizabeth Seton",
+   "key": "saint elizabeth seton",
+   "phone": "(403) 500-2105",
+   "website": "http://www.cssd.ab.ca/schools/stelizabethseton"
+  },
+  {
+   "code": "589",
+   "name": "Monsignor J. J. O'Brien",
+   "key": "monsignor j j o brien",
+   "phone": "(403) 500-2104",
+   "website": "http://www.cssd.ab.ca/schools/msgrobrien/"
+  },
+  {
+   "code": "596",
+   "name": "Douglasdale School",
+   "key": "douglasdale",
+   "phone": "(403) 777-6177",
+   "website": "http://school.cbe.ab.ca/school/douglasdale/Pages/d"
+  },
+  {
+   "code": "597",
+   "name": "Scenic Acres School",
+   "key": "scenic acres",
+   "phone": "(403) 777-6193",
+   "website": "http://www.cbe.ab.ca/b352"
+  },
+  {
+   "code": "598",
+   "name": "Our Lady of Lourdes",
+   "key": "our lady lourdes",
+   "phone": "(403) 500-2002",
+   "website": "http://www.cssd.ab.ca/schools/ourladyoflourdes"
+  },
+  {
+   "code": "796",
+   "name": "Calgary French & International School",
+   "key": "calgary french international",
+   "phone": "(403) 240-1500",
+   "website": "http://www.cfis.com"
+  },
+  {
+   "code": "941",
+   "name": "Thornhill Community Building Early Childhood Society",
+   "key": "thornhill community building early childhood society",
+   "phone": "(403) 274-2335",
+   "website": "http://www.thornhillchildcare.com"
+  },
+  {
+   "code": "1014",
+   "name": "École de la Source",
+   "key": "cole de la source",
+   "phone": "(403) 255-6724",
+   "website": "http://www.lasource.francosud.ca"
+  },
+  {
+   "code": "1015",
+   "name": "Calgary Academy Collegiate",
+   "key": "calgary academy collegiate",
+   "phone": "(403) 686-6444",
+   "website": "http://www.calgaryacademy.com"
+  },
+  {
+   "code": "1020",
+   "name": "Alberta Chung Wah School",
+   "key": "alberta chung wah",
+   "phone": "(403) 271-8033",
+   "website": "http://www.AlbertaChungWahSchool.ca"
+  },
+  {
+   "code": "1030",
+   "name": "Bearspaw School",
+   "key": "bearspaw",
+   "phone": "(403) 239-9607",
+   "website": "http://bearspaw.rockyview.ab.ca"
+  },
+  {
+   "code": "1038",
+   "name": "Coventry Hills School",
+   "key": "coventry hills",
+   "phone": "(403) 777-6025",
+   "website": "http://schools.cbe.ab.ca/b116/"
+  },
+  {
+   "code": "1048",
+   "name": "Yufeng Chinese School",
+   "key": "yufeng chinese",
+   "phone": "(403) 681-8617",
+   "website": "http://www.yufeng.ca"
+  },
+  {
+   "code": "1053",
+   "name": "Colonel Sanders School",
+   "key": "colonel sanders",
+   "phone": "(403) 777-6034",
+   "website": "https://colonelsanders.cbe.ab.ca/"
+  },
+  {
+   "code": "1054",
+   "name": "Piitoayis Family School",
+   "key": "piitoayis family",
+   "phone": "(403) 777-7860",
+   "website": "http://school.cbe.ab.ca/school/Piitoayis/Pages/def"
+  },
+  {
+   "code": "1062",
+   "name": "Lead Foundation",
+   "key": "lead foundation",
+   "phone": "(403) 270-7912",
+   "website": null
+  },
+  {
+   "code": "1064",
+   "name": "CBe-learn",
+   "key": "cbe learn",
+   "phone": "(403) 777-7971",
+   "website": "http://www.cbelearn.ca"
+  },
+  {
+   "code": "1098",
+   "name": "Valley Creek School",
+   "key": "valley creek",
+   "phone": "(403) 777-7995",
+   "website": "https://valleycreek.cbe.ab.ca/"
+  },
+  {
+   "code": "1099",
+   "name": "Somerset School",
+   "key": "somerset",
+   "phone": null,
+   "website": "https://school.cbe.ab.ca/school/Somerset/Pages/def"
+  },
+  {
+   "code": "1118",
+   "name": "St. Clare",
+   "key": "saint clare",
+   "phone": "(403) 500-2102",
+   "website": "http://www.cssd.ab.ca/schools/stclare"
+  },
+  {
+   "code": "1119",
+   "name": "St. Brigid",
+   "key": "saint brigid",
+   "phone": "(403) 500-2113",
+   "website": "http://www.cssd.ab.ca/schools/stbrigid"
+  },
+  {
+   "code": "1125",
+   "name": "Juno Beach Academy of Canadian Studies",
+   "key": "juno beach academy canadian studies",
+   "phone": "(403) 777-7210",
+   "website": "http://schools.cbe.ab.ca/b872/"
+  },
+  {
+   "code": "1126",
+   "name": "Calgary Arts Academy",
+   "key": "calgary arts academy",
+   "phone": "(403) 229-3010",
+   "website": "http://www.caaschool.com"
+  },
+  {
+   "code": "1128",
+   "name": "Calgary Girls Charter School",
+   "key": "calgary girls charter",
+   "phone": "(403) 220-0745",
+   "website": "http://www.calgarygirlsschool.com"
+  },
+  {
+   "code": "1161",
+   "name": "Discovering Choices II",
+   "key": "discovering choices ii",
+   "phone": "(403) 777-8384",
+   "website": "https://school.cbe.ab.ca/school/discoveringchoices"
+  },
+  {
+   "code": "1165",
+   "name": "Christ-King Catholic School",
+   "key": "christ king catholic",
+   "phone": "(403) 742-0280",
+   "website": "https://ck.ecacs.ca/"
+  },
+  {
+   "code": "1216",
+   "name": "Providence Children's Centre - Falconridge",
+   "key": "providence children s centre falconridge",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "1218",
+   "name": "Ranchlands Montessori Children's Centre",
+   "key": "ranchlands montessori children s centre",
+   "phone": "(403) 255-8664",
+   "website": "http://MontessoriCentres.ca"
+  },
+  {
+   "code": "1224",
+   "name": "Centennial High School",
+   "key": "centennial high",
+   "phone": "(403) 256-8140",
+   "website": "http://school.cbe.ab.ca/school/centennial/Pages/de"
+  },
+  {
+   "code": "1226",
+   "name": "Our Lady of Fatima",
+   "key": "our lady fatima",
+   "phone": "(403) 500-2112",
+   "website": "http://www.cssd.ab.ca/schools/ourladyoffatima"
+  },
+  {
+   "code": "1232",
+   "name": "Start Outreach",
+   "key": "start outreach",
+   "phone": "(403) 777-6107",
+   "website": "https://school.cbe.ab.ca/school/discoveringchoices"
+  },
+  {
+   "code": "1246",
+   "name": "SCcyber E-learning Community",
+   "key": "sccyber e learning community",
+   "phone": "(403) 872-0487",
+   "website": "http://www.sccyber.net/"
+  },
+  {
+   "code": "1249",
+   "name": "Behaviour Therapy and Learning Centre Ltd.",
+   "key": "behaviour therapy learning centre ltd",
+   "phone": "(403) 217-5876",
+   "website": "http://www.btlc.ca"
+  },
+  {
+   "code": "1251",
+   "name": "Providence Children's Centre - Beddington",
+   "key": "providence children s centre beddington",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "1260",
+   "name": "Westbrook Outreach",
+   "key": "westbrook outreach",
+   "phone": "(403) 777-8020",
+   "website": "https://school.cbe.ab.ca/school/discoveringchoices"
+  },
+  {
+   "code": "1264",
+   "name": "Phoenix Education Foundation",
+   "key": "phoenix education foundation",
+   "phone": "(403) 265-7701",
+   "website": "http://www.phoenixfoundation.ca"
+  },
+  {
+   "code": "1271",
+   "name": "Access International College",
+   "key": "access international college",
+   "phone": "(403) 651-8899",
+   "website": "http://www.accesscollege.ca"
+  },
+  {
+   "code": "1275",
+   "name": "Notre Dame High School",
+   "key": "notre dame high",
+   "phone": "(403) 500-2109",
+   "website": "http://www.cssd.ab.ca/schools/notredame"
+  },
+  {
+   "code": "1278",
+   "name": "Calgary Writing Centre (Argyll Home School)",
+   "key": "calgary writing centre argyll home",
+   "phone": "(403) 204-1836",
+   "website": "http://argyll.epsb.edmonton.ab.ca"
+  },
+  {
+   "code": "1316",
+   "name": "I'm For Kids Team",
+   "key": "i m for kids team",
+   "phone": "(403) 236-8919",
+   "website": "http://www.imforkids.org"
+  },
+  {
+   "code": "1323",
+   "name": "Janus Academy Junior/Senior High School",
+   "key": "janus academy junior senior high",
+   "phone": "(403) 262-3333",
+   "website": "http://www.janusacademy.org"
+  },
+  {
+   "code": "1330",
+   "name": "Arbour Lake Middle School",
+   "key": "arbour lake middle",
+   "phone": "(403) 777-7310",
+   "website": "http://school.cbe.ab.ca/school/ArbourLake/"
+  },
+  {
+   "code": "1331",
+   "name": "Chaparral School",
+   "key": "chaparral",
+   "phone": "(403) 777-6424",
+   "website": "https://chaparral.cbe.ab.ca/"
+  },
+  {
+   "code": "1332",
+   "name": "Citadel Park School",
+   "key": "citadel park",
+   "phone": "(403) 777-8063",
+   "website": "http://school.cbe.ab.ca/school/CitadelPark/"
+  },
+  {
+   "code": "1333",
+   "name": "Mountain Park School",
+   "key": "mountain park",
+   "phone": "(403) 777-6442",
+   "website": "http://school.cbe.ab.ca/school/MountainPark/"
+  },
+  {
+   "code": "1334",
+   "name": "Radisson Park School",
+   "key": "radisson park",
+   "phone": "(403) 777-8070",
+   "website": "http://school.cbe.ab.ca/school/RadissonPark/Pages/"
+  },
+  {
+   "code": "1335",
+   "name": "Tuscany School",
+   "key": "tuscany",
+   "phone": "(403) 777-8060",
+   "website": "http://school.cbe.ab.ca/school/Tuscany/Pages/defau"
+  },
+  {
+   "code": "1336",
+   "name": "St. Albert the Great",
+   "key": "saint albert great",
+   "phone": "(403) 500-2114",
+   "website": "http://Www.cssd.ab.ca/schools/stalbert"
+  },
+  {
+   "code": "1337",
+   "name": "St. Basil Elementary/Junior High School",
+   "key": "saint basil elementary junior high",
+   "phone": "(403) 500-2108",
+   "website": "http://www.cssd.ab.ca/schools/stbasil"
+  },
+  {
+   "code": "1338",
+   "name": "St. Joan of Arc Elementary/Junior High School",
+   "key": "saint joan arc elementary junior high",
+   "phone": "(403) 500-2107",
+   "website": "http://www.cssd.ab.ca/schools/stjoanofarc"
+  },
+  {
+   "code": "1339",
+   "name": "St. Sebastian Elementary School",
+   "key": "saint sebastian elementary",
+   "phone": "(403) 500-2116",
+   "website": "http://www.cssd.ab.ca/schools/stsebastian"
+  },
+  {
+   "code": "1340",
+   "name": "St. Jerome Elementary School",
+   "key": "saint jerome elementary",
+   "phone": "(403) 500-2115",
+   "website": "http://www.cssd.ab.ca/schools/stjerome"
+  },
+  {
+   "code": "1348",
+   "name": "Southeast Elementary Campus",
+   "key": "southeast elementary",
+   "phone": "(430) 258-2728",
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1349",
+   "name": "Northeast Elementary Campus",
+   "key": "northeast elementary",
+   "phone": null,
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1350",
+   "name": "Northwest Elementary Campus",
+   "key": "northwest elementary",
+   "phone": "(403) 282-5202",
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1351",
+   "name": "South Middle School Campus",
+   "key": "south middle",
+   "phone": "(403) 259-3175",
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1352",
+   "name": "Southwest Elementary Campus",
+   "key": "southwest elementary",
+   "phone": "(403) 259-3527",
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1364",
+   "name": "École Terre des Jeunes",
+   "key": "cole terre des jeunes",
+   "phone": "(403) 247-2458",
+   "website": "http://www.terredesjeunes.francosud.ca"
+  },
+  {
+   "code": "1365",
+   "name": "École La Mosaïque",
+   "key": "cole la mosa que",
+   "phone": "(403) 277-2344",
+   "website": "http://www.lamosaique.francosud.ca"
+  },
+  {
+   "code": "1369",
+   "name": "Our Lady of the Rosary School",
+   "key": "our lady rosary",
+   "phone": "(403) 343-2568",
+   "website": "http://www.olrschool.ca"
+  },
+  {
+   "code": "1378",
+   "name": "École Notre-Dame-de-la-Paix",
+   "key": "cole notre dame de la paix",
+   "phone": "(403) 271-5544",
+   "website": "http://www.ndp.francosud.ca"
+  },
+  {
+   "code": "1385",
+   "name": "Providence Children's Centre - Midnapore",
+   "key": "providence children s centre midnapore",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "1386",
+   "name": "Dalhousie Community Kindergarten",
+   "key": "dalhousie community kindergarten",
+   "phone": "(403) 288-1050",
+   "website": "http://www.dcakids.com"
+  },
+  {
+   "code": "1392",
+   "name": "Northern Lights School",
+   "key": "northern lights",
+   "phone": "(780) 351-2242",
+   "website": null
+  },
+  {
+   "code": "1397",
+   "name": "Aurora Learning Calgary",
+   "key": "aurora learning calgary",
+   "phone": "(403) 277-9535",
+   "website": "http://auroralearningfoundation.com/"
+  },
+  {
+   "code": "1410",
+   "name": "Maria Montessori School",
+   "key": "maria montessori",
+   "phone": "(403) 668-8538",
+   "website": "http://mmec.ca"
+  },
+  {
+   "code": "1411",
+   "name": "Tanbridge Academy",
+   "key": "tanbridge academy",
+   "phone": "(403) 259-3443",
+   "website": "http://tanbridge.com"
+  },
+  {
+   "code": "1415",
+   "name": "Oaks & Acorns Montessori ECS/Kindergarten - Midnapore",
+   "key": "oaks acorns montessori ecs kindergarten midnapore",
+   "phone": "(403) 463-7346",
+   "website": null
+  },
+  {
+   "code": "1426",
+   "name": "North Middle School Campus",
+   "key": "north middle",
+   "phone": null,
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "1432",
+   "name": "Providence Children's Centre - Hawkwood",
+   "key": "providence children s centre hawkwood",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "1434",
+   "name": "Pathway Montessori Inc",
+   "key": "pathway montessori inc",
+   "phone": "(403) 402-0901",
+   "website": "http://www.pathwaymontessori.com"
+  },
+  {
+   "code": "1440",
+   "name": "Filipino Language and Cultural School of Calgary",
+   "key": "filipino language cultural calgary",
+   "phone": "(403) 992-8200",
+   "website": "http://pccfcalgary.org"
+  },
+  {
+   "code": "1450",
+   "name": "Taradale School",
+   "key": "taradale",
+   "phone": "(403) 777-6270",
+   "website": "http://school.cbe.ab.ca/school/taradale/"
+  },
+  {
+   "code": "1451",
+   "name": "Samuel W. Shaw School",
+   "key": "samuel w shaw",
+   "phone": "(403) 777-6163",
+   "website": "http://school.cbe.ab.ca/school/SamuelWShaw/Pages/d"
+  },
+  {
+   "code": "1452",
+   "name": "Panorama Hills School",
+   "key": "panorama hills",
+   "phone": "(403) 777-6061",
+   "website": "http://school.cbe.ab.ca/school/panoramahills"
+  },
+  {
+   "code": "1463",
+   "name": "McKenzie Towne School",
+   "key": "mckenzie towne",
+   "phone": null,
+   "website": "http://school.cbe.ab.ca/school/McKenzieTowne"
+  },
+  {
+   "code": "1476",
+   "name": "ASASA Academy",
+   "key": "asasa academy",
+   "phone": "(403) 285-9277",
+   "website": "http://www.asasa.ca"
+  },
+  {
+   "code": "1478",
+   "name": "Big Plans for Little Kids",
+   "key": "big plans for little kids",
+   "phone": "(403) 685-4229",
+   "website": "http://www.bigplans.org"
+  },
+  {
+   "code": "1484",
+   "name": "Christ the King Catholic School",
+   "key": "christ king catholic",
+   "phone": "(403) 500-2119",
+   "website": "http://www.cssd.ab.ca/schools/christtheking"
+  },
+  {
+   "code": "1485",
+   "name": "Our Lady of the Evergreens Catholic School",
+   "key": "our lady evergreens catholic",
+   "phone": "(403) 500-2120",
+   "website": "http://www.cssd.ab.ca/schools/ourladyevergreens"
+  },
+  {
+   "code": "1486",
+   "name": "Light of Christ Catholic School",
+   "key": "light christ catholic",
+   "phone": "(403) 500-2121",
+   "website": "http://www.cssd.ab.ca/lightofchrist"
+  },
+  {
+   "code": "1497",
+   "name": "Holy Trinity School",
+   "key": "holy trinity",
+   "phone": "(403) 556-9444",
+   "website": "http://holytrinitycatholic.ca/"
+  },
+  {
+   "code": "1498",
+   "name": "Bridlewood School",
+   "key": "bridlewood",
+   "phone": null,
+   "website": "http://school.cbe.ab.ca/school/Bridlewood/"
+  },
+  {
+   "code": "1499",
+   "name": "Cranston School",
+   "key": "cranston",
+   "phone": "(403) 777-6267",
+   "website": "http://schools.cbe.ab.ca/school/Cranston/Pages/def"
+  },
+  {
+   "code": "1500",
+   "name": "Evergreen School",
+   "key": "evergreen",
+   "phone": null,
+   "website": "http://schools.cbe.ab.ca/b401/"
+  },
+  {
+   "code": "1519",
+   "name": "Royal Oak School",
+   "key": "royal oak",
+   "phone": "(403) 777-6279",
+   "website": "http://school.cbe.ab.ca/school/RoyalOak/"
+  },
+  {
+   "code": "1520",
+   "name": "Saddle Ridge School",
+   "key": "saddle ridge",
+   "phone": "(403) 777-6249",
+   "website": "http://school.cbe.ab.ca/school/saddleridge"
+  },
+  {
+   "code": "1521",
+   "name": "West Springs School",
+   "key": "west springs",
+   "phone": "(403) 777-6244",
+   "website": "http://school.cbe.ab.ca/school/westsprings/Pages/d"
+  },
+  {
+   "code": "1525",
+   "name": "Fresh Start Outreach Program",
+   "key": "fresh start outreach program",
+   "phone": "(403) 500-2012",
+   "website": "http://www.cssd.ab.ca/schools/stanne"
+  },
+  {
+   "code": "1535",
+   "name": "Oaks & Acorns ECS/Kindergarten - Seton",
+   "key": "oaks acorns ecs kindergarten seton",
+   "phone": "(403) 463-7346",
+   "website": null
+  },
+  {
+   "code": "1554",
+   "name": "Sanctuary Outreach",
+   "key": "sanctuary outreach",
+   "phone": "(403) 500-2066",
+   "website": "http://www.cssd.ab.ca/schools/fatherlacombe"
+  },
+  {
+   "code": "1558",
+   "name": "Vista Virtual School South",
+   "key": "vista virtual south",
+   "phone": "(855) 974-5333",
+   "website": "http://www.vvschool.ca"
+  },
+  {
+   "code": "1562",
+   "name": "Master's College",
+   "key": "master s college",
+   "phone": "(403) 242-7034",
+   "website": "http://www.masters.ab.ca"
+  },
+  {
+   "code": "1570",
+   "name": "Holy Family School",
+   "key": "holy family",
+   "phone": "(780) 332-4550",
+   "website": "http://www.hfcrd.ab.ca/hfamily/webpage/index.html"
+  },
+  {
+   "code": "1580",
+   "name": "Westmount Elementary School",
+   "key": "westmount elementary",
+   "phone": "(403) 217-0426",
+   "website": "http://www.westmountcharter.com"
+  },
+  {
+   "code": "1586",
+   "name": "Montessori Children's House Academy Ltd #1",
+   "key": "montessori children s house academy ltd 1",
+   "phone": "(403) 220-1122",
+   "website": null
+  },
+  {
+   "code": "1591",
+   "name": "Providence Children's Centre - McKenzie Towne",
+   "key": "providence children s centre mckenzie towne",
+   "phone": "(403) 255-5577",
+   "website": null
+  },
+  {
+   "code": "1595",
+   "name": "Montessori Children's House Academy Ltd #2",
+   "key": "montessori children s house academy ltd 2",
+   "phone": "(403) 873-1198",
+   "website": null
+  },
+  {
+   "code": "1596",
+   "name": "Montessori Children's House Academy Ltd #3",
+   "key": "montessori children s house academy ltd 3",
+   "phone": "(403) 726-1132",
+   "website": null
+  },
+  {
+   "code": "1598",
+   "name": "Alberta Ballet School",
+   "key": "alberta ballet",
+   "phone": "(403) 245-2274",
+   "website": "http://www.albertaballetschool.com"
+  },
+  {
+   "code": "1602",
+   "name": "Georges P Vanier School",
+   "key": "georges p vanier",
+   "phone": "(780) 925-3959",
+   "website": "http://gpv.hpsd.ca"
+  },
+  {
+   "code": "1623",
+   "name": "Soaring Heights Academy",
+   "key": "soaring heights academy",
+   "phone": "(403) 285-9277",
+   "website": "http://www.asasa.ca"
+  },
+  {
+   "code": "1674",
+   "name": "Nose Creek School",
+   "key": "nose creek",
+   "phone": "(403) 817-3360",
+   "website": "http://www.cbe.ab.ca/b661"
+  },
+  {
+   "code": "1676",
+   "name": "Captain Nichola Goddard School",
+   "key": "captain nichola goddard",
+   "phone": "(403) 817-3300",
+   "website": "http://school.cbe.ab.ca/school/cptnicholagoddard/P"
+  },
+  {
+   "code": "1677",
+   "name": "Ted Harrison School",
+   "key": "ted harrison",
+   "phone": "(403) 817-3330",
+   "website": "http://www.cbe.ab.ca/b663"
+  },
+  {
+   "code": "1678",
+   "name": "Twelve Mile Coulee School",
+   "key": "twelve mile coulee",
+   "phone": "(403) 817-3390",
+   "website": "http://school.cbe.ab.ca/school/twelvemilecoulee"
+  },
+  {
+   "code": "1679",
+   "name": "Robert Thirsk High School",
+   "key": "robert thirsk high",
+   "phone": null,
+   "website": "http://schools.cbe.ab.ca/b880/"
+  },
+  {
+   "code": "1680",
+   "name": "St. Isabella School",
+   "key": "saint isabella",
+   "phone": "(403) 500-2123",
+   "website": "http://www.cssd.ab.ca/schools/stisabella"
+  },
+  {
+   "code": "1685",
+   "name": "Canadian Montessori School North",
+   "key": "canadian montessori north",
+   "phone": "(403) 252-3281",
+   "website": null
+  },
+  {
+   "code": "1686",
+   "name": "Canadian Montessori School West",
+   "key": "canadian montessori west",
+   "phone": "(403) 252-3281",
+   "website": null
+  },
+  {
+   "code": "1700",
+   "name": "Chestermere Learning Centre",
+   "key": "chestermere learning centre",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "1725",
+   "name": "Almadina Language Charter Academy, Ogden Campus",
+   "key": "almadina language charter academy ogden",
+   "phone": "(403) 543-5070",
+   "website": "http://www.alca-calgary.com"
+  },
+  {
+   "code": "1736",
+   "name": "Calgary Early Learning Centre",
+   "key": "calgary early learning centre",
+   "phone": "(403) 255-4288",
+   "website": "http://www.calgaryearlylearning.com"
+  },
+  {
+   "code": "1739",
+   "name": "McKenzie Learning Centre",
+   "key": "mckenzie learning centre",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "1747",
+   "name": "Renert School",
+   "key": "renert",
+   "phone": "(587) 353-1053",
+   "website": "http://www.renertschool.ca"
+  },
+  {
+   "code": "1749",
+   "name": "Adolescent Day Treatment Program",
+   "key": "adolescent day treatment program",
+   "phone": "(403) 270-1751",
+   "website": null
+  },
+  {
+   "code": "1750",
+   "name": "School of East Indian Languages and Performing Arts",
+   "key": "east indian languages performing arts",
+   "phone": "(403) 280-5110",
+   "website": null
+  },
+  {
+   "code": "1906",
+   "name": "River Valley School ECS",
+   "key": "river valley ecs",
+   "phone": "(403) 246-2275",
+   "website": "http://www.rivervalleyschool.ca"
+  },
+  {
+   "code": "1913",
+   "name": "Horizon Heritage Arabic School",
+   "key": "horizon heritage arabic",
+   "phone": "(403) 826-4655",
+   "website": null
+  },
+  {
+   "code": "1937",
+   "name": "St. David's United Church",
+   "key": "saint david s united church",
+   "phone": "(403) 284-2276",
+   "website": null
+  },
+  {
+   "code": "1949",
+   "name": "Pacekids Programs North",
+   "key": "pacekids programs north",
+   "phone": "(403) 234-7876",
+   "website": "http://www.pacekids.ca"
+  },
+  {
+   "code": "1956",
+   "name": "Glenmore Christian Academy Junior High",
+   "key": "glenmore christian academy junior high",
+   "phone": "(403) 254-9051",
+   "website": null
+  },
+  {
+   "code": "1961",
+   "name": "Step By Step Early Intervention Program",
+   "key": "step by step early intervention program",
+   "phone": "(587) 893-7429",
+   "website": null
+  },
+  {
+   "code": "1962",
+   "name": "Apple Tree Preschool",
+   "key": "apple tree preschool",
+   "phone": "(403) 975-0871",
+   "website": "http://www.appletreepreschool.ca"
+  },
+  {
+   "code": "1963",
+   "name": "Kids at Play Preschool",
+   "key": "kids at play preschool",
+   "phone": "(403) 975-0871",
+   "website": "http://www.kidsatplaypreschool.ca"
+  },
+  {
+   "code": "1965",
+   "name": "Children's Commons Ecological Society Nature Kindergarten",
+   "key": "children s commons ecological society nature kindergarten",
+   "phone": "(587) 576-8733",
+   "website": "http://www.calgarynaturekindergarten.com"
+  },
+  {
+   "code": "1969",
+   "name": "St. John XXIII School",
+   "key": "saint john xxiii",
+   "phone": "(780) 469-2451",
+   "website": "https://www.ecsd.net/1969"
+  },
+  {
+   "code": "1981",
+   "name": "Canadian Montessori School",
+   "key": "canadian montessori",
+   "phone": "(403) 862-8551",
+   "website": "http://www.calgarymontessorischool.com"
+  },
+  {
+   "code": "1982",
+   "name": "North Point School - DSEPS",
+   "key": "north point dseps",
+   "phone": "(403) 744-5214",
+   "website": "http://www.northpointschools.ca"
+  },
+  {
+   "code": "1989",
+   "name": "Nelson Mandela High School",
+   "key": "nelson mandela high",
+   "phone": "(403) 817-3500",
+   "website": "https://nelsonmandela.cbe.ab.ca/"
+  },
+  {
+   "code": "2000",
+   "name": "Palliser Beyond Borders at Calgary",
+   "key": "palliser beyond borders at calgary",
+   "phone": "(403) 345-4421",
+   "website": "https://www.palliserbeyondborders.com/"
+  },
+  {
+   "code": "2007",
+   "name": "Evergreen School",
+   "key": "evergreen",
+   "phone": "(780) 723-3908",
+   "website": "http://eg.gypsd.ca/"
+  },
+  {
+   "code": "2018",
+   "name": "Wildwood School",
+   "key": "wildwood",
+   "phone": "(780) 325-3858",
+   "website": "https://wildwoodschool.gypsd.ca/"
+  },
+  {
+   "code": "2029",
+   "name": "Buffalo Rubbing Stone School",
+   "key": "buffalo rubbing stone",
+   "phone": "(403) 817-3536",
+   "website": "http://school.cbe.ab.ca/school/BuffaloRubbingStone"
+  },
+  {
+   "code": "2031",
+   "name": "Eric Harvie School",
+   "key": "eric harvie",
+   "phone": "(403) 817-3532",
+   "website": "http://www.cbe.ab.ca/ericharvie"
+  },
+  {
+   "code": "2054",
+   "name": "Dr. Roberta Bondar School",
+   "key": "dr roberta bondar",
+   "phone": "(403) 817-3564",
+   "website": "http://schools.cbe.ab.ca/b127/"
+  },
+  {
+   "code": "2055",
+   "name": "McKenzie Highlands School",
+   "key": "mckenzie highlands",
+   "phone": "(403) 817-3544",
+   "website": "http://school.cbe.ab.ca/school/McKenzieHighlands"
+  },
+  {
+   "code": "2056",
+   "name": "Hugh A. Bennett School",
+   "key": "hugh a bennett",
+   "phone": "(403) 817-3560",
+   "website": "https://hughabennett.cbe.ab.ca"
+  },
+  {
+   "code": "2062",
+   "name": "St. Teresa of Calcutta School",
+   "key": "saint teresa calcutta",
+   "phone": "(587) 787-1490",
+   "website": "http://www.holyspirit.ab.ca/bmt"
+  },
+  {
+   "code": "2067",
+   "name": "William D. Pratt School",
+   "key": "william d pratt",
+   "phone": "(403) 817-3520",
+   "website": "http://www.cbe.ab.ca/williamdpratt"
+  },
+  {
+   "code": "2068",
+   "name": "Peter Lougheed School",
+   "key": "peter lougheed",
+   "phone": "(403) 817-3508",
+   "website": "http://school.cbe.ab.ca/school/peterlougheed"
+  },
+  {
+   "code": "2069",
+   "name": "Marshall Springs School",
+   "key": "marshall springs",
+   "phone": "(403) 817-3528",
+   "website": "https://marshallsprings.cbe.ab.ca/"
+  },
+  {
+   "code": "2070",
+   "name": "Dr. Martha Cohen School",
+   "key": "dr martha cohen",
+   "phone": "(403) 817-3548",
+   "website": "http://school.cbe.ab.ca/school/drmarthacohen/"
+  },
+  {
+   "code": "2072",
+   "name": "New Brighton School",
+   "key": "new brighton",
+   "phone": "(403) 817-3516",
+   "website": "https://newbrighton.cbe.ab.ca/"
+  },
+  {
+   "code": "2080",
+   "name": "Prince of Peace School",
+   "key": "prince peace",
+   "phone": "(403) 500-2125",
+   "website": "http://www.cssd.ab.ca/schools/princeofpeace"
+  },
+  {
+   "code": "2081",
+   "name": "Our Lady of the Rosary School",
+   "key": "our lady rosary",
+   "phone": "(403) 500-2126",
+   "website": "http://www.cssd.ab.ca/schools/ourladyrosary"
+  },
+  {
+   "code": "2082",
+   "name": "St. Marguerite School",
+   "key": "saint marguerite",
+   "phone": "(403) 500-2127",
+   "website": "http://www.cssd.ab.ca/schools/stmarguerite"
+  },
+  {
+   "code": "2083",
+   "name": "Our Lady of Grace School",
+   "key": "our lady grace",
+   "phone": "(403) 500-2124",
+   "website": "http://www.cssd.ab.ca/schools/ourladyofgrace"
+  },
+  {
+   "code": "2084",
+   "name": "Dr. George Stanley School",
+   "key": "dr george stanley",
+   "phone": "(403) 817-3556",
+   "website": "http://school.cbe.ab.ca/school/drgeorgestanley/Pag"
+  },
+  {
+   "code": "2085",
+   "name": "Auburn Bay School",
+   "key": "auburn bay",
+   "phone": "(403) 817-3540",
+   "website": "http://school.cbe.ab.ca/school/auburnbay"
+  },
+  {
+   "code": "2086",
+   "name": "Copperfield School",
+   "key": "copperfield",
+   "phone": "(403) 817-3512",
+   "website": "http://school.cbe.ab.ca/school/copperfield/"
+  },
+  {
+   "code": "2087",
+   "name": "West Ridge School",
+   "key": "west ridge",
+   "phone": "(403) 817-3552",
+   "website": "https://westridge.cbe.ab.ca/"
+  },
+  {
+   "code": "2088",
+   "name": "Kenneth D. Taylor School",
+   "key": "kenneth d taylor",
+   "phone": "(403) 817-3504",
+   "website": "http://school.cbe.ab.ca/school/kennethdtaylor"
+  },
+  {
+   "code": "2094",
+   "name": "Creekside Campus ECS",
+   "key": "creekside ecs",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "2123",
+   "name": "Niitsitapi Learning Centre",
+   "key": "niitsitapi learning centre",
+   "phone": "(403) 817-3404",
+   "website": "http://school.cbe.ab.ca/school/Niitsitapi"
+  },
+  {
+   "code": "2124",
+   "name": "Light of Christ Catholic School",
+   "key": "light christ catholic",
+   "phone": "(780) 623-3667",
+   "website": "https://lcc.lrcssd.ca/o/lcc"
+  },
+  {
+   "code": "2145",
+   "name": "Manmeet Singh Bhullar School",
+   "key": "manmeet singh bhullar",
+   "phone": "(403) 817-3568",
+   "website": "http://school.cbe.ab.ca/school/ManmeetSinghBhullar"
+  },
+  {
+   "code": "2146",
+   "name": "Ron Southern School",
+   "key": "ron southern",
+   "phone": "(403) 817-3576",
+   "website": "http://school.cbe.ab.ca/school/ronsouthern"
+  },
+  {
+   "code": "2147",
+   "name": "Griffith Woods School",
+   "key": "griffith woods",
+   "phone": "(403) 817-3572",
+   "website": "https://griffithwoods.cbe.ab.ca/"
+  },
+  {
+   "code": "2149",
+   "name": "École du Nouveau-Monde",
+   "key": "cole du nouveau monde",
+   "phone": "(403) 910-3851",
+   "website": "http://nouveaumonde.francosud.ca"
+  },
+  {
+   "code": "2155",
+   "name": "Apostles of Jesus",
+   "key": "apostles jesus",
+   "phone": "(403) 500-2129",
+   "website": "http://www.cssd.ab.ca/schools/apostlesofjesus"
+  },
+  {
+   "code": "2156",
+   "name": "Guardian Angel School",
+   "key": "guardian angel",
+   "phone": "(403) 500-2111",
+   "website": "http://www.cssd.ab.ca/schools/guardianangel"
+  },
+  {
+   "code": "2160",
+   "name": "Holy Child School",
+   "key": "holy child",
+   "phone": "(403) 500-2130",
+   "website": "http://www.cssd.ab.ca/schools/holychild"
+  },
+  {
+   "code": "2164",
+   "name": "Horizon Leadership Academy",
+   "key": "horizon leadership academy",
+   "phone": "(403) 460-1746",
+   "website": "https://www.horizonelementary.ca/"
+  },
+  {
+   "code": "2167",
+   "name": "Maria Montessori School - cSPACE King Edward Location",
+   "key": "maria montessori cspace king edward location",
+   "phone": "(403) 668-8538",
+   "website": null
+  },
+  {
+   "code": "2174",
+   "name": "Gobind Sarvar School",
+   "key": "gobind sarvar",
+   "phone": "(403) 460-4522",
+   "website": "http://www.gobindsarvarcalgary.com"
+  },
+  {
+   "code": "2175",
+   "name": "All Saints School",
+   "key": "all saints",
+   "phone": "(403) 500-2133",
+   "website": "http://www.cssd.ab.ca/schools/allsaints"
+  },
+  {
+   "code": "2178",
+   "name": "MAC Islamic School - Calgary Chapter",
+   "key": "mac islamic calgary chapter",
+   "phone": "(403) 454-7879",
+   "website": "http://www.macislamicschool.ca"
+  },
+  {
+   "code": "2180",
+   "name": "Joane Cardinal-Schubert High School",
+   "key": "joane cardinal schubert high",
+   "phone": "(403) 817-3600",
+   "website": "http://school.cbe.ab.ca/school/JoaneCardinalSchube"
+  },
+  {
+   "code": "2189",
+   "name": "Divine Mercy School",
+   "key": "divine mercy",
+   "phone": "(403) 500-2132",
+   "website": "http://www.cssd.ab.ca/schools/divinemercy"
+  },
+  {
+   "code": "2195",
+   "name": "Blessed Marie-Rose",
+   "key": "blessed marie rose",
+   "phone": "(403) 500-2131",
+   "website": "http://www.cssd.ab.ca/schools/MarieRose"
+  },
+  {
+   "code": "2236",
+   "name": "Kids Developmental Services Ltd.",
+   "key": "kids developmental services ltd",
+   "phone": "(403) 452-6745",
+   "website": "http://www.kidsds.org"
+  },
+  {
+   "code": "2245",
+   "name": "CLS Lord Beaverbrook Writing Centre",
+   "key": "cls lord beaverbrook writing centre",
+   "phone": "(403) 259-5585",
+   "website": "http://www.chinooklearningservices.com"
+  },
+  {
+   "code": "2246",
+   "name": "CLS James Fowler Writing Centre",
+   "key": "cls james fowler writing centre",
+   "phone": "(403) 230-4743",
+   "website": "http://www.chinooklearningservices.com"
+  },
+  {
+   "code": "2247",
+   "name": "CLS Lord Shaughnessy Writing Centre",
+   "key": "cls lord shaughnessy writing centre",
+   "phone": "(403) 777-7272",
+   "website": "http://www.chinooklearningservices.com"
+  },
+  {
+   "code": "2255",
+   "name": "Montessori Alberta",
+   "key": "montessori alberta",
+   "phone": "(403) 970-8320",
+   "website": "http://www.montessorialberta.com"
+  },
+  {
+   "code": "2262",
+   "name": "Marlborough Day Nursery ECS Ltd. West Henday Campus",
+   "key": "marlborough day nursery ecs ltd west henday",
+   "phone": "(403) 818-4128",
+   "website": null
+  },
+  {
+   "code": "2270",
+   "name": "St. Anthony School",
+   "key": "saint anthony",
+   "phone": "(780) 542-4396",
+   "website": "https://stan.starcatholic.ab.ca/"
+  },
+  {
+   "code": "2280",
+   "name": "Dr. Freda Miller School",
+   "key": "dr freda miller",
+   "phone": "(403) 817-3428",
+   "website": "http://school.cbe.ab.ca/school/drfredamiller"
+  },
+  {
+   "code": "2281",
+   "name": "Sibylla Kiddle School",
+   "key": "sibylla kiddle",
+   "phone": "(403) 817-3432",
+   "website": "http://school.cbe.ab.ca/school/sibyllakiddle/Pages"
+  },
+  {
+   "code": "2282",
+   "name": "Northern Lights School",
+   "key": "northern lights",
+   "phone": "(403) 817-3444",
+   "website": null
+  },
+  {
+   "code": "2285",
+   "name": "Calgary Mandarin School",
+   "key": "calgary mandarin",
+   "phone": "(587) 718-8138",
+   "website": "https://calgarymandarinschool.ca/"
+  },
+  {
+   "code": "2286",
+   "name": "BCS@Home",
+   "key": "bcs home",
+   "phone": "(403) 295-2566",
+   "website": null
+  },
+  {
+   "code": "2317",
+   "name": "Vista Virtual School",
+   "key": "vista virtual",
+   "phone": null,
+   "website": "http://www.vvschool.ca"
+  },
+  {
+   "code": "2318",
+   "name": "North Point School for Boys",
+   "key": "north point for boys",
+   "phone": "(403) 744-5214",
+   "website": "http://www.northpointschools.ca"
+  },
+  {
+   "code": "2319",
+   "name": "Calgary International Academy",
+   "key": "calgary international academy",
+   "phone": "(403) 991-7534",
+   "website": "http://www.ciacademy.ca"
+  },
+  {
+   "code": "2320",
+   "name": "URSA",
+   "key": "ursa",
+   "phone": "(403) 288-5335",
+   "website": "http://www.goursa.education"
+  },
+  {
+   "code": "2321",
+   "name": "Maximize Early Childhood Services",
+   "key": "maximize early childhood services",
+   "phone": "(587) 583-3963",
+   "website": "http://www.maxecs.net"
+  },
+  {
+   "code": "2323",
+   "name": "Calgary International Academy ECS",
+   "key": "calgary international academy ecs",
+   "phone": "(403) 991-7534",
+   "website": null
+  },
+  {
+   "code": "2325",
+   "name": "Great Journeys Learning Centre Kindergarten",
+   "key": "great journeys learning centre kindergarten",
+   "phone": "(403) 289-3174",
+   "website": "http://www.greatjourneyslc.ca/"
+  },
+  {
+   "code": "2328",
+   "name": "St. Gianna School",
+   "key": "saint gianna",
+   "phone": "(403) 500-2135",
+   "website": "https://www.cssd.ab.ca/schools/stgianna"
+  },
+  {
+   "code": "2338",
+   "name": "The Gilbertine Academy",
+   "key": "gilbertine academy",
+   "phone": "(866) 361-3650",
+   "website": "http://gilbertineacademy.com"
+  },
+  {
+   "code": "2339",
+   "name": "Ahmadiyya Muslim School",
+   "key": "ahmadiyya muslim",
+   "phone": "(403) 355-6313",
+   "website": "https://ahmadiyyamuslimschool.ca/"
+  },
+  {
+   "code": "2343",
+   "name": "FFCA South High School Campus",
+   "key": "ffca south high",
+   "phone": "(587) 794-4250",
+   "website": "http://www.ffca-calgary.com"
+  },
+  {
+   "code": "2344",
+   "name": "St. Isidore Online School",
+   "key": "saint isidore online",
+   "phone": "(403) 500-2138",
+   "website": "https://www.cssd.ab.ca/schools/stisidore"
+  },
+  {
+   "code": "2355",
+   "name": "St. Josephine Bakhita School",
+   "key": "saint josephine bakhita",
+   "phone": "(403) 500-2136",
+   "website": "https://stjosephinebakhita.cssd.ab.ca/"
+  },
+  {
+   "code": "2357",
+   "name": "STEM Innovation Academy Middle School",
+   "key": "stem innovation academy middle",
+   "phone": "(403) 259-4211",
+   "website": "http://www.steminnovationacademy.com"
+  },
+  {
+   "code": "2359",
+   "name": "Wing Kei Montessori School",
+   "key": "wing kei montessori",
+   "phone": "(403) 769-1646",
+   "website": "http://www.wingkeimontessori.org"
+  },
+  {
+   "code": "2372",
+   "name": "SCcyber E-Learning Institute",
+   "key": "sccyber e learning institute",
+   "phone": "(403) 872-0487",
+   "website": "http://www.sccyber.net"
+  },
+  {
+   "code": "2374",
+   "name": "Al-Amal Academy",
+   "key": "al amal academy",
+   "phone": "(825) 996-5399",
+   "website": "https://al-amalacademy.com/"
+  },
+  {
+   "code": "2375",
+   "name": "Beacon Heights ECS",
+   "key": "beacon heights ecs",
+   "phone": "(403) 400-4760",
+   "website": "https://www.littlescholarsdaycare.ca/"
+  },
+  {
+   "code": "2410",
+   "name": "National Sport School",
+   "key": "national sport",
+   "phone": "(403) 777-7329",
+   "website": "http://www.nationalsportschool.com"
+  },
+  {
+   "code": "2420",
+   "name": "Calgary Nature Kindergarten - Rosemont",
+   "key": "calgary nature kindergarten rosemont",
+   "phone": "(587) 576-8733",
+   "website": null
+  },
+  {
+   "code": "2422",
+   "name": "LYNX West",
+   "key": "lynx west",
+   "phone": "(403) 288-5335",
+   "website": "http://www.lynxecs.education; www.lynx.education"
+  },
+  {
+   "code": "2425",
+   "name": "Mahogany School",
+   "key": "mahogany",
+   "phone": "(403) 817-3448",
+   "website": "https://mahogany.cbe.ab.ca/"
+  },
+  {
+   "code": "2426",
+   "name": "Lakeshore School",
+   "key": "lakeshore",
+   "phone": "(403) 817-3440",
+   "website": null
+  },
+  {
+   "code": "2427",
+   "name": "Bayside School",
+   "key": "bayside",
+   "phone": "(403) 817-3436",
+   "website": "https://bayside.cbe.ab.ca/"
+  },
+  {
+   "code": "2428",
+   "name": "Prairie Sky School",
+   "key": "prairie sky",
+   "phone": "(403) 817-3452",
+   "website": "http://school.cbe.ab.ca/school/prairiesky"
+  },
+  {
+   "code": "2429",
+   "name": "Calgary Classical Academy",
+   "key": "calgary classical academy",
+   "phone": "(587) 885-3688",
+   "website": "http://www.calgaryclassicalacademy.ca"
+  },
+  {
+   "code": "2448",
+   "name": "North Point School",
+   "key": "north point",
+   "phone": "(567) 393-6699",
+   "website": "http://www.northpointschools.ca"
+  },
+  {
+   "code": "2449",
+   "name": "STEM Innovation Academy High School",
+   "key": "stem innovation academy high",
+   "phone": "(587) 943-2499",
+   "website": "http://www.steminnovationacademy.com"
+  },
+  {
+   "code": "2452",
+   "name": "CLS Alternative Site",
+   "key": "cls alternative site",
+   "phone": "(403) 777-7272",
+   "website": "http://www.chinooklearningservices.com"
+  },
+  {
+   "code": "2458",
+   "name": "Al-Qaim International School",
+   "key": "al qaim international",
+   "phone": "(825) 540-3220",
+   "website": "http://alqaimschool.ca"
+  },
+  {
+   "code": "2466",
+   "name": "Foothills Creative Beginnings Preschool and E.C.S. Association",
+   "key": "foothills creative beginnings preschool e c s association",
+   "phone": "(403) 300-5543",
+   "website": null
+  },
+  {
+   "code": "2475",
+   "name": "North Trail High School",
+   "key": "north trail high",
+   "phone": "(403) 817-3700",
+   "website": "https://northtrail.cbe.ab.ca/"
+  },
+  {
+   "code": "2477",
+   "name": "Calgary Arts Academy Rosscarrock Middle School",
+   "key": "calgary arts academy rosscarrock middle",
+   "phone": "(403) 235-1984",
+   "website": null
+  },
+  {
+   "code": "2479",
+   "name": "Gobind Sarvar School Guru Nanak Gate Campus",
+   "key": "gobind sarvar guru nanak gate",
+   "phone": "(403) 805-1822",
+   "website": "http://www.gscalgary.com"
+  },
+  {
+   "code": "2486",
+   "name": "Fusion Collegiate",
+   "key": "fusion collegiate",
+   "phone": "(587) 333-7772",
+   "website": "https://fusioncollegiate.ca"
+  },
+  {
+   "code": "2489",
+   "name": "St. Gemma Outreach High School",
+   "key": "saint gemma outreach high",
+   "phone": "(403) 500-2140",
+   "website": "http://www.cssd.ab.ca/schools/stgemma"
+  },
+  {
+   "code": "2497",
+   "name": "Neriah Christian School",
+   "key": "neriah christian",
+   "phone": "(587) 317-6805",
+   "website": null
+  },
+  {
+   "code": "2498",
+   "name": "Calgary Classical Academy Currie Campus",
+   "key": "calgary classical academy currie",
+   "phone": "(587) 885-3688",
+   "website": null
+  },
+  {
+   "code": "2519",
+   "name": "Fueling Brains Academy Braeside",
+   "key": "fueling brains academy braeside",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2520",
+   "name": "Fueling Brains Academy Centennial",
+   "key": "fueling brains academy centennial",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2521",
+   "name": "Fueling Brains Academy McKnight",
+   "key": "fueling brains academy mcknight",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2522",
+   "name": "Fueling Brains Academy New Brighton",
+   "key": "fueling brains academy new brighton",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2523",
+   "name": "Fueling Brains Academy Strathmore",
+   "key": "fueling brains academy strathmore",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2524",
+   "name": "Fueling Brains Academy Walden",
+   "key": "fueling brains academy walden",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2526",
+   "name": "Fueling Brains Academy West 85th",
+   "key": "fueling brains academy west 85th",
+   "phone": "(403) 990-5454",
+   "website": null
+  },
+  {
+   "code": "2528",
+   "name": "Lady Fatima Academy",
+   "key": "lady fatima academy",
+   "phone": "(587) 437-0083",
+   "website": "http://www.ladyfatimaacademy.ca"
+  },
+  {
+   "code": "2530",
+   "name": "1st Class Collaborative Intervention Support Services Institute",
+   "key": "1st class collaborative intervention support services institute",
+   "phone": "(825) 513-6036",
+   "website": null
+  },
+  {
+   "code": "2531",
+   "name": "CLS Forest Lawn Writing Centre",
+   "key": "cls forest lawn writing centre",
+   "phone": "(403) 272-6665",
+   "website": null
+  },
+  {
+   "code": "2533",
+   "name": "Arise Christian Academy",
+   "key": "arise christian academy",
+   "phone": "(403) 973-8171",
+   "website": "http://arisechristianacademy.ca"
+  },
+  {
+   "code": "2561",
+   "name": "Al-Amal Online Academy",
+   "key": "al amal online academy",
+   "phone": "(825) 996-5399",
+   "website": null
+  },
+  {
+   "code": "2565",
+   "name": "Personalized Learning and Community Education South",
+   "key": "personalized learning community education south",
+   "phone": "(403) 888-3101",
+   "website": "http://www.centreforautism.ab.ca"
+  },
+  {
+   "code": "2600",
+   "name": "BCS@Home Blended-Learning North Campus",
+   "key": "bcs home blended learning north",
+   "phone": "(403) 295-2566",
+   "website": "http://www.bearspawschool.com"
+  },
+  {
+   "code": "2603",
+   "name": "BCS@Home Blended-Learning South Campus",
+   "key": "bcs home blended learning south",
+   "phone": "(403) 295-2566",
+   "website": "http://www.bearspawschool.com"
+  },
+  {
+   "code": "2614",
+   "name": "Banbury Crossroads Academy",
+   "key": "banbury crossroads academy",
+   "phone": "(403) 270-7787",
+   "website": "http://www.banburycrossroads.com"
+  },
+  {
+   "code": "2619",
+   "name": "Thornhill Child Care Society - Haysboro ECS",
+   "key": "thornhill child care society haysboro ecs",
+   "phone": "(403) 255-4288",
+   "website": "http://www.thornhillchildcare.com"
+  },
+  {
+   "code": "2631",
+   "name": "Calgary Charter School Hub – Almadina Campus",
+   "key": "calgary charter hub almadina",
+   "phone": "(825) 801-5825",
+   "website": "https://www.alca-calgary.com/"
+  },
+  {
+   "code": "2636",
+   "name": "Green Dome Islamic School",
+   "key": "green dome islamic",
+   "phone": "(403) 900-5445",
+   "website": "https://www.greendomeislamicschool.com/"
+  },
+  {
+   "code": "2640",
+   "name": "Providence North School",
+   "key": "providence north",
+   "phone": "(403) 255-5577",
+   "website": "http://www.providencechildren.com"
+  },
+  {
+   "code": "2648",
+   "name": "Access Academy",
+   "key": "access academy",
+   "phone": "(403) 455-3033",
+   "website": "http://www.AccessAcademy.ca"
+  },
+  {
+   "code": "2652",
+   "name": "St. Thomas More",
+   "key": "saint thomas more",
+   "phone": "(780) 835-2245",
+   "website": "https://www.hfcrd.ab.ca/st-thomas-more-school"
+  },
+  {
+   "code": "2659",
+   "name": "St. Isidore Writing Centre",
+   "key": "saint isidore writing centre",
+   "phone": "(403) 701-2079",
+   "website": null
+  },
+  {
+   "code": "2661",
+   "name": "STEM Innovation Academy Northwest Junior High School",
+   "key": "stem innovation academy northwest junior high",
+   "phone": "(587) 943-9395",
+   "website": "http://www.steminnovationacademy.com"
+  },
+  {
+   "code": "2662",
+   "name": "École secondaire Le Phare",
+   "key": "cole secondaire le phare",
+   "phone": "(403) 906-3444",
+   "website": "https://silverado.francosud.ca"
+  },
+  {
+   "code": "2663",
+   "name": "École de l’Horizon",
+   "key": "cole de l horizon",
+   "phone": "(403) 906-3444",
+   "website": "https://silverado.francosud.ca/"
+  },
+  {
+   "code": "2665",
+   "name": "Canadian Montessori School – Killarney",
+   "key": "canadian montessori killarney",
+   "phone": "(825) 437-8483",
+   "website": null
+  },
+  {
+   "code": "2675",
+   "name": "École de l’Oasis",
+   "key": "cole de l oasis",
+   "phone": "(403) 907-1393",
+   "website": "https://chestermere.francosud.ca/"
+  },
+  {
+   "code": "2730",
+   "name": "A&D Tutoring (Calgary) - 140",
+   "key": "a d tutoring calgary 140",
+   "phone": "(587) 392-3333",
+   "website": null
+  },
+  {
+   "code": "2733",
+   "name": "Northeast Learning Academy",
+   "key": "northeast learning academy",
+   "phone": "(403) 277-0425",
+   "website": "http://www.adaptedu.ca"
+  },
+  {
+   "code": "2734",
+   "name": "Living Spirit School",
+   "key": "living spirit",
+   "phone": "(403) 500-2139",
+   "website": null
+  },
+  {
+   "code": "2738",
+   "name": "Calgary Islamic School, Omar Bin Al-Khattab Campus",
+   "key": "calgary islamic omar bin al khattab",
+   "phone": "(587) 353-8900",
+   "website": "https://www.omarbinalkhattab.ca/"
+  },
+  {
+   "code": "2739",
+   "name": "Calgary Islamic School, Akram Jomaa Campus",
+   "key": "calgary islamic akram jomaa",
+   "phone": "(403) 248-2773",
+   "website": "https://www.akramjomaa.ca/"
+  },
+  {
+   "code": "2753",
+   "name": "Yuzyk Academy",
+   "key": "yuzyk academy",
+   "phone": "(403) 539-2364",
+   "website": "http://ukrainianacademy.ca"
+  },
+  {
+   "code": "2756",
+   "name": "Pacekids Sunridge",
+   "key": "pacekids sunridge",
+   "phone": "(403) 234-7876",
+   "website": "http://www.pacekids.ca"
+  },
+  {
+   "code": "2758",
+   "name": "Acton Academy Calgary Central School",
+   "key": "acton academy calgary central",
+   "phone": "(587) 889-3621",
+   "website": "http://www.ActonCentral.org"
+  },
+  {
+   "code": "2761",
+   "name": "MAC Islamic School Ranchlands",
+   "key": "mac islamic ranchlands",
+   "phone": "(403) 930-7841",
+   "website": "http://www.macislamicschool.ca"
+  },
+  {
+   "code": "2762",
+   "name": "Calgary Quest Sunalta Campus",
+   "key": "calgary quest sunalta",
+   "phone": "(403) 253-0003",
+   "website": "http://www.calgaryquestschool.com"
+  },
+  {
+   "code": "2766",
+   "name": "CanLanguage",
+   "key": "canlanguage",
+   "phone": "(403) 688-9999",
+   "website": null
+  },
+  {
+   "code": "2770",
+   "name": "Calgary Arts Academy Erickson Centre",
+   "key": "calgary arts academy erickson centre",
+   "phone": "(403) 532-3020",
+   "website": "http://www.caaschool.com"
+  },
+  {
+   "code": "2778",
+   "name": "The Calgary John Howard Society",
+   "key": "calgary john howard society",
+   "phone": "(403) 266-4566",
+   "website": null
+  },
+  {
+   "code": "2779",
+   "name": "Evanston Heights School",
+   "key": "evanston heights",
+   "phone": "(403) 777-8720",
+   "website": null
+  },
+  {
+   "code": "2785",
+   "name": "The Busy School Calgary",
+   "key": "busy calgary",
+   "phone": "(368) 338-0661",
+   "website": "http://www.thebusyschool.ca"
+  },
+  {
+   "code": "2822",
+   "name": "AGC Testing Centre - site 339",
+   "key": "agc testing centre site 339",
+   "phone": "(587) 582-6780",
+   "website": null
+  },
+  {
+   "code": "2824",
+   "name": "Education Services -Beltline",
+   "key": "education services beltline",
+   "phone": "(587) 349-5544",
+   "website": null
+  },
+  {
+   "code": "2825",
+   "name": "Calgary Society - North Location",
+   "key": "calgary society north location",
+   "phone": "(403) 215-2444",
+   "website": "http://www.gritcalgarysociety.com"
+  },
+  {
+   "code": "2836",
+   "name": "Nova International College",
+   "key": "nova international college",
+   "phone": "(825) 583-6755",
+   "website": "http://www.novaic.ca"
+  },
+  {
+   "code": "2970",
+   "name": "St. Dominic School",
+   "key": "saint dominic",
+   "phone": "(780) 639-3520",
+   "website": "https://sde.lrcssd.ca/o/sde"
+  },
+  {
+   "code": "3143",
+   "name": "Queen Elizabeth School",
+   "key": "queen elizabeth",
+   "phone": "(780) 352-2281",
+   "website": "http://queene.ca"
+  },
+  {
+   "code": "3217",
+   "name": "Willow Park School",
+   "key": "willow park",
+   "phone": "(780) 986-8456",
+   "website": "http://www.blackgold.ca"
+  },
+  {
+   "code": "3271",
+   "name": "St. Benedict School",
+   "key": "saint benedict",
+   "phone": "(780) 986-7480",
+   "website": "https://sb.starcatholic.ab.ca/"
+  },
+  {
+   "code": "3324",
+   "name": "Brentwood School",
+   "key": "brentwood",
+   "phone": "(780) 467-5591",
+   "website": "http://www.brentwoodelementary.ca"
+  },
+  {
+   "code": "3845",
+   "name": "Queen Elizabeth",
+   "key": "queen elizabeth",
+   "phone": "(780) 875-5090",
+   "website": "http://queenelizabeth.lpsd.ca"
+  },
+  {
+   "code": "4102",
+   "name": "David Thompson School",
+   "key": "david thompson",
+   "phone": "(403) 729-3930",
+   "website": "http://www.davidthompson.wrsd.ca"
+  },
+  {
+   "code": "4440",
+   "name": "Fairview School",
+   "key": "fairview",
+   "phone": "(403) 343-8780",
+   "website": "http://fairview.rdpsd.ab.ca"
+  },
+  {
+   "code": "4476",
+   "name": "St. Thomas Aquinas School",
+   "key": "saint thomas aquinas",
+   "phone": "(403) 346-8951",
+   "website": "http://staschool.ca/"
+  },
+  {
+   "code": "4477",
+   "name": "St. Elizabeth Seton School",
+   "key": "saint elizabeth seton",
+   "phone": "(403) 343-6017",
+   "website": "http://stelizabethsetonschool.ca/"
+  },
+  {
+   "code": "4481",
+   "name": "Holy Family School",
+   "key": "holy family",
+   "phone": "(403) 341-3777",
+   "website": "http://holyfamilyschool.ca/"
+  },
+  {
+   "code": "4970",
+   "name": "St. Thomas Aquinas School",
+   "key": "saint thomas aquinas",
+   "phone": "(780) 753-6838",
+   "website": "https://sta.ecacs.ca/"
+  },
+  {
+   "code": "5001",
+   "name": "Calgary Chinese Alliance School",
+   "key": "calgary chinese alliance",
+   "phone": "(403) 274-7046",
+   "website": "https://ccac.life/eng-chinese-school"
+  },
+  {
+   "code": "5002",
+   "name": "Rundle Studio",
+   "key": "rundle studio",
+   "phone": "(403) 291-3866",
+   "website": "http://www.rundle.ab.ca"
+  },
+  {
+   "code": "5120",
+   "name": "River Valley School",
+   "key": "river valley",
+   "phone": "(403) 638-3939",
+   "website": "http://www.rivervalleysundre.ca"
+  },
+  {
+   "code": "5199",
+   "name": "Bow Valley College - Airdrie Campus",
+   "key": "bow valley college airdrie",
+   "phone": "(403) 355-1910",
+   "website": null
+  },
+  {
+   "code": "5215",
+   "name": "Springbank Middle School",
+   "key": "springbank middle",
+   "phone": "(403) 242-4456",
+   "website": "http://springmd.rockyview.ab.ca"
+  },
+  {
+   "code": "5216",
+   "name": "Elbow Valley Elementary School",
+   "key": "elbow valley elementary",
+   "phone": "(403) 242-1117",
+   "website": "http://evalley.rockyview.ab.ca"
+  },
+  {
+   "code": "5223",
+   "name": "Springbank Community High School",
+   "key": "springbank community high",
+   "phone": "(403) 246-4771",
+   "website": "http://springhs.rockyview.ab.ca"
+  },
+  {
+   "code": "5297",
+   "name": "Rundle College Academy",
+   "key": "rundle college academy",
+   "phone": "(403) 250-2965",
+   "website": "http://www.rundle.ab.ca"
+  },
+  {
+   "code": "5298",
+   "name": "Bow Valley College - High School Extension",
+   "key": "bow valley college high extension",
+   "phone": "(403) 410-1400",
+   "website": null
+  },
+  {
+   "code": "5350",
+   "name": "Bow Valley College (Outreach)",
+   "key": "bow valley college outreach",
+   "phone": "(403) 410-1400",
+   "website": null
+  },
+  {
+   "code": "5398",
+   "name": "Calgary Quest School",
+   "key": "calgary quest",
+   "phone": "(403) 253-0003",
+   "website": "http://www.calgaryquestschool.com"
+  },
+  {
+   "code": "6002",
+   "name": "Westmount Mid/High School",
+   "key": "westmount mid high",
+   "phone": null,
+   "website": "http://www.westmountcharter.com"
+  },
+  {
+   "code": "6007",
+   "name": "Almadina Language Charter Academy, Mountain View Campus",
+   "key": "almadina language charter academy mountain view",
+   "phone": "(403) 543-5074",
+   "website": "http://www.esl-almadina.com"
+  },
+  {
+   "code": "6407",
+   "name": "Sunnyside School",
+   "key": "sunnyside",
+   "phone": "(403) 327-9214",
+   "website": "http://www.sunnysideschool.ca"
+  },
+  {
+   "code": "6475",
+   "name": "Our Lady of The Assumption School",
+   "key": "our lady assumption",
+   "phone": "(403) 327-5028",
+   "website": "http://www.holyspirit.ab.ca/assumption"
+  },
+  {
+   "code": "6843",
+   "name": "Connaught School",
+   "key": "connaught",
+   "phone": "(403) 526-2392",
+   "website": "http://connaught.mhpsd.ca"
+  },
+  {
+   "code": "6844",
+   "name": "Crescent Heights High School",
+   "key": "crescent heights high",
+   "phone": "(403) 527-6641",
+   "website": "http://chhs.mhpsd.ca"
+  },
+  {
+   "code": "6856",
+   "name": "Vincent Massey School",
+   "key": "vincent massey",
+   "phone": "(403) 527-3750",
+   "website": "http://vincentmassey.mhpsd.ca/"
+  },
+  {
+   "code": "7052",
+   "name": "Queen Elizabeth School",
+   "key": "queen elizabeth",
+   "phone": "(780) 476-8671",
+   "website": "http://queene.epsb.ca"
+  },
+  {
+   "code": "7216",
+   "name": "Thorncliffe School",
+   "key": "thorncliffe",
+   "phone": "(780) 487-2061",
+   "website": "http://thorncliffe.epsb.ca"
+  },
+  {
+   "code": "7232",
+   "name": "Rideau Park School",
+   "key": "rideau park",
+   "phone": "(780) 437-0010",
+   "website": "http://rideaupark.epsb.ca"
+  },
+  {
+   "code": "7516",
+   "name": "Killarney School",
+   "key": "killarney",
+   "phone": "(780) 475-1737",
+   "website": "http://killarney.epsb.ca"
+  },
+  {
+   "code": "7538",
+   "name": "Riverbend School",
+   "key": "riverbend",
+   "phone": "(780) 434-7914",
+   "website": "http://riverbend.epsb.ca"
+  },
+  {
+   "code": "7976",
+   "name": "Clear Water Academy",
+   "key": "clear water academy",
+   "phone": "(403) 217-8448",
+   "website": null
+  },
+  {
+   "code": "8016",
+   "name": "St. Bernadette",
+   "key": "saint bernadette",
+   "phone": "(780) 474-4167",
+   "website": "http://www.stbernadette.ecsd.net"
+  },
+  {
+   "code": "8020",
+   "name": "St. Dominic",
+   "key": "saint dominic",
+   "phone": "(780) 476-9906",
+   "website": "http://www.stdominic.ecsd.net"
+  },
+  {
+   "code": "8029",
+   "name": "St. Matthew",
+   "key": "saint matthew",
+   "phone": "(780) 473-6575",
+   "website": "http://www.stmatthew.ecsd.net"
+  },
+  {
+   "code": "8037",
+   "name": "St. Philip",
+   "key": "saint philip",
+   "phone": "(780) 475-3566",
+   "website": "http://www.stphilip.ecsd.net"
+  },
+  {
+   "code": "8039",
+   "name": "St. Monica School",
+   "key": "saint monica",
+   "phone": "(780) 436-7888",
+   "website": "http://www.stmonica.escd.net"
+  },
+  {
+   "code": "8050",
+   "name": "St. Martha",
+   "key": "saint martha",
+   "phone": "(780) 487-4594",
+   "website": "http://www.stmartha.ecsd.net"
+  },
+  {
+   "code": "8054",
+   "name": "St. Bonaventure",
+   "key": "saint bonaventure",
+   "phone": "(780) 476-7257",
+   "website": "http://www.stbonaventure.ecsd.net"
+  },
+  {
+   "code": "8230",
+   "name": "St. Elizabeth Seton",
+   "key": "saint elizabeth seton",
+   "phone": "(780) 478-7751",
+   "website": "http://www.stelizabethseton.ecsd.net"
+  },
+  {
+   "code": "8232",
+   "name": "St. Benedict",
+   "key": "saint benedict",
+   "phone": "(780) 487-2733",
+   "website": "http://www.stbenedict.ecsd.net"
+  },
+  {
+   "code": "8501",
+   "name": "Corpus Christi School",
+   "key": "corpus christi",
+   "phone": "(403) 500-2023",
+   "website": "http://www.cssd.ab.ca/schools/corpuschristi"
+  },
+  {
+   "code": "8502",
+   "name": "St. Hubert Elementary School",
+   "key": "saint hubert elementary",
+   "phone": "(403) 500-2067",
+   "website": "http://www.cssd.ab.ca/schools/sthubert"
+  },
+  {
+   "code": "8503",
+   "name": "Holy Family School",
+   "key": "holy family",
+   "phone": "(403) 500-2054",
+   "website": "http://www.cssd.ab.ca/schools/holyfamily"
+  },
+  {
+   "code": "8504",
+   "name": "Holy Name (Bilingual) School",
+   "key": "holy name bilingual",
+   "phone": "(403) 500-2006",
+   "website": "http://www.cssd.ab.ca/schools/holyname"
+  },
+  {
+   "code": "8506",
+   "name": "Holy Trinity School",
+   "key": "holy trinity",
+   "phone": "(403) 500-2032",
+   "website": "http://www.cssd.ab.ca/schools/holytrinity"
+  },
+  {
+   "code": "8507",
+   "name": "St. Patrick School",
+   "key": "saint patrick",
+   "phone": "(403) 500-2076",
+   "website": "http://www.cssd.ab.ca/schools/stpatrick"
+  },
+  {
+   "code": "8508",
+   "name": "St. Andrew School",
+   "key": "saint andrew",
+   "phone": "(403) 500-2031",
+   "website": "http://www.cssd.ab.ca/schools/standrew"
+  },
+  {
+   "code": "8511",
+   "name": "St. Benedict School",
+   "key": "saint benedict",
+   "phone": "(403) 500-2053",
+   "website": "http://www.cssd.ab.ca/schools/stbenedict"
+  },
+  {
+   "code": "8513",
+   "name": "St. Cecilia (Bilingual) Elementary School",
+   "key": "saint cecilia bilingual elementary",
+   "phone": "(403) 500-2040",
+   "website": "http://www.cssd.ab.ca/schools/stcecilia"
+  },
+  {
+   "code": "8515",
+   "name": "St. Anthony",
+   "key": "saint anthony",
+   "phone": "(403) 500-2013",
+   "website": "http://www.cssd.ab.ca/schools/stanthony"
+  },
+  {
+   "code": "8521",
+   "name": "St. Luke Bilingual Elementary School",
+   "key": "saint luke bilingual elementary",
+   "phone": "(403) 500-2039",
+   "website": "http://www.cssd.ab.ca/schools/stluke"
+  },
+  {
+   "code": "8523",
+   "name": "St. Paul School",
+   "key": "saint paul",
+   "phone": "(403) 500-2010",
+   "website": null
+  },
+  {
+   "code": "8524",
+   "name": "Ecole St. Pius X School",
+   "key": "ecole saint pius x",
+   "phone": "(403) 500-2015",
+   "website": "https://stpiusx.cssd.ab.ca/"
+  },
+  {
+   "code": "8527",
+   "name": "St. Thomas Aquinas School",
+   "key": "saint thomas aquinas",
+   "phone": "(403) 500-2027",
+   "website": "http://www.cssd.ab.ca/schools/stthomasaquinas"
+  },
+  {
+   "code": "8528",
+   "name": "St. Vincent De Paul Elementary Junior High School",
+   "key": "saint vincent de paul elementary junior high",
+   "phone": "(403) 500-2051",
+   "website": "http://www.cssd.ab.ca/schools/stvincent"
+  },
+  {
+   "code": "8529",
+   "name": "St. William School",
+   "key": "saint william",
+   "phone": "(403) 500-2055",
+   "website": "http://www.cssd.ab.ca/schools/stwilliam"
+  },
+  {
+   "code": "8530",
+   "name": "St. Monica School",
+   "key": "saint monica",
+   "phone": "(403) 500-2001",
+   "website": "http://Www.cssd.ab.ca/schools/stmonica"
+  },
+  {
+   "code": "8531",
+   "name": "St. Dominic School",
+   "key": "saint dominic",
+   "phone": "(403) 500-2058",
+   "website": "http://www.cssd.ab.ca/schools/stdominic"
+  },
+  {
+   "code": "8532",
+   "name": "St. Boniface Elementary School",
+   "key": "saint boniface elementary",
+   "phone": "(403) 500-2060",
+   "website": "http://www.cssd.ab.ca/schools/stboniface"
+  },
+  {
+   "code": "8533",
+   "name": "St. Catherine Elementary School",
+   "key": "saint catherine elementary",
+   "phone": "(403) 500-2061",
+   "website": "http://www.cssd.ab.ca/schools/stcatherine"
+  },
+  {
+   "code": "8534",
+   "name": "St. Henry Elementary School",
+   "key": "saint henry elementary",
+   "phone": "(403) 500-2059",
+   "website": "http://www.cssd.ab.ca/schools/sthenry"
+  },
+  {
+   "code": "8536",
+   "name": "St. Mark Elementary School",
+   "key": "saint mark elementary",
+   "phone": "(403) 500-2068",
+   "website": "http://www.cssd.ab.ca/schools/stmark"
+  },
+  {
+   "code": "8537",
+   "name": "St. Sylvester School",
+   "key": "saint sylvester",
+   "phone": "(403) 500-2063",
+   "website": "http://www.cssd.ab.ca/schools/stsylvester"
+  },
+  {
+   "code": "8541",
+   "name": "St. Wilfrid Elementary School",
+   "key": "saint wilfrid elementary",
+   "phone": "(403) 500-2077",
+   "website": "http://www.cssd.ab.ca/schools/stwilfrid"
+  },
+  {
+   "code": "8542",
+   "name": "St. Teresa of Calcutta School",
+   "key": "saint teresa calcutta",
+   "phone": "(403) 500-2078",
+   "website": "http://www.cssd.ab.ca/schools/motherteresa"
+  },
+  {
+   "code": "8543",
+   "name": "St. Peter Elementary School",
+   "key": "saint peter elementary",
+   "phone": "(403) 500-2079",
+   "website": "http://www.cssd.ab.ca/schools/stpeter"
+  },
+  {
+   "code": "8544",
+   "name": "St. Thomas More School",
+   "key": "saint thomas more",
+   "phone": "(403) 500-2081",
+   "website": "http://www.cssd.ab.ca/schools/stthomasmore"
+  },
+  {
+   "code": "8545",
+   "name": "St. Bede Elementary School",
+   "key": "saint bede elementary",
+   "phone": "(403) 500-2082",
+   "website": "http://www.cssd.ab.ca/schools/stbede"
+  },
+  {
+   "code": "8546",
+   "name": "St. Jude School",
+   "key": "saint jude",
+   "phone": "(403) 500-2084",
+   "website": "http://www.cssd.ab.ca/schools/stjude"
+  },
+  {
+   "code": "8547",
+   "name": "St. Rita School",
+   "key": "saint rita",
+   "phone": "(403) 500-2083",
+   "website": "http://www.cssd.ab.ca/schools/strita"
+  },
+  {
+   "code": "8548",
+   "name": "St. Rupert School",
+   "key": "saint rupert",
+   "phone": "(403) 500-2044",
+   "website": "http://www.cssd.ab.ca/schools/strupert"
+  },
+  {
+   "code": "8549",
+   "name": "St. John Paul II School",
+   "key": "saint john paul ii",
+   "phone": "(403) 500-2085",
+   "website": "http://www.cssd.ab.ca/schools/stjohnpaul2"
+  },
+  {
+   "code": "8550",
+   "name": "St. Damien School",
+   "key": "saint damien",
+   "phone": "(403) 500-2073",
+   "website": "http://www.cssd.ab.ca/schools/stdamien"
+  },
+  {
+   "code": "8551",
+   "name": "Father Doucet School",
+   "key": "father doucet",
+   "phone": "(403) 500-2089",
+   "website": "http://www.cssd.ab.ca/schools/fatherdoucet"
+  },
+  {
+   "code": "8552",
+   "name": "St. Kateri Tekakwitha School",
+   "key": "saint kateri tekakwitha",
+   "phone": "(403) 500-2090",
+   "website": "http://www.cssd.ab.ca/schools/stkateri"
+  },
+  {
+   "code": "8553",
+   "name": "Mother Mary Greene School",
+   "key": "mother mary greene",
+   "phone": "(403) 500-2095",
+   "website": "http://www.cssd.ab.ca/schools/mothermarygreene"
+  },
+  {
+   "code": "8554",
+   "name": "Monsignor Neville Anderson School",
+   "key": "monsignor neville anderson",
+   "phone": "(403) 500-2094",
+   "website": "http://www.cssd.ab.ca/schools/msgranderson"
+  },
+  {
+   "code": "8555",
+   "name": "Monsignor E. L. Doyle Elementary School",
+   "key": "monsignor e l doyle elementary",
+   "phone": "(403) 500-2098",
+   "website": "http://www.cssd.ab.ca/schools/msgrdoyle"
+  },
+  {
+   "code": "8556",
+   "name": "St. Maria Goretti Elementary School",
+   "key": "saint maria goretti elementary",
+   "phone": "(403) 500-2099",
+   "website": "http://www.cssd.ab.ca/schools/stmariagoretti"
+  },
+  {
+   "code": "8557",
+   "name": "Monsignor A. J. Hetherington Elementary School",
+   "key": "monsignor a j hetherington elementary",
+   "phone": "(403) 500-2036",
+   "website": "https://msgrhetherington.cssd.ab.ca/"
+  },
+  {
+   "code": "8558",
+   "name": "John Costello Catholic School",
+   "key": "john costello catholic",
+   "phone": "(403) 500-2003",
+   "website": "http://Www.cssd.ab.ca/schools/johncostello"
+  },
+  {
+   "code": "8701",
+   "name": "Our Lady of the Assumption School",
+   "key": "our lady assumption",
+   "phone": "(403) 500-2045",
+   "website": "http://www.cssd.ab.ca/schools/assumption"
+  },
+  {
+   "code": "8702",
+   "name": "Bishop Kidd School",
+   "key": "bishop kidd",
+   "phone": "(403) 500-2052",
+   "website": "http://www.cssd.ab.ca/schools/bishopkidd"
+  },
+  {
+   "code": "8703",
+   "name": "St. Jean Brebeuf School",
+   "key": "saint jean brebeuf",
+   "phone": "(403) 500-2046",
+   "website": "http://www.cssd.ab.ca/schools/stjeanbrebeuf"
+  },
+  {
+   "code": "8704",
+   "name": "Holy Cross Elementary Junior High School",
+   "key": "holy cross elementary junior high",
+   "phone": "(403) 500-2033",
+   "website": "http://www.cssd.ba.ca/holycross"
+  },
+  {
+   "code": "8705",
+   "name": "Sacred Heart Elementary School",
+   "key": "sacred heart elementary",
+   "phone": "(403) 500-2004",
+   "website": "http://www.cssd.ab.ca/schools/sacredheart"
+  },
+  {
+   "code": "8706",
+   "name": "St. Alphonsus Elementary Junior High School",
+   "key": "saint alphonsus elementary junior high",
+   "phone": "(403) 500-2016",
+   "website": "http://www.cssd.ab.ca/schools/stalphonsus"
+  },
+  {
+   "code": "8707",
+   "name": "École Sainte-Marguerite-Bourgeoys",
+   "key": "cole sainte marguerite bourgeoys",
+   "phone": "(403) 240-2007",
+   "website": "http://smb.francosud.ca"
+  },
+  {
+   "code": "8708",
+   "name": "St. Augustine Elementary Junior High School",
+   "key": "saint augustine elementary junior high",
+   "phone": "(403) 500-2022",
+   "website": "http://www.cssd.ab.ca/schools/staugustine"
+  },
+  {
+   "code": "8709",
+   "name": "St. Bernadette School",
+   "key": "saint bernadette",
+   "phone": "(403) 500-2020",
+   "website": "http://www.cssd.ab.ca/schools/stbernadette"
+  },
+  {
+   "code": "8710",
+   "name": "St. Gregory School",
+   "key": "saint gregory",
+   "phone": "(403) 500-2048",
+   "website": "http://www.cssd.ab.ca/schools/stgregory"
+  },
+  {
+   "code": "8711",
+   "name": "St. Helena School",
+   "key": "saint helena",
+   "phone": "(403) 500-2049",
+   "website": "http://www.cssd.ab.ca/schools/sthelena"
+  },
+  {
+   "code": "8712",
+   "name": "St. James Elementary Junior High School",
+   "key": "saint james elementary junior high",
+   "phone": "(403) 500-2035",
+   "website": "http://www.cssd.ab.ca/schools/stjames"
+  },
+  {
+   "code": "8713",
+   "name": "St. Joseph Elementary Junior High School",
+   "key": "saint joseph elementary junior high",
+   "phone": "(403) 500-2009",
+   "website": "http://www.cssd.ab.ca/schools/stjoseph"
+  },
+  {
+   "code": "8714",
+   "name": "St. Margaret School",
+   "key": "saint margaret",
+   "phone": "(403) 500-2025",
+   "website": "http://www.cssd.ab.ca/schools/stmargaret"
+  },
+  {
+   "code": "8716",
+   "name": "St. Matthew School",
+   "key": "saint matthew",
+   "phone": "(403) 500-2030",
+   "website": "http://www.cssd.ab.ca/schools/stmatthew"
+  },
+  {
+   "code": "8717",
+   "name": "St. Michael School",
+   "key": "saint michael",
+   "phone": "(403) 500-2021",
+   "website": "http://www.cssd.ab.ca/schools/stmichael"
+  },
+  {
+   "code": "8719",
+   "name": "St. Stephen School",
+   "key": "saint stephen",
+   "phone": "(403) 500-2043",
+   "website": "http://www.cssd.ab.ca/schools/ststephen"
+  },
+  {
+   "code": "8721",
+   "name": "St. Bonaventure School",
+   "key": "saint bonaventure",
+   "phone": "(403) 500-2062",
+   "website": "http://cssd.ab.ca/schools/stbonaventure"
+  },
+  {
+   "code": "8722",
+   "name": "St. Rose of Lima Junior High School",
+   "key": "saint rose lima junior high",
+   "phone": "(403) 500-2071",
+   "website": "http://www.cssd.ab.ca/schools/strose"
+  },
+  {
+   "code": "8723",
+   "name": "St. Cyril School",
+   "key": "saint cyril",
+   "phone": "(403) 500-2070",
+   "website": "http://www.cssd.ab.ca/schools/stcyril"
+  },
+  {
+   "code": "8724",
+   "name": "St. Philip School",
+   "key": "saint philip",
+   "phone": "(403) 500-2072",
+   "website": "http://www.cssd.ab.ca/schools/stphilip"
+  },
+  {
+   "code": "8725",
+   "name": "St. Martha School",
+   "key": "saint martha",
+   "phone": "(403) 500-2074",
+   "website": "http://www.cssd.ab.ca/schools/stmartha"
+  },
+  {
+   "code": "8726",
+   "name": "St. John XXIII School",
+   "key": "saint john xxiii",
+   "phone": "(403) 500-2080",
+   "website": "http://www.cssd.ab.ca/schools/stjohn23"
+  },
+  {
+   "code": "8727",
+   "name": "Don Bosco School",
+   "key": "don bosco",
+   "phone": "(403) 500-2057",
+   "website": "http://www.cssd.ab.ca/schools/donbosco"
+  },
+  {
+   "code": "8728",
+   "name": "Madeleine D' Houet Bilingual School",
+   "key": "madeleine d houet bilingual",
+   "phone": "(403) 500-2008",
+   "website": "http://www.cssd.ab.ca/schools/madeleinedhouet"
+  },
+  {
+   "code": "8729",
+   "name": "Father James Whelihan",
+   "key": "father james whelihan",
+   "phone": "(403) 500-2087",
+   "website": "http://www.cssd.ab.ca/schools/fatherwhelihan"
+  },
+  {
+   "code": "8730",
+   "name": "Father Scollen School",
+   "key": "father scollen",
+   "phone": "(403) 500-2088",
+   "website": "http://www.cssd.ab.ca/schools/fatherscollen"
+  },
+  {
+   "code": "8731",
+   "name": "St. John Henry Newman School",
+   "key": "saint john henry newman",
+   "phone": "(403) 500-2092",
+   "website": "https://stjohnhenrynewman.cssd.ab.ca/"
+  },
+  {
+   "code": "8732",
+   "name": "Our Lady of Peace Elementary Junior High School",
+   "key": "our lady peace elementary junior high",
+   "phone": "(403) 500-2097",
+   "website": "http://www.cssd.ab.ca/schools/olp"
+  },
+  {
+   "code": "8901",
+   "name": "Our Lady of the Rockies High School",
+   "key": "our lady rockies high",
+   "phone": "(403) 500-2047",
+   "website": "http://ourladyoftherockies.cssd.ab.ca"
+  },
+  {
+   "code": "8902",
+   "name": "St. Francis High School",
+   "key": "saint francis high",
+   "phone": "(403) 500-2026",
+   "website": "http://www.cssd.ab.ca/stfrancis"
+  },
+  {
+   "code": "8903",
+   "name": "Father Lacombe School",
+   "key": "father lacombe",
+   "phone": "(403) 500-2066",
+   "website": "http://www.cssd.ab.ca/schools/fatherlacombe"
+  },
+  {
+   "code": "8904",
+   "name": "St. Mary's High School",
+   "key": "saint mary s high",
+   "phone": "(403) 500-2024",
+   "website": "https://stmarys.cssd.ab.ca/"
+  },
+  {
+   "code": "8905",
+   "name": "Bishop Carroll High School",
+   "key": "bishop carroll high",
+   "phone": "(403) 500-2056",
+   "website": "http://www.cssd.ab.ca/schools/bishopcarroll"
+  },
+  {
+   "code": "8906",
+   "name": "St. Anne Academic Centre",
+   "key": "saint anne academic centre",
+   "phone": "(403) 500-2012",
+   "website": "http://www.cssd.ab.ca/schools/stanne/"
+  },
+  {
+   "code": "8907",
+   "name": "Bishop McNally High School",
+   "key": "bishop mcnally high",
+   "phone": "(403) 500-2091",
+   "website": "http://www.cssd.ab.ca/schools/bishopmcnally"
+  },
+  {
+   "code": "9014",
+   "name": "Children's Village School",
+   "key": "children s village",
+   "phone": "(403) 777-6114",
+   "website": "http://school.cbe.ab.ca/school/childrensvillage/Pa"
+  },
+  {
+   "code": "9033",
+   "name": "William Roper Hull School",
+   "key": "william roper hull",
+   "phone": "(403) 251-8022",
+   "website": "http://schools.cbe.ab.ca/b033/"
+  },
+  {
+   "code": "9035",
+   "name": "Wood's Homes School",
+   "key": "wood s homes",
+   "phone": "(403) 270-1751",
+   "website": "http://schools.cbe.ab.ca/b035/"
+  },
+  {
+   "code": "9036",
+   "name": "Emily Follensbee School",
+   "key": "emily follensbee",
+   "phone": "(403) 777-6980",
+   "website": "http://www.cbe.ab.ca/b036"
+  },
+  {
+   "code": "9037",
+   "name": "Christine Meikle School",
+   "key": "christine meikle",
+   "phone": "(403) 817-3524",
+   "website": "http://school.cbe.ab.ca/school/christinemeikle/"
+  },
+  {
+   "code": "9100",
+   "name": "Richmond School",
+   "key": "richmond",
+   "phone": "(403) 777-8380",
+   "website": "http://school.cbe.ab.ca/school/richmond/Pages/defa"
+  },
+  {
+   "code": "9101",
+   "name": "Alex Ferguson School",
+   "key": "alex ferguson",
+   "phone": "(403) 777-8270",
+   "website": "http://school.cbe.ab.ca/school/AlexanderFerguson/P"
+  },
+  {
+   "code": "9103",
+   "name": "Jennie Elliott School",
+   "key": "jennie elliott",
+   "phone": "(403) 777-8350",
+   "website": "http://school.cbe.ab.ca/school/JennieElliott"
+  },
+  {
+   "code": "9104",
+   "name": "Killarney School",
+   "key": "killarney",
+   "phone": "(403) 777-8360",
+   "website": "http://school.cbe.ab.ca/school/Killarney/Pages/def"
+  },
+  {
+   "code": "9109",
+   "name": "Altadore School",
+   "key": "altadore",
+   "phone": "(403) 777-6910",
+   "website": "http://school.cbe.ab.ca/school/altadore"
+  },
+  {
+   "code": "9110",
+   "name": "Belvedere Parkway School",
+   "key": "belvedere parkway",
+   "phone": "(403) 777-6010",
+   "website": "http://school.cbe.ab.ca/school/BelvedereParkway"
+  },
+  {
+   "code": "9111",
+   "name": "Bowcroft School",
+   "key": "bowcroft",
+   "phone": "(403) 777-6020",
+   "website": "http://school.cbe.ab.ca/school/bowcroft"
+  },
+  {
+   "code": "9114",
+   "name": "Connaught School",
+   "key": "connaught",
+   "phone": "(403) 777-8560",
+   "website": "http://schools.cbe.ab.ca/b114/"
+  },
+  {
+   "code": "9118",
+   "name": "Earl Grey School",
+   "key": "earl grey",
+   "phone": "(403) 777-8570",
+   "website": "http://school.cbe.ab.ca/school/EarlGrey"
+  },
+  {
+   "code": "9119",
+   "name": "Elbow Park School",
+   "key": "elbow park",
+   "phone": "(403) 817-3408",
+   "website": "https://elbowpark.cbe.ab.ca/"
+  },
+  {
+   "code": "9121",
+   "name": "Glamorgan School",
+   "key": "glamorgan",
+   "phone": "(403) 777-8310",
+   "website": "http://www.cbe.ab.ca/b121"
+  },
+  {
+   "code": "9122",
+   "name": "Glenbrook School",
+   "key": "glenbrook",
+   "phone": "(403) 777-8320",
+   "website": "https://school.cbe.ab.ca/school/Glenbrook"
+  },
+  {
+   "code": "9123",
+   "name": "Glenmeadows School",
+   "key": "glenmeadows",
+   "phone": "(403) 777-5235",
+   "website": "http://school.cbe.ab.ca/school/glenmeadows"
+  },
+  {
+   "code": "9130",
+   "name": "Ramsay School",
+   "key": "ramsay",
+   "phone": "(403) 777-6790",
+   "website": "https://ramsay.cbe.ab.ca/"
+  },
+  {
+   "code": "9138",
+   "name": "Terrace Road School",
+   "key": "terrace road",
+   "phone": "(403) 777-6080",
+   "website": "http://terraceroad.cbe.ab.ca"
+  },
+  {
+   "code": "9140",
+   "name": "Westgate School",
+   "key": "westgate",
+   "phone": "(403) 777-8420",
+   "website": "http://school.cbe.ab.ca/school/westgate/Pages/defa"
+  },
+  {
+   "code": "9141",
+   "name": "Wildwood School",
+   "key": "wildwood",
+   "phone": "(403) 777-8430",
+   "website": "https://wildwood.cbe.ab.ca/"
+  },
+  {
+   "code": "9142",
+   "name": "William Reid School",
+   "key": "william reid",
+   "phone": "(403) 777-6940",
+   "website": "http://www.cbe.ab.ca/b142"
+  },
+  {
+   "code": "9143",
+   "name": "Glendale School",
+   "key": "glendale",
+   "phone": "(403) 777-8330",
+   "website": "http://school.cbe.ab.ca/school/glendale"
+  },
+  {
+   "code": "9202",
+   "name": "Banff Trail School",
+   "key": "banff trail",
+   "phone": "(403) 777-6120",
+   "website": "https://banfftrail.cbe.ab.ca/"
+  },
+  {
+   "code": "9203",
+   "name": "Belfast School",
+   "key": "belfast",
+   "phone": "(403) 777-6250",
+   "website": "http://school.cbe.ab.ca/school/Belfast/Pages/defau"
+  },
+  {
+   "code": "9204",
+   "name": "Brentwood School",
+   "key": "brentwood",
+   "phone": "(403) 777-6130",
+   "website": "http://schools.cbe.ab.ca/b204/"
+  },
+  {
+   "code": "9205",
+   "name": "Briar Hill School",
+   "key": "briar hill",
+   "phone": "(403) 777-6140",
+   "website": "http://www.cbe.ab.ca/b205"
+  },
+  {
+   "code": "9207",
+   "name": "Buchanan School",
+   "key": "buchanan",
+   "phone": "(403) 777-6260",
+   "website": "http://school.cbe.ab.ca/school/Buchanan"
+  },
+  {
+   "code": "9208",
+   "name": "Cambrian Heights School",
+   "key": "cambrian heights",
+   "phone": "(403) 777-6150",
+   "website": "http://school.cbe.ab.ca/school/CambrianHeights"
+  },
+  {
+   "code": "9209",
+   "name": "Capitol Hill School",
+   "key": "capitol hill",
+   "phone": "(403) 777-6160",
+   "website": "http://schools.cbe.ab.ca/CapitolHill"
+  },
+  {
+   "code": "9210",
+   "name": "Captain John Palliser School",
+   "key": "captain john palliser",
+   "phone": "(403) 777-6170",
+   "website": "http://school.cbe.ab.ca/school/CaptainJohnPalliser"
+  },
+  {
+   "code": "9212",
+   "name": "Collingwood School",
+   "key": "collingwood",
+   "phone": "(403) 777-6180",
+   "website": "http://www.cbe.ab.ca/b212"
+  },
+  {
+   "code": "9214",
+   "name": "Dr. E. W. Coffin School",
+   "key": "dr e w coffin",
+   "phone": "(403) 777-6190",
+   "website": "http://school.cbe.ab.ca/school/DrEWCoffin/Pages/de"
+  },
+  {
+   "code": "9217",
+   "name": "Highwood School",
+   "key": "highwood",
+   "phone": "(403) 777-6200",
+   "website": "http://school.cbe.ab.ca/school/Highwood/"
+  },
+  {
+   "code": "9218",
+   "name": "Hillhurst School",
+   "key": "hillhurst",
+   "phone": "(403) 777-6360",
+   "website": "https://school.cbe.ab.ca/school/Hillhurst/Pages/de"
+  },
+  {
+   "code": "9219",
+   "name": "Huntington Hills School",
+   "key": "huntington hills",
+   "phone": "(403) 777-6650",
+   "website": "https://huntingtonhills.cbe.ab.ca/"
+  },
+  {
+   "code": "9223",
+   "name": "Mayland Heights School",
+   "key": "mayland heights",
+   "phone": "(403) 777-6290",
+   "website": "http://school.cbe.ab.ca/school/maylandheights/Page"
+  },
+  {
+   "code": "9224",
+   "name": "Mount View School",
+   "key": "mount view",
+   "phone": "(403) 777-6300",
+   "website": "http://schools.cbe.ab.ca/mountview"
+  },
+  {
+   "code": "9225",
+   "name": "North Haven School",
+   "key": "north haven",
+   "phone": "(403) 777-6220",
+   "website": "http://school.cbe.ab.ca/school/NorthHaven/Pages/de"
+  },
+  {
+   "code": "9227",
+   "name": "Queen Elizabeth School",
+   "key": "queen elizabeth",
+   "phone": "(403) 777-6789",
+   "website": "http://schools.cbe.ab.ca/b227/"
+  },
+  {
+   "code": "9228",
+   "name": "École de la Rose sauvage",
+   "key": "cole de la rose sauvage",
+   "phone": "(403) 230-3112",
+   "website": "http://www.larosesauvage.francosud.ca"
+  },
+  {
+   "code": "9231",
+   "name": "Rosemont School",
+   "key": "rosemont",
+   "phone": "(403) 777-6230",
+   "website": "https://school.cbe.ab.ca/school/Rosemont/Pages/def"
+  },
+  {
+   "code": "9232",
+   "name": "Catherine Nichols Gunn School",
+   "key": "catherine nichols gunn",
+   "phone": "(403) 777-6620",
+   "website": "https://catherinenicholsgunn.cbe.ab.ca/"
+  },
+  {
+   "code": "9233",
+   "name": "Stanley Jones School",
+   "key": "stanley jones",
+   "phone": "(403) 777-6800",
+   "website": "http://school.cbe.ab.ca/school/stanleyjones"
+  },
+  {
+   "code": "9234",
+   "name": "Sunnyside School",
+   "key": "sunnyside",
+   "phone": "(403) 777-6390",
+   "website": "http://school.cbe.ab.ca/school/sunnyside"
+  },
+  {
+   "code": "9235",
+   "name": "Thorncliffe School",
+   "key": "thorncliffe",
+   "phone": "(403) 777-6670",
+   "website": "http://school.cbe.ab.ca/school/thorncliffe/Pages/d"
+  },
+  {
+   "code": "9237",
+   "name": "University School",
+   "key": "university",
+   "phone": "(403) 777-6240",
+   "website": "http://school.cbe.ab.ca/school/university/"
+  },
+  {
+   "code": "9238",
+   "name": "Varsity Acres School",
+   "key": "varsity acres",
+   "phone": "(403) 777-6090",
+   "website": "http://school.cbe.ab.ca/school/VarsityAcres/Pages/"
+  },
+  {
+   "code": "9239",
+   "name": "Vista Heights School",
+   "key": "vista heights",
+   "phone": "(403) 777-6000",
+   "website": "http://school.cbe.ab.ca/school/vistaheights/Pages/"
+  },
+  {
+   "code": "9240",
+   "name": "Dalhousie School",
+   "key": "dalhousie",
+   "phone": "(403) 777-6030",
+   "website": "http://www.cbe.ab.ca/dalhousie"
+  },
+  {
+   "code": "9241",
+   "name": "Marion Carson School",
+   "key": "marion carson",
+   "phone": "(403) 777-6050",
+   "website": "https://marioncarson.cbe.ab.ca/"
+  },
+  {
+   "code": "9242",
+   "name": "Dr. J. K. Mulloy School",
+   "key": "dr j k mulloy",
+   "phone": "(403) 777-6640",
+   "website": "http://schools.cbe.ab.ca/b242"
+  },
+  {
+   "code": "9250",
+   "name": "Roland Michener School",
+   "key": "roland michener",
+   "phone": "(403) 777-8240",
+   "website": "http://school.cbe.ab.ca/school/RolandMichener"
+  },
+  {
+   "code": "9256",
+   "name": "Silver Springs School",
+   "key": "silver springs",
+   "phone": "(403) 777-6070",
+   "website": "https://silversprings.cbe.ab.ca/"
+  },
+  {
+   "code": "9257",
+   "name": "W. O. Mitchell School",
+   "key": "w o mitchell",
+   "phone": "(403) 777-6100",
+   "website": "https://womitchell.cbe.ab.ca/"
+  },
+  {
+   "code": "9261",
+   "name": "Alex Munro School",
+   "key": "alex munro",
+   "phone": "(403) 777-6600",
+   "website": "http://school.cbe.ab.ca/school/AlexMunro/"
+  },
+  {
+   "code": "9265",
+   "name": "Deer Run School",
+   "key": "deer run",
+   "phone": "(403) 777-6840",
+   "website": "https://deerrun.cbe.ab.ca"
+  },
+  {
+   "code": "9266",
+   "name": "Woodbine School",
+   "key": "woodbine",
+   "phone": "(403) 777-8630",
+   "website": "http://school.cbe.ab.ca/school/Woodbine"
+  },
+  {
+   "code": "9267",
+   "name": "Sundance School",
+   "key": "sundance",
+   "phone": "(403) 777-8690",
+   "website": "http://school.cbe.ab.ca/school/sundance/Pages/defa"
+  },
+  {
+   "code": "9269",
+   "name": "Erin Woods School",
+   "key": "erin woods",
+   "phone": "(403) 777-8140",
+   "website": "http://school.cbe.ab.ca/school/erinwoods/Pages/def"
+  },
+  {
+   "code": "9270",
+   "name": "Janet Johnstone School",
+   "key": "janet johnstone",
+   "phone": "(403) 777-8670",
+   "website": "http://school.cbe.ab.ca/school/JanetJohnstone"
+  },
+  {
+   "code": "9271",
+   "name": "O. S. Geiger School",
+   "key": "o s geiger",
+   "phone": "(403) 777-6950",
+   "website": "http://schools.cbe.ab.ca/b271/"
+  },
+  {
+   "code": "9273",
+   "name": "Hawkwood School",
+   "key": "hawkwood",
+   "phone": "(403) 777-6410",
+   "website": "http://school.cbe.ab.ca/school/Hawkwood/Pages/defa"
+  },
+  {
+   "code": "9300",
+   "name": "Acadia School",
+   "key": "acadia",
+   "phone": "(403) 777-8440",
+   "website": "http://school.cbe.ab.ca/school/Acadia"
+  },
+  {
+   "code": "9305",
+   "name": "Braeside School",
+   "key": "braeside",
+   "phone": "(403) 777-8470",
+   "website": "http://school.cbe.ab.ca/school/Braeside/Pages/defa"
+  },
+  {
+   "code": "9306",
+   "name": "Chinook Park School",
+   "key": "chinook park",
+   "phone": "(403) 777-8480",
+   "website": "http://chinookpark.cbe.ab.ca"
+  },
+  {
+   "code": "9310",
+   "name": "Ethel M. Johnson School",
+   "key": "ethel m johnson",
+   "phone": "(403) 777-8500",
+   "website": "http://school.cbe.ab.ca/school/EthelMJohnson/Pages"
+  },
+  {
+   "code": "9311",
+   "name": "Eugene Coste School",
+   "key": "eugene coste",
+   "phone": "(403) 777-8511",
+   "website": "http://schools.cbe.ab.ca/school/EugeneCoste/Pages/"
+  },
+  {
+   "code": "9316",
+   "name": "Haysboro School",
+   "key": "haysboro",
+   "phone": "(403) 777-8530",
+   "website": "https://school.cbe.ab.ca/school/Haysboro/Pages/def"
+  },
+  {
+   "code": "9318",
+   "name": "Keeler School",
+   "key": "keeler",
+   "phone": "(403) 777-8180",
+   "website": "http://schools.cbe.ab.ca/b318/"
+  },
+  {
+   "code": "9320",
+   "name": "Le Roi Daniels School",
+   "key": "le roi daniels",
+   "phone": "(403) 777-6420",
+   "website": "http://school.cbe.ab.ca/school/LeRoiDaniels"
+  },
+  {
+   "code": "9321",
+   "name": "Maple Ridge School",
+   "key": "maple ridge",
+   "phone": "(403) 777-6280",
+   "website": "http://school.cbe.ab.ca/school/mapleridge"
+  },
+  {
+   "code": "9322",
+   "name": "Marlborough School",
+   "key": "marlborough",
+   "phone": "(403) 777-8190",
+   "website": "https://marlborough.cbe.ab.ca/"
+  },
+  {
+   "code": "9327",
+   "name": "Patrick Airlie School",
+   "key": "patrick airlie",
+   "phone": "(403) 777-8220",
+   "website": "http://schools.cbe.ab.ca/b327/"
+  },
+  {
+   "code": "9330",
+   "name": "Valley View School",
+   "key": "valley view",
+   "phone": "(403) 777-8250",
+   "website": "http://schools.cbe.ab/b330/"
+  },
+  {
+   "code": "9331",
+   "name": "Willow Park School",
+   "key": "willow park",
+   "phone": "(403) 777-6900",
+   "website": "http://www.cbe.ab.ca/b331"
+  },
+  {
+   "code": "9332",
+   "name": "Windsor Park School",
+   "key": "windsor park",
+   "phone": "(403) 777-8490",
+   "website": null
+  },
+  {
+   "code": "9333",
+   "name": "Nellie McClung School",
+   "key": "nellie mcclung",
+   "phone": "(403) 777-8620",
+   "website": "http://school.cbe.ab.ca/school/NellieMcClung/"
+  },
+  {
+   "code": "9334",
+   "name": "Lake Bonavista School",
+   "key": "lake bonavista",
+   "phone": "(403) 777-6871",
+   "website": "http://school.cbe.ab.ca/school/LakeBonavista"
+  },
+  {
+   "code": "9336",
+   "name": "Andrew Sibbald School",
+   "key": "andrew sibbald",
+   "phone": "(403) 777-6830",
+   "website": "http://school.cbe.ab.ca/school/andrewsibbald"
+  },
+  {
+   "code": "9338",
+   "name": "Cedarbrae School",
+   "key": "cedarbrae",
+   "phone": "(403) 777-8610",
+   "website": "http://schools.cbe.ab.ca/b338/"
+  },
+  {
+   "code": "9339",
+   "name": "Chris Akkerman School",
+   "key": "chris akkerman",
+   "phone": "(403) 777-8120",
+   "website": "http://school.cbe.ab.ca/school/ChrisAkkerman/Pages"
+  },
+  {
+   "code": "9341",
+   "name": "Prince of Wales School",
+   "key": "prince wales",
+   "phone": "(403) 777-6880",
+   "website": "http://school.cbe.ab.ca/school/PrinceOfWales/Pages"
+  },
+  {
+   "code": "9343",
+   "name": "Guy Weadick School",
+   "key": "guy weadick",
+   "phone": "(403) 777-6740",
+   "website": "http://ww.cbe.ab.ca/b343"
+  },
+  {
+   "code": "9344",
+   "name": "West Dalhousie School",
+   "key": "west dalhousie",
+   "phone": "(403) 777-6110",
+   "website": "http://schools.cbe.ab.ca/b344/"
+  },
+  {
+   "code": "9346",
+   "name": "Dr. Gordon Higgins School",
+   "key": "dr gordon higgins",
+   "phone": "(403) 777-7060",
+   "website": "http://schools.cbe.ab.ca/b681/"
+  },
+  {
+   "code": "9347",
+   "name": "Douglas Harkness School",
+   "key": "douglas harkness",
+   "phone": "(403) 777-6720",
+   "website": "https://DouglasHarkness.cbe.ab.ca/"
+  },
+  {
+   "code": "9348",
+   "name": "Colonel J. Fred Scott School",
+   "key": "colonel j fred scott",
+   "phone": "(403) 777-6710",
+   "website": "http://school.cbe.ab.ca/school/ColonelJFredScott/"
+  },
+  {
+   "code": "9350",
+   "name": "Dr. Gladys McKelvie Egbert School",
+   "key": "dr gladys mckelvie egbert",
+   "phone": "(403) 777-7780",
+   "website": "http://school.cbe.ab.ca/school/drgmegbert/Pages/de"
+  },
+  {
+   "code": "9351",
+   "name": "G. W. Skene School",
+   "key": "g w skene",
+   "phone": "(403) 777-8150",
+   "website": "http://school.cbe.ab.ca/school/GWSkene/"
+  },
+  {
+   "code": "9353",
+   "name": "Cappy Smart School",
+   "key": "cappy smart",
+   "phone": "(403) 777-8110",
+   "website": "http://school.cbe.ab.ca/school/CappySmart/Pages/de"
+  },
+  {
+   "code": "9354",
+   "name": "Sam Livingston School",
+   "key": "sam livingston",
+   "phone": "(403) 777-6890",
+   "website": "https://school.cbe.ab.ca/school/samlivingston/Page"
+  },
+  {
+   "code": "9355",
+   "name": "Canyon Meadows School",
+   "key": "canyon meadows",
+   "phone": "(403) 777-8600",
+   "website": "http://school.cbe.ab.ca/school/CanyonMeadows/Pages"
+  },
+  {
+   "code": "9356",
+   "name": "Penbrooke Meadows School",
+   "key": "penbrooke meadows",
+   "phone": "(403) 777-8230",
+   "website": "http://school.cbe.ab.ca/school/penbrookemeadows/Pa"
+  },
+  {
+   "code": "9357",
+   "name": "West Dover School",
+   "key": "west dover",
+   "phone": "(403) 777-8260",
+   "website": "http://school.cbe.ab.ca/school/WestDover/Pages/def"
+  },
+  {
+   "code": "9358",
+   "name": "Rundle School",
+   "key": "rundle",
+   "phone": "(403) 777-6760",
+   "website": "https://rundle.cbe.ab.ca/"
+  },
+  {
+   "code": "9360",
+   "name": "Pineridge School",
+   "key": "pineridge",
+   "phone": "(403) 777-6750",
+   "website": "http://school.cbe.ab.ca/school/Pineridge/"
+  },
+  {
+   "code": "9361",
+   "name": "Chief Justice Milvain School",
+   "key": "chief justice milvain",
+   "phone": "(403) 777-6700",
+   "website": "http://schools.cbe.ab.ca/b361/"
+  },
+  {
+   "code": "9362",
+   "name": "Haultain Memorial School",
+   "key": "haultain memorial",
+   "phone": "(403) 777-6860",
+   "website": "https://haultainmemorial.cbe.ab.ca/"
+  },
+  {
+   "code": "9363",
+   "name": "Midnapore School",
+   "key": "midnapore",
+   "phone": "(403) 777-8680",
+   "website": "http://schools.cbe.ab.ca/b363/"
+  },
+  {
+   "code": "9364",
+   "name": "James Short Memorial School",
+   "key": "james short memorial",
+   "phone": "(403) 777-8170",
+   "website": "http://www.cbe.ab.ca/b364"
+  },
+  {
+   "code": "9368",
+   "name": "Sunalta School",
+   "key": "sunalta",
+   "phone": "(403) 777-8590",
+   "website": "http://school.cbe.ab.ca/school/Sunalta"
+  },
+  {
+   "code": "9369",
+   "name": "Banting and Best School",
+   "key": "banting best",
+   "phone": "(403) 777-8650",
+   "website": "https://bantingandbest.cbe.ab.ca/"
+  },
+  {
+   "code": "9371",
+   "name": "Woodlands School",
+   "key": "woodlands",
+   "phone": "(403) 777-8640",
+   "website": "https://woodlands.cbe.ab.ca/"
+  },
+  {
+   "code": "9372",
+   "name": "Beddington Heights School",
+   "key": "beddington heights",
+   "phone": "(403) 777-6610",
+   "website": "https://beddingtonheights.cbe.ab.ca/"
+  },
+  {
+   "code": "9373",
+   "name": "Cecil Swanson School",
+   "key": "cecil swanson",
+   "phone": "(403) 777-6690",
+   "website": "http://schools.cbe.ab.ca/b373/"
+  },
+  {
+   "code": "9374",
+   "name": "Ranchlands School",
+   "key": "ranchlands",
+   "phone": "(403) 777-6350",
+   "website": "http://school.cbe.ab.ca/school/ranchlands/Pages/de"
+  },
+  {
+   "code": "9375",
+   "name": "Falconridge School",
+   "key": "falconridge",
+   "phone": "(403) 777-6730",
+   "website": "http://school.cbe.ab.ca/school/falconridge/Pages/d"
+  },
+  {
+   "code": "9376",
+   "name": "Abbeydale School",
+   "key": "abbeydale",
+   "phone": "(403) 777-6970",
+   "website": "http://www.cbe.ab.ca/b376"
+  },
+  {
+   "code": "9377",
+   "name": "Annie Foote School",
+   "key": "annie foote",
+   "phone": "(403) 777-6680",
+   "website": "http://schools.cbe.ab.ca/b377/"
+  },
+  {
+   "code": "9378",
+   "name": "Grant MacEwan School",
+   "key": "grant macewan",
+   "phone": "(403) 777-6930",
+   "website": "https://grantmacewan.cbe.ab.ca"
+  },
+  {
+   "code": "9379",
+   "name": "Edgemont School",
+   "key": "edgemont",
+   "phone": "(403) 777-6340",
+   "website": "http://school.cbe.ab.ca/school/Edgemont"
+  },
+  {
+   "code": "9382",
+   "name": "Olympic Heights School",
+   "key": "olympic heights",
+   "phone": "(403) 777-8370",
+   "website": "https://school.cbe.ab.ca/school/olympicheights"
+  },
+  {
+   "code": "9383",
+   "name": "Simons Valley School",
+   "key": "simons valley",
+   "phone": "(403) 777-6660",
+   "website": "http://school.cbe.ab.ca/school/simonsvalley/Pages/"
+  },
+  {
+   "code": "9384",
+   "name": "Fish Creek School",
+   "key": "fish creek",
+   "phone": "(403) 777-6400",
+   "website": "http://schools.cbe.ab.ca/b384/"
+  },
+  {
+   "code": "9385",
+   "name": "McKenzie Lake School",
+   "key": "mckenzie lake",
+   "phone": "(403) 777-6500",
+   "website": "http://school.cbe.ab.ca/school/McKenzieLake/Pages/"
+  },
+  {
+   "code": "9386",
+   "name": "Riverbend School",
+   "key": "riverbend",
+   "phone": "(403) 777-6510",
+   "website": "http://school.cbe.ab.ca/school/Riverbend/Pages/def"
+  },
+  {
+   "code": "9387",
+   "name": "W.H.Cushing Workplace School",
+   "key": "w h cushing workplace",
+   "phone": "(403) 777-8900",
+   "website": null
+  },
+  {
+   "code": "9425",
+   "name": "Calgary Home Education",
+   "key": "calgary home education",
+   "phone": "(403) 817-3464",
+   "website": "https://homeeducation.cbe.ab.ca/"
+  },
+  {
+   "code": "9512",
+   "name": "Adolescent Mental Health Services",
+   "key": "adolescent mental health services",
+   "phone": "(403) 270-1751",
+   "website": "http://schools.cbe.ab.ca/b512/"
+  },
+  {
+   "code": "9573",
+   "name": "AADAC Youth Services",
+   "key": "aadac youth services",
+   "phone": "(403) 297-4664",
+   "website": "http://schools.cbe.ab.ca/b573"
+  },
+  {
+   "code": "9599",
+   "name": "Project Trust",
+   "key": "project trust",
+   "phone": "(403) 777-6107",
+   "website": "https://school.cbe.ab.ca/school/discoveringchoices"
+  },
+  {
+   "code": "9601",
+   "name": "Balmoral School",
+   "key": "balmoral",
+   "phone": "(403) 777-7330",
+   "website": "https://school.cbe.ab.ca/school/balmoral/Pages/def"
+  },
+  {
+   "code": "9602",
+   "name": "Colonel Walker School",
+   "key": "colonel walker",
+   "phone": "(403) 777-6780",
+   "website": "http://school.cbe.ab.ca/school/ColonelWalker/Pages"
+  },
+  {
+   "code": "9603",
+   "name": "John Ware School",
+   "key": "john ware",
+   "phone": "(403) 777-7930",
+   "website": "http://www.cbe.ab.ca/b603"
+  },
+  {
+   "code": "9608",
+   "name": "King George School",
+   "key": "king george",
+   "phone": "(403) 777-6210",
+   "website": "http://school.cbe.ab.ca/school/kinggeorge/Pages/de"
+  },
+  {
+   "code": "9609",
+   "name": "Riverside School",
+   "key": "riverside",
+   "phone": "(403) 777-7350",
+   "website": "https://riverside.cbe.ab.ca/"
+  },
+  {
+   "code": "9610",
+   "name": "Rideau Park School",
+   "key": "rideau park",
+   "phone": "(403) 777-7480",
+   "website": "http://school.cbe.ab.ca/school/rideaupark/"
+  },
+  {
+   "code": "9611",
+   "name": "Thomas B. Riley School",
+   "key": "thomas b riley",
+   "phone": "(403) 777-7260",
+   "website": "http://thomasbriley.cbe.ab.ca"
+  },
+  {
+   "code": "9613",
+   "name": "Ian Bazalgette School",
+   "key": "ian bazalgette",
+   "phone": "(403) 777-7360",
+   "website": "http://school.cbe.ab.ca/school/ianbazalgette/Pages"
+  },
+  {
+   "code": "9618",
+   "name": "Rosedale School",
+   "key": "rosedale",
+   "phone": "(403) 777-7530",
+   "website": "http://school.cbe.ab.ca/school/rosedale"
+  },
+  {
+   "code": "9620",
+   "name": "Colonel Macleod School",
+   "key": "colonel macleod",
+   "phone": "(403) 777-7500",
+   "website": "https://colonelmacleod.cbe.ab.ca/"
+  },
+  {
+   "code": "9621",
+   "name": "Branton School",
+   "key": "branton",
+   "phone": "(403) 777-7440",
+   "website": "http://www.cbe.ab.ca/b621"
+  },
+  {
+   "code": "9622",
+   "name": "Colonel Irvine School",
+   "key": "colonel irvine",
+   "phone": "(403) 777-7280",
+   "website": "http://schools.cbe.ab.ca/b622/"
+  },
+  {
+   "code": "9623",
+   "name": "Bob Edwards School",
+   "key": "bob edwards",
+   "phone": "(403) 777-7770",
+   "website": "https://bobedwards.cbe.ab.ca/"
+  },
+  {
+   "code": "9625",
+   "name": "Louis Riel School",
+   "key": "louis riel",
+   "phone": "(403) 777-7650",
+   "website": "http://www.cbe.ab.ca/b625"
+  },
+  {
+   "code": "9626",
+   "name": "Louise Dean School",
+   "key": "louise dean",
+   "phone": "(403) 777-7630",
+   "website": "https://louisedean.cbe.ab.ca/"
+  },
+  {
+   "code": "9627",
+   "name": "Elboya School",
+   "key": "elboya",
+   "phone": "(403) 777-7760",
+   "website": "http://school.cbe.ab.ca/school/Elboya/Pages/defaul"
+  },
+  {
+   "code": "9628",
+   "name": "Vincent Massey School",
+   "key": "vincent massey",
+   "phone": "(403) 777-7870",
+   "website": "http://vincentmassey.cbe.ab.ca"
+  },
+  {
+   "code": "9630",
+   "name": "Dr. Oakley School",
+   "key": "dr oakley",
+   "phone": "(403) 777-8300",
+   "website": "http://schools.cbe.ab.ca/b630/"
+  },
+  {
+   "code": "9631",
+   "name": "Woodman School",
+   "key": "woodman",
+   "phone": "(403) 777-7490",
+   "website": "http://schools.cbe.ab.ca/b631/"
+  },
+  {
+   "code": "9632",
+   "name": "Sherwood School",
+   "key": "sherwood",
+   "phone": "(403) 777-7590",
+   "website": "https://school.cbe.ab.ca/school/Sherwood/Pages/def"
+  },
+  {
+   "code": "9633",
+   "name": "Fairview School",
+   "key": "fairview",
+   "phone": "(403) 777-7900",
+   "website": "http://school.cbe.ab.ca/school/fairview"
+  },
+  {
+   "code": "9635",
+   "name": "Georges P. Vanier School",
+   "key": "georges p vanier",
+   "phone": "(403) 777-7460",
+   "website": "http://school.cbe.ab.ca/school/gpvanier/Pages/defa"
+  },
+  {
+   "code": "9638",
+   "name": "A. E. Cross School",
+   "key": "a e cross",
+   "phone": "(403) 777-7410",
+   "website": "https://aecross.cbe.ab.ca/"
+  },
+  {
+   "code": "9639",
+   "name": "Mount Royal School",
+   "key": "mount royal",
+   "phone": "(403) 777-7980",
+   "website": "http://schools.cbe.ab.ca/b639"
+  },
+  {
+   "code": "9640",
+   "name": "Senator Patrick Burns School",
+   "key": "senator patrick burns",
+   "phone": "(403) 777-7400",
+   "website": "https://senatorpatrickburns.cbe.ab.ca/"
+  },
+  {
+   "code": "9641",
+   "name": "David Thompson School",
+   "key": "david thompson",
+   "phone": "(403) 777-7470",
+   "website": "http://school.cbe.ab.ca/school/davidthompson/Pages"
+  },
+  {
+   "code": "9643",
+   "name": "Harold Panabaker School",
+   "key": "harold panabaker",
+   "phone": "(403) 777-7890",
+   "website": "http://www.cbe.ab.ca/b643"
+  },
+  {
+   "code": "9644",
+   "name": "Ernest Morrow School",
+   "key": "ernest morrow",
+   "phone": "(403) 777-7800",
+   "website": "http://schools.cbe.ab.ca/b644/"
+  },
+  {
+   "code": "9645",
+   "name": "Bishop Pinkham School",
+   "key": "bishop pinkham",
+   "phone": "(403) 777-7840",
+   "website": "http://school.cbe.ab.ca/school/BishopPinkham"
+  },
+  {
+   "code": "9646",
+   "name": "Simon Fraser School",
+   "key": "simon fraser",
+   "phone": "(403) 777-7290",
+   "website": "https://simonfraser.cbe.ab.ca/"
+  },
+  {
+   "code": "9648",
+   "name": "Sir Wilfrid Laurier School",
+   "key": "sir wilfrid laurier",
+   "phone": "(403) 777-7370",
+   "website": "http://school.cbe.ab.ca/school/SirWilfridLaurier/P"
+  },
+  {
+   "code": "9649",
+   "name": "Sir John Franklin School",
+   "key": "sir john franklin",
+   "phone": "(403) 777-7610",
+   "website": "http://www.cbe.ab.ca/b649"
+  },
+  {
+   "code": "9651",
+   "name": "F. E. Osborne School",
+   "key": "f e osborne",
+   "phone": "(403) 777-7540",
+   "website": "http://schools.cbe.ab.ca/b651/"
+  },
+  {
+   "code": "9652",
+   "name": "Sir John A. Macdonald School",
+   "key": "sir john a macdonald",
+   "phone": "(403) 777-7670",
+   "website": "http://schools.cbe.ab.ca/b652"
+  },
+  {
+   "code": "9653",
+   "name": "R. T. Alderman School",
+   "key": "r t alderman",
+   "phone": "(403) 777-7520",
+   "website": "http://www.cbe.ab.ca/b653"
+  },
+  {
+   "code": "9654",
+   "name": "Nickle School",
+   "key": "nickle",
+   "phone": "(403) 777-7720",
+   "website": "http://school.cbe.ab.ca/school/nickle"
+  },
+  {
+   "code": "9655",
+   "name": "Robert Warren School",
+   "key": "robert warren",
+   "phone": "(403) 777-7690",
+   "website": "http://schools.cbe.ab.ca/b655/"
+  },
+  {
+   "code": "9660",
+   "name": "H. D. Cartwright School",
+   "key": "h d cartwright",
+   "phone": "(403) 777-7420",
+   "website": "http://www.cbe.ab.ca/b660"
+  },
+  {
+   "code": "9682",
+   "name": "Clarence Sansom School",
+   "key": "clarence sansom",
+   "phone": "(403) 777-7700",
+   "website": "http://school.cbe.ab.ca/school/clarencesansom/Page"
+  },
+  {
+   "code": "9685",
+   "name": "Wilma Hansen School",
+   "key": "wilma hansen",
+   "phone": "(403) 777-7430",
+   "website": "http://school.cbe.ab.ca/school/wilmahansen/"
+  },
+  {
+   "code": "9686",
+   "name": "Annie Gale School",
+   "key": "annie gale",
+   "phone": "(403) 777-7680",
+   "website": "https://anniegale.cbe.ab.ca/"
+  },
+  {
+   "code": "9687",
+   "name": "West View School",
+   "key": "west view",
+   "phone": "(403) 662-3547",
+   "website": null
+  },
+  {
+   "code": "9689",
+   "name": "Terry Fox School",
+   "key": "terry fox",
+   "phone": "(403) 777-8800",
+   "website": "https://terryfox.cbe.ab.ca/"
+  },
+  {
+   "code": "9690",
+   "name": "Tom Baines School",
+   "key": "tom baines",
+   "phone": "(403) 777-7190",
+   "website": "https://tombaines.cbe.ab.ca/"
+  },
+  {
+   "code": "9806",
+   "name": "Queen Elizabeth High School",
+   "key": "queen elizabeth high",
+   "phone": "(403) 777-6380",
+   "website": "http://school.cbe.ab.ca/school/queenelizabethhs/"
+  },
+  {
+   "code": "9813",
+   "name": "Forest Lawn High School",
+   "key": "forest lawn high",
+   "phone": "(403) 272-6665",
+   "website": "http://schools.cbe.ab.ca/b813/"
+  },
+  {
+   "code": "9815",
+   "name": "Crescent Heights High School",
+   "key": "crescent heights high",
+   "phone": "(403) 276-5521",
+   "website": "https://school.cbe.ab.ca/school/CrescentHeights/Pa"
+  },
+  {
+   "code": "9816",
+   "name": "Western Canada High School",
+   "key": "western canada high",
+   "phone": "(403) 228-5363",
+   "website": "https://westerncanada.cbe.ab.ca/"
+  },
+  {
+   "code": "9817",
+   "name": "Chinook Learning Services",
+   "key": "chinook learning services",
+   "phone": "(403) 817-3340",
+   "website": "http://www.chinooklearningservices.com/"
+  },
+  {
+   "code": "9823",
+   "name": "Central Memorial High School",
+   "key": "central memorial high",
+   "phone": "(403) 243-8880",
+   "website": "http://www.cbe.ab.ca/b823"
+  },
+  {
+   "code": "9825",
+   "name": "James Fowler High School",
+   "key": "james fowler high",
+   "phone": "(403) 230-4743",
+   "website": "http://www.cbe.ab.ca/b825"
+  },
+  {
+   "code": "9826",
+   "name": "Ernest Manning High School",
+   "key": "ernest manning high",
+   "phone": "(403) 249-3131",
+   "website": "https://ernestmanning.cbe.ab.ca/"
+  },
+  {
+   "code": "9829",
+   "name": "William Aberhart High School",
+   "key": "william aberhart high",
+   "phone": "(403) 289-2551",
+   "website": "https://williamaberhart.cbe.ab.ca/"
+  },
+  {
+   "code": "9836",
+   "name": "Henry Wise Wood High School",
+   "key": "henry wise wood high",
+   "phone": "(403) 253-2261",
+   "website": "https://henrywisewood.cbe.ab.ca/"
+  },
+  {
+   "code": "9847",
+   "name": "Bowness High School",
+   "key": "bowness high",
+   "phone": "(403) 286-5092",
+   "website": "http://school.cbe.ab.ca/school/bowness/Pages/defau"
+  },
+  {
+   "code": "9850",
+   "name": "Lord Beaverbrook High School",
+   "key": "lord beaverbrook high",
+   "phone": "(403) 259-5585",
+   "website": "http://schools.cbe.ab.ca/b850"
+  },
+  {
+   "code": "9856",
+   "name": "Jack James High School",
+   "key": "jack james high",
+   "phone": "(403) 248-4054",
+   "website": "https://jackjames.cbe.ab.ca/"
+  },
+  {
+   "code": "9857",
+   "name": "Sir Winston Churchill High School",
+   "key": "sir winston churchill high",
+   "phone": "(403) 289-9241",
+   "website": "https://school.cbe.ab.ca/school/SirWinstonChurchil"
+  },
+  {
+   "code": "9858",
+   "name": "Dr. E. P. Scarlett High School",
+   "key": "dr e p scarlett high",
+   "phone": "(403) 281-3366",
+   "website": "http://school.cbe.ab.ca/school/drepscarlett"
+  },
+  {
+   "code": "9860",
+   "name": "John G. Diefenbaker High School",
+   "key": "john g diefenbaker high",
+   "phone": "(403) 274-2240",
+   "website": "http://school.cbe.ab.ca/school/johngdiefenbaker/Pa"
+  },
+  {
+   "code": "9863",
+   "name": "Alternative High School",
+   "key": "alternative high",
+   "phone": "(403) 777-7730",
+   "website": "http://www.cbe.ab.ca/b863/"
+  },
+  {
+   "code": "9865",
+   "name": "Lester B. Pearson High School",
+   "key": "lester b pearson high",
+   "phone": "(403) 280-6565",
+   "website": "http://schools.cbe.ab.ca/b865"
+  },
+  {
+   "code": "9868",
+   "name": "Discovering Choices",
+   "key": "discovering choices",
+   "phone": "(403) 268-3265",
+   "website": "https://school.cbe.ab.ca/school/discoveringchoices"
+  },
+  {
+   "code": "9886",
+   "name": "Dr. Gordon Townsend School",
+   "key": "dr gordon townsend",
+   "phone": "(403) 955-7004",
+   "website": "http://school.cbe.ab.ca/school/drgordontownsend/"
+  },
+  {
+   "code": "9903",
+   "name": "Calgary Christian School",
+   "key": "calgary christian",
+   "phone": "(403) 242-2896",
+   "website": "http://www.calgarychristianschool.com"
+  },
+  {
+   "code": "9906",
+   "name": "Heritage Christian Academy",
+   "key": "heritage christian academy",
+   "phone": "(403) 219-3201",
+   "website": "http://www.heritagechristianacademy.com"
+  },
+  {
+   "code": "9908",
+   "name": "Calgary Academy",
+   "key": "calgary academy",
+   "phone": "(403) 686-6444",
+   "website": "http://www.calgaryacademy.com"
+  },
+  {
+   "code": "9911",
+   "name": "Calgary Jewish Academy",
+   "key": "calgary jewish academy",
+   "phone": "(403) 253-3992",
+   "website": "http://www.cja.ab.ca"
+  },
+  {
+   "code": "9913",
+   "name": "West Island College",
+   "key": "west island college",
+   "phone": "(403) 255-5300",
+   "website": "http://www.westislandcollege.ab.ca"
+  },
+  {
+   "code": "9914",
+   "name": "Akiva Academy",
+   "key": "akiva academy",
+   "phone": "(403) 258-1312",
+   "website": "http://www.akiva.ca"
+  },
+  {
+   "code": "9916",
+   "name": "Chinook Winds Adventist Academy",
+   "key": "chinook winds adventist academy",
+   "phone": "(403) 286-5686",
+   "website": "http://cwaa.net"
+  },
+  {
+   "code": "9917",
+   "name": "Foothills Academy",
+   "key": "foothills academy",
+   "phone": "(403) 270-9400",
+   "website": "http://www.foothillsacademy.org"
+  },
+  {
+   "code": "9919",
+   "name": "Lycée international de Calgary",
+   "key": "lyc e international de calgary",
+   "phone": "(403) 243-5420",
+   "website": "http://www.lycee.ca"
+  },
+  {
+   "code": "9921",
+   "name": "River Valley School",
+   "key": "river valley",
+   "phone": "(403) 246-2275",
+   "website": null
+  },
+  {
+   "code": "9925",
+   "name": "Calgary German Language School Society",
+   "key": "calgary german language society",
+   "phone": "(403) 797-1766",
+   "website": "https://calgarygermanschool.com/"
+  },
+  {
+   "code": "9926",
+   "name": "Italian School of Calgary",
+   "key": "italian calgary",
+   "phone": "(403) 264-6349",
+   "website": null
+  },
+  {
+   "code": "9927",
+   "name": "Bearspaw Christian School & College",
+   "key": "bearspaw christian college",
+   "phone": "(403) 295-2566",
+   "website": "http://www.bearspawschool.com"
+  },
+  {
+   "code": "9928",
+   "name": "Glenmore Christian Academy Elementary",
+   "key": "glenmore christian academy elementary",
+   "phone": "(403) 254-9050",
+   "website": "http://www.gcaschool.com"
+  },
+  {
+   "code": "9935",
+   "name": "Banbury Crossroads School",
+   "key": "banbury crossroads",
+   "phone": "(403) 270-7787",
+   "website": null
+  },
+  {
+   "code": "9936",
+   "name": "Menno Simons Christian School",
+   "key": "menno simons christian",
+   "phone": "(403) 531-0745",
+   "website": "http://mennosimonschristianschool.ca"
+  },
+  {
+   "code": "9949",
+   "name": "Calgary Waldorf School",
+   "key": "calgary waldorf",
+   "phone": "(403) 287-1868",
+   "website": "http://www.calgarywaldorf.org"
+  },
+  {
+   "code": "9952",
+   "name": "Rundle College Junior Senior High",
+   "key": "rundle college junior senior high",
+   "phone": "(403) 250-7180",
+   "website": "http://www.rundle.ab.ca"
+  },
+  {
+   "code": "9957",
+   "name": "Greek Community School",
+   "key": "greek community",
+   "phone": "(403) 246-4553",
+   "website": null
+  },
+  {
+   "code": "9958",
+   "name": "Swedish Language School",
+   "key": "swedish language",
+   "phone": "(403) 284-2610",
+   "website": "http://www.swedishschool.com"
+  },
+  {
+   "code": "9963",
+   "name": "Calgary Chinese Private School",
+   "key": "calgary chinese private",
+   "phone": "(403) 264-2233",
+   "website": null
+  },
+  {
+   "code": "9964",
+   "name": "Columbia College",
+   "key": "columbia college",
+   "phone": "(403) 235-9300",
+   "website": null
+  },
+  {
+   "code": "9972",
+   "name": "Delta West Academy",
+   "key": "delta west academy",
+   "phone": "(403) 290-0767",
+   "website": null
+  },
+  {
+   "code": "9973",
+   "name": "Trinity Christian School",
+   "key": "trinity christian",
+   "phone": "(403) 254-6682",
+   "website": null
+  },
+  {
+   "code": "9974",
+   "name": "West Island College-Class Afloat",
+   "key": "west island college class afloat",
+   "phone": "(403) 255-5300",
+   "website": null
+  },
+  {
+   "code": "9978",
+   "name": "Calgary Christian High School",
+   "key": "calgary christian high",
+   "phone": "(403) 242-2896",
+   "website": "http://www.calgarychristianschool.com"
+  },
+  {
+   "code": "9979",
+   "name": "Rundle College Elementary School",
+   "key": "rundle college elementary",
+   "phone": "(403) 282-8411",
+   "website": "http://www.rundle.ab.ca"
+  },
+  {
+   "code": "9984",
+   "name": "Tyndale Christian School",
+   "key": "tyndale christian",
+   "phone": "(403) 590-5881",
+   "website": "http://www.tyndalecalgary.ca"
+  },
+  {
+   "code": "9995",
+   "name": "Bow Valley College - Main Campus",
+   "key": "bow valley college main",
+   "phone": "(403) 410-1500",
+   "website": null
+  },
+  {
+   "code": "9996",
+   "name": "Calgary Provincial Writing Centre",
+   "key": "calgary provincial writing centre",
+   "phone": "(780) 427-1857",
+   "website": null
+  },
+  {
+   "code": "9997",
+   "name": "Bow Valley College - Correctional Centre",
+   "key": "bow valley college correctional centre",
+   "phone": "(403) 410-1500",
+   "website": null
+  }
+ ]
+}
