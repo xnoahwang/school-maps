@@ -11,7 +11,7 @@
   const state = { lang: params.get("lang") === "zh" ? "zh" : "en", metric: params.get("metric") || "school_score",
                   sortKey: "school_score", sortAsc: false, selected: params.get("zone") || params.get("community"), query: "",
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
-                  board: "all", grade: "all", program: "all", letter: "all" };
+                  board: "all", grade: "all", program: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
@@ -302,7 +302,6 @@
 
   function passesDirectory(school) {
     if (state.program !== "all" && !(school.program_names || []).includes(state.program)) return false;
-    if (state.letter !== "all" && displayName(school).trim().charAt(0).toUpperCase() !== state.letter) return false;
     const q = state.query.toLowerCase();
     if (!q) return true;
     const programs = (school.program_names || []).join(" ");
@@ -310,7 +309,6 @@
   }
 
   function renderRank() {
-    document.querySelectorAll("#letterFilters button").forEach((btn) => btn.classList.toggle("on", btn.dataset.letter === state.letter));
     refreshFilterLabels();
     const rows = schools.filter((s) => inConfig(s) && passesDirectory(s));
     const mixed = state.grade === "all";
@@ -346,9 +344,7 @@
     }).join("");
     const allPrograms = document.querySelector("#programFilter option[value=all]");
     if (allPrograms) allPrograms.textContent = t("filter_all_programs");
-    const allLetters = document.querySelector("#letterFilters button[data-letter=all]");
-    if (allLetters) allLetters.textContent = t("filter_all");
-    const filtered = state.program !== "all" || state.letter !== "all" || state.query;
+    const filtered = state.program !== "all" || state.query;
     document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig())
       .replace("{n}", String(rows.length))
       .replace("{scored}", String(scored));
@@ -632,7 +628,7 @@
     maxZoom: 19, opacity: 0.6 }).addTo(map);
   }
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005o";
+  const dataUrl = (name) => "data/" + name + "?v=20261005q";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory]) => {
@@ -685,20 +681,6 @@
     renderRank();
   });
   if (RANK_FIRST) {
-    const letters = document.getElementById("letterFilters");
-    ["all", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")].forEach((letter) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.dataset.letter = letter;
-      button.textContent = letter === "all" ? t("filter_all") : letter;
-      letters.appendChild(button);
-    });
-    letters.addEventListener("click", (e) => {
-      const letter = e.target.dataset && e.target.dataset.letter;
-      if (!letter || e.target.disabled) return;
-      state.letter = letter;
-      renderRank();
-    });
     document.getElementById("programFilter").addEventListener("change", (e) => {
       state.program = e.target.value;
       renderRank();
@@ -728,7 +710,7 @@
   scoreSourcePop.addEventListener("click", (e) => e.stopPropagation());
   document.addEventListener("click", () => setScoreSource(false));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") setScoreSource(false); });
-  document.getElementById("listPane").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
+  document.getElementById("rankScroll").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;
     if (RANK_FIRST) renderRank(); else renderTable();

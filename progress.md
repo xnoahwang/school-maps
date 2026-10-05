@@ -1,7 +1,7 @@
 # progress.md
 
 ## Current Focus
-The ranking list opens with both filters on All. The score heading still has a circle that opens Alberta's PAT results page.
+The ranking list opens with both filters on All. The A–Z letter row is gone. The filters stay put while the school rows scroll. The score heading still has a circle that opens Alberta's PAT results page.
 
 ## Completed
 - cursor-prime-cloud rules installed (autonomous mode), and the plan recorded in PLAN.md.

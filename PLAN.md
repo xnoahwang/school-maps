@@ -1,5 +1,37 @@
 # PLAN.md
 
+## Plan (2026-10-05, pin the filters)
+
+Mode: `autonomous`. Design notes: skipped. The filters, the count note, and the search stay put. The school rows scroll underneath the column headings.
+
+**Goal.** In the ranking page, scrolling moves only the school rows. Board, grade, program, the note, and search do not move.
+
+**Out of scope.** The map layout, the filter choices, commits.
+
+**Done when.** After scrolling the list, the board dropdown is in the same place and a later school is visible.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `web/index.html`, `web/style.css`, `web/app.js`.
+
+**Verify.** Reload, scroll the rows, and compare the filter position.
+
+## Plan (2026-10-05, remove letter filter)
+
+Mode: `autonomous`. Design notes: skipped. The A–Z row is the letter filter.
+
+**Goal.** Remove the letter buttons. Board, grade, program, and search stay.
+
+**Out of scope.** The other filters, the map, commits.
+
+**Done when.** A fresh load has no A–Z row, and the program dropdown still filters the list.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `AGENTS.md`, `web/index.html`, `web/app.js`, `web/style.css`.
+
+**Verify.** Reload and confirm the letter row is gone. Choose one program and see the list shrink.
+
 ## Plan (2026-10-05, default filters are All)
 
 Mode: `autonomous`. Design notes: skipped. The screenshot is board All and grade All.
