@@ -336,9 +336,9 @@
       const detail = result.detail;
       const tip = detail && detail.acc != null ? `${t("pat_acc")} ${detail.acc} · ${t("pat_exc")} ${detail.exc}` : "";
       const nameShown = displayName(s);
-      const name = s.website ? `<a href="${esc(s.website)}" target="_blank" rel="noopener">${esc(nameShown)}</a>` : esc(nameShown);
+      const name = esc(nameShown);
       const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
-      return `<tr><td class="num">${rank}</td><td>${name}</td>
+      return `<tr data-id="${esc(s.id)}" class="${String(s.id) === pickedId ? "sel" : ""}"><td class="num">${rank}</td><td>${name}</td>
         <td>${esc(s.board || "–")}</td><td>${esc(s.cbe_grades || s.grades || "–")}</td>
         <td class="num" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
     }).join("");
@@ -348,6 +348,7 @@
     document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig())
       .replace("{n}", String(rows.length))
       .replace("{scored}", String(scored));
+    renderRankMap();
   }
 
   function fillProgramFilter(names) {
@@ -378,13 +379,22 @@
         grade_min: row.grade_min, grade_max: row.grade_max, cbe_grades: row.grades,
         cbe_programs: row.programs, program_names: row.program_names,
       };
+      const lat = Number(row.lat), lon = Number(row.lon);
+      const hasPoint = Number.isFinite(lat) && Number.isFinite(lon);
       if (row.school_id != null && byId.has(row.school_id)) {
-        Object.assign(byId.get(row.school_id), fields);
+        const school = byId.get(row.school_id);
+        Object.assign(school, fields);
+        // City coordinates stay. The directory point fills a school the city file did not locate.
+        if (hasPoint && !Number.isFinite(Number(school.lat))) {
+          school.lat = lat;
+          school.lon = lon;
+        }
         return;
       }
       schools.push({
         id: "cbe-" + (row.code || row.name), name: row.name, board: "The Calgary School Division",
         grades: row.grades, rank_exam: row.rank_exam, rank_score: null, rank_year: null, cbe_only: true,
+        lat: hasPoint ? lat : null, lon: hasPoint ? lon : null,
         ...fields,
       });
     });
@@ -501,6 +511,117 @@
     }
   }
 
+  // Same schools as the ranking list. A later filter replaces the points and leaves the view where it is.
+  let rankMapFitted = false;
+  let pickedId = null;
+  const markerById = new Map();
+  let focusToken = 0;
+  function schoolPoint(school) {
+    const lat = Number(school.lat), lon = Number(school.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+    return [lat, lon];
+  }
+  function pointStyle(school, picked) {
+    const result = listedResult(school);
+    return {
+      radius: picked ? 8 : 5, weight: picked ? 3 : 1,
+      color: picked ? "#f5a623" : "#12355b",
+      fillColor: result.score == null ? "#ffffff" : "#12355b", fillOpacity: 0.9,
+    };
+  }
+  function schoolPopupHtml(school) {
+    const result = listedResult(school);
+    const name = displayName(school);
+    const title = school.website
+      ? `<a href="${esc(school.website)}" target="_blank" rel="noopener">${esc(name)}</a>`
+      : esc(name);
+    const phoneDigits = String(school.phone || "").replace(/[^\d+]/g, "");
+    const phone = phoneDigits
+      ? `<a href="tel:${esc(phoneDigits)}">${esc(school.phone)}</a>`
+      : `<span class="na">${t("no_data")}</span>`;
+    const address = school.address ? esc(school.address) : `<span class="na">${t("no_data")}</span>`;
+    const exam = result.exam === "pat9" ? t("grade9") : result.exam === "pat6" ? t("grade6") : "";
+    const score = result.score == null
+      ? t("no_data")
+      : `${fmtScore(result.score)}${exam ? " · " + exam : ""}${result.year ? " · " + result.year : ""}`;
+    const programs = (school.program_names || []).filter(Boolean);
+    const programLine = programs.length ? `<div><span class="k">${esc(t("filter_program"))}</span>${esc(programs.join(", "))}</div>` : "";
+    const enrol = school.enrolment == null ? "" : `<div><span class="k">${esc(t("enrolment"))}</span>${Number(school.enrolment).toLocaleString()}</div>`;
+    return `<div class="school-pop"><strong>${title}</strong>
+      <div><span class="k">${esc(t("phone"))}</span>${phone}</div>
+      <div><span class="k">${esc(t("address"))}</span>${address}</div>
+      <div><span class="k">${esc(t("board"))}</span>${esc(school.board || "–")}</div>
+      <div><span class="k">${esc(t("grades"))}</span>${esc(school.cbe_grades || school.grades || "–")}</div>
+      <div><span class="k">${esc(t("col_score"))}</span>${esc(score)}</div>
+      ${enrol}${programLine}</div>`;
+  }
+  // pinToTop is for a map click: the sticky header was covering the row, so it never looked like the first one.
+  function revealRankRow(id, pinToTop) {
+    const tr = document.querySelector(`#rankTable tbody tr[data-id="${CSS.escape(id)}"]`);
+    if (!tr) return;
+    const scroller = document.getElementById("rankScroll");
+    const head = document.querySelector("#rankTable thead");
+    const headH = head ? head.getBoundingClientRect().height : 0;
+    const row = tr.getBoundingClientRect();
+    const box = scroller.getBoundingClientRect();
+    const top = box.top + headH;
+    if (pinToTop || row.top < top || row.bottom > box.bottom) scroller.scrollTop += row.top - top;
+  }
+  function restylePicked(nextId) {
+    if (pickedId && pickedId !== nextId && markerById.has(pickedId)) {
+      const prev = schools.find((s) => String(s.id) === pickedId);
+      if (prev) markerById.get(pickedId).setStyle(pointStyle(prev, false));
+    }
+    pickedId = nextId;
+    document.querySelectorAll("#rankTable tbody tr").forEach((tr) => {
+      tr.classList.toggle("sel", tr.dataset.id === nextId);
+    });
+    const school = schools.find((s) => String(s.id) === nextId);
+    const marker = markerById.get(nextId);
+    if (school && marker) marker.setStyle(pointStyle(school, true));
+  }
+  // Row clicks and point clicks share this. The list name is plain text; the website link lives on the map card.
+  function focusSchool(id, pinToTop) {
+    const key = String(id);
+    const school = schools.find((s) => String(s.id) === key);
+    const marker = markerById.get(key);
+    const token = ++focusToken;
+    restylePicked(key);
+    revealRankRow(key, pinToTop);
+    if (!school || !marker) return;
+    const point = schoolPoint(school);
+    if (!point) return;
+    const latlng = L.latLng(point);
+    const zoom = Math.max(map.getZoom(), 15);
+    const open = () => { if (token === focusToken && markerById.get(key) === marker) marker.openPopup(); };
+    const there = map.getZoom() >= 15 && map.getCenter().distanceTo(latlng) < 40;
+    if (there) open();
+    else {
+      map.once("moveend", open);
+      map.flyTo(latlng, zoom, { duration: 0.45 });
+    }
+  }
+  function renderRankMap() {
+    if (!map) return;
+    map.invalidateSize();
+    if (schoolLayer) schoolLayer.remove();
+    markerById.clear();
+    const rows = schools.filter((s) => inConfig(s) && passesDirectory(s) && schoolPoint(s));
+    schoolLayer = L.layerGroup(rows.map((s) => {
+      const marker = L.circleMarker(schoolPoint(s), pointStyle(s, String(s.id) === pickedId))
+        .bindPopup(schoolPopupHtml(s), { maxWidth: 260, autoPan: true, autoPanPadding: [12, 12] });
+      marker.off("click");
+      marker.on("click", () => focusSchool(s.id, true));
+      markerById.set(String(s.id), marker);
+      return marker;
+    })).addTo(map);
+    if (!rankMapFitted && rows.length) {
+      rankMapFitted = true;
+      map.fitBounds(L.latLngBounds(rows.map((s) => schoolPoint(s))), { padding: [28, 28], maxZoom: 13 });
+    }
+  }
+
   function renderSchools() {
     if (schoolLayer) schoolLayer.remove();
     if (!document.getElementById("showSchools").checked) return;
@@ -550,7 +671,6 @@
   }
 
   let map;
-  if (!RANK_FIRST) {
   // map-zoom.mdc: scale the picture already on screen. The default wheel handler
   // waits out wheelDebounceTime, then setZoomAround. While an animation is
   // running, _tryAnimatedZoom returns without retargeting, so the next notch
@@ -626,7 +746,6 @@
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19, opacity: 0.6 }).addTo(map);
-  }
 
   const dataUrl = (name) => "data/" + name + "?v=20261005q";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json"].map((name) => fetch(dataUrl(name)).then((r) => {
@@ -714,6 +833,11 @@
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;
     if (RANK_FIRST) renderRank(); else renderTable();
+  });
+  document.querySelector("#rankTable tbody").addEventListener("click", (e) => {
+    if (e.target.closest("a")) return;
+    const tr = e.target.closest("tr");
+    if (tr && tr.dataset.id) focusSchool(tr.dataset.id);
   });
   document.querySelector("#commTable thead").addEventListener("click", (e) => {
     const key = e.target.dataset.key; if (!key) return;

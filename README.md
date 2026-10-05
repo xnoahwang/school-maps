@@ -2,7 +2,7 @@
 
 A local prototype for **immigrant / newcomer parents in Calgary** who know little about how schools and communities compare.
 
-The page opens on a **school ranking list**. The map is still in the project and is not shown on this page.
+The page opens with a left sidebar, the school filter area, holding the ranking list. The map on the right draws one point for each school in that list. With every filter on All, that is every listed school. A board, grade, program, or search filter draws only the schools still in the list. Click a row, including the school name, to move the map to that school and open its card (phone, address, board, grades, and score). Click a point for the same card. The name on the card links to the school website. A missing phone or address is "no data". Attendance areas are not on this map yet.
 
 - CBE schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest). Other schools are grouped by authority: Catholic, charter, francophone, other public boards, and private.
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
@@ -12,7 +12,7 @@ The score is (% acceptable + % excellence) / 2 for that one year. It is not the 
 
 CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters, and both open on All: board first, then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label.
 
-The map data, when brought back, shows every residential community as a choropleth, coloured by one of these metrics:
+The community view is not on this page. Its data still colours every residential community as a choropleth, by one of these metrics:
 
 - **School score**: Alberta Provincial Achievement Test (PAT) results of the community's *nearby* schools. Grade 6 (elementary) and grade 9 (junior high) are scored separately and combined.
 - **Median assessed home value**: 2026 City of Calgary property assessment roll.

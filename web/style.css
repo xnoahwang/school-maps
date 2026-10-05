@@ -28,15 +28,17 @@ tr:hover, tr.sel { background: #e3f0ff; cursor: pointer; }
 .legend { background: #fff; padding: 6px 8px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.3); font-size: 12px; line-height: 18px; }
 .legend i { display: inline-block; width: 16px; height: 12px; margin-right: 4px; vertical-align: middle; }
 @media (max-width: 1000px) { main { grid-template-columns: 1fr; grid-template-rows: 50vh auto auto; } #map { order: -1; } }
-/* The rank list is the page for now. The map stays in the markup and is not shown. */
-body.rank-first main { grid-template-columns: 1fr; }
-body.rank-first #map, body.rank-first #panel, body.rank-first #disclaimer, body.rank-first .controls label, body.rank-first #commTable { display: none; }
+/* The ranking list is the left sidebar. The map on the right is school points only. */
+body.rank-first #panel, body.rank-first #disclaimer, body.rank-first .controls label, body.rank-first #commTable { display: none; }
 body.rank-first { overflow: hidden; }
-body.rank-first main { grid-template-rows: minmax(0, 1fr); }
-body.rank-first #listPane { border: 0; max-width: 980px; margin: 0 auto; width: 100%; height: 100%; min-height: 0; padding: 16px 18px 12px; overflow: hidden; display: flex; flex-direction: column; }
+body.rank-first main { grid-template-columns: clamp(560px, 52vw, 820px) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); background: #ebe7e0; }
+body.rank-first #map { order: 0; height: 100%; min-height: 0; }
+body.rank-first #listPane { max-width: none; margin: 0; width: auto; height: 100%; min-height: 0; padding: 14px 14px 10px; overflow: hidden; display: flex; flex-direction: column; background: #fff; border-right: 1px solid #d9dee4; }
+#filterRegionTitle { margin: 0 0 10px; font-size: 16px; color: #12355b; }
+@media (max-width: 900px) { body.rank-first main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(220px, 40vh); } }
 body.rank-first #rankChrome { flex: none; }
 body.rank-first #rankScroll { flex: 1; min-height: 0; overflow: auto; }
-body.rank-first #rankTable th { position: sticky; top: 0; z-index: 2; }
+body.rank-first #rankTable th { position: sticky; top: 0; z-index: 2; white-space: nowrap; }
 #rankNote { margin: 0 0 10px; }
 #dirFilters { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 10px; }
 #configNote { margin: 0; }
@@ -50,3 +52,8 @@ body.rank-first #rankTable th { position: sticky; top: 0; z-index: 2; }
 #rankTable a { color: #12355b; }
 #rankTable { font-size: 14px; }
 #rankTable td { padding: 6px 4px; }
+#rankTable tr.sel, #rankTable tr.sel:hover { background: #8fbef2; }
+.school-pop strong { display: block; margin: 0 0 4px; }
+.school-pop div { margin-top: 2px; }
+.school-pop .k { color: #52606d; margin-right: 4px; }
+.leaflet-popup-content a { color: #12355b; }

@@ -4,6 +4,7 @@ window.I18N = {
   en: {
     title: "Calgary school results, ranked",
     subtitle: "Schools are grouped by the grade range CBE publishes, such as K–6 or 7–9. A range that includes grade 9 is ranked on the latest Grade 9 PAT. A range that includes grade 6 but not grade 9 is ranked on the latest Grade 6 PAT. High schools are left out until a current Diploma file is public.",
+    filter_region: "School filters",
     filter_board: "Board",
     filter_grade_layer: "Grades",
     rank_note_all: "{n} schools. Grade 6 and Grade 9 are different exams, so this is not one ranking. The score stays, with its grade beside it.",
@@ -23,6 +24,7 @@ window.I18N = {
     rank_note_noscore: "{n} schools. This grade range does not include grade 6 or grade 9, so there is no PAT to rank them by. They are listed by name.",
     rank_note_unknown: "{n} schools. The city file does not say which grades they teach, so they are listed by name and not ranked. The board is in the table.",
     col_rank: "#", col_school_name: "School", col_board: "Board", col_grades: "Grades", col_score: "Score", col_year: "Year",
+    phone: "Phone", address: "Address",
     score_source_label: "Where this score comes from",
     score_source_body: "Alberta Provincial Achievement Tests (PAT), Grade 6 or Grade 9. The source is the page below, under Multiyear results (by school). Score = (acceptable % + excellence %) / 2 for that school's newest year.",
     score_source_link: "Alberta PAT results",
@@ -82,6 +84,7 @@ window.I18N = {
   zh: {
     title: "卡尔加里学校成绩排名",
     subtitle: "按 CBE 公布的实际年级来分，例如 K–6、7–9。这个年级包含 9 年级的，按最新一年的 9 年级 PAT 排名；包含 6 年级、读不到 9 年级的，按最新一年的 6 年级 PAT 排名。高中没有公开成绩，不列入。",
+    filter_region: "学校筛选区",
     filter_board: "教育局",
     filter_grade_layer: "年级",
     rank_note_all: "{n} 所。6 年级和 9 年级不是同一种考试，所以这里不排成一个总名次。分数还在，旁边标了是哪一年级的成绩。",
@@ -101,6 +104,7 @@ window.I18N = {
     rank_note_noscore: "{n} 所。这个年级读不到 6 年级，也没有 9 年级，所以没有 PAT 可以排名，只按校名列出。",
     rank_note_unknown: "{n} 所。市里没写清年级，所以不排名，只按校名列出。教育局写在表里。",
     col_rank: "排名", col_school_name: "学校", col_board: "教育局", col_grades: "年级", col_score: "分数", col_year: "年份",
+    phone: "电话", address: "地址",
     score_source_label: "分数来源",
     score_source_body: "阿尔伯塔省 PAT（6 年级或 9 年级全省统考）。信源是下面这个页面，其中的 Multiyear results (by school)。分数 =（达标率 + 优秀率）/ 2，用这所学校最新一年。",
     score_source_link: "阿尔伯塔省 PAT 成绩页",

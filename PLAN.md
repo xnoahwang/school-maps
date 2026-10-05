@@ -1,5 +1,101 @@
 # PLAN.md
 
+## Plan (2026-10-05, selected row under the header)
+
+Mode: `autonomous`. Design notes: skipped. The sticky column header covers the row the map click scrolled to, so the highlighted school is not the first one you see.
+
+**Goal.** After a map click, the highlighted row sits just under the column header, as the first visible school.
+
+**Out of scope.** Row clicks jumping to the top, the card, commits.
+
+**Done when.** Clicking a point makes that school the first row under the header.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Click a point and compare the highlighted row’s top with the bottom of the column header.
+
+## Plan (2026-10-05, deeper selected row)
+
+Mode: `autonomous`. Design notes: skipped. The selected row uses the same pale blue as hover.
+
+**Goal.** The selected school row has a darker background so it stands out. Hover stays the lighter blue.
+
+**Out of scope.** The map marker, commits.
+
+**Done when.** A selected row’s background is darker than a hovered row.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/style.css`, `web/index.html`.
+
+**Verify.** Reload, select a row, and read its background color.
+
+## Plan (2026-10-05, plain school names)
+
+Mode: `autonomous`. Design notes: skipped. The list names are the underlined links in the screenshot. The map card keeps its website link.
+
+**Goal.** School names in the ranking list are plain text. Clicking a name moves the map the same way clicking the rest of the row does. The card on the map still links to the school website.
+
+**Out of scope.** The card contents, attendance areas, commits.
+
+**Done when.** The list names are not links, and the open card still has a website link.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `README.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload in Chinese. The school names in the list are not links. Open one card and confirm the name there is still a link.
+
+## Plan (2026-10-05, school row and map card)
+
+Mode: `autonomous`. Design notes: skipped. The card shows fields the data already has. A missing phone or address stays "no data".
+
+**Goal.** Clicking a school row moves the map to that school and opens its card. Clicking a point on the map opens the same card. The card shows the name, phone, address, board, grades, and score. The name link still opens the school website.
+
+**Out of scope.** Attendance areas, inventing phone numbers, commits.
+
+**Done when.** A row click centers that school and the card shows its phone and address when those exist. A point click opens the card and highlights the matching row.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/i18n.js`, `web/app.js`, `web/style.css`.
+
+**Verify.** In Chinese, click Briar Hill’s row (not the name link) and read the card. Click another point and confirm the card and the highlighted row.
+
+## Plan (2026-10-05, school points on the map)
+
+Mode: `autonomous`. Design notes: skipped. The right side stays empty of zones. It shows the same schools as the ranking list.
+
+**Goal.** Draw one point per school that the school filter area is listing. All filters on All shows every listed school. A board, grade, program, or search filter shows only the schools still in the list.
+
+**Out of scope.** Attendance areas, walk zones, the community choropleth, the detail panel, commits.
+
+**Done when.** A fresh load shows a point for each listed school that has coordinates. Changing a filter changes the points to that shorter list and does not move the map.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/app.js`, `web/style.css`.
+
+**Verify.** Reload in Chinese. Count map points against list rows on All, then on one board filter. The map view stays put when the filter changes.
+
+## Plan (2026-10-05, school filter sidebar)
+
+Mode: `autonomous`. Design notes: skipped. The ranking list becomes the left sidebar. The map itself waits for the next task.
+
+**Goal.** Put the filters and school rows in a left sidebar titled 学校筛选区 (School filters in English). The filters stay fixed and the rows still scroll. The right side is empty space for the map.
+
+**Out of scope.** Drawing the map, the old map controls, commits.
+
+**Done when.** The sidebar is on the left with that title, and the right side has no school rows.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/i18n.js`, `web/style.css`.
+
+**Verify.** Reload in Chinese. The title is 学校筛选区, the filters do not move when the rows scroll, and the right side is empty.
+
 ## Plan (2026-10-05, pin the filters)
 
 Mode: `autonomous`. Design notes: skipped. The filters, the count note, and the search stay put. The school rows scroll underneath the column headings.
