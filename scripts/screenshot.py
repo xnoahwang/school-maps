@@ -44,7 +44,8 @@ def main() -> int:
             page.screenshot(path=str(out_dir / "a_school_rank_pat6_en.png"))
 
             page.click("#lang")
-            page.select_option("#gradeConfig", "6-9")
+            page.select_option("#boardFilter", "cbe")
+            page.select_option("#gradeFilter", "6-9")
             page.wait_for_timeout(300)
             page.screenshot(path=str(out_dir / "b_school_rank_pat9_zh.png"))
             browser.close()

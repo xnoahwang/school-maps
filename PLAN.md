@@ -1,5 +1,58 @@
 # PLAN.md
 
+## Plan (2026-10-05, two-level grade filter)
+
+Mode: `autonomous`. Design notes: the grade control is two dropdowns. The first is the authority, including All. The second lists only the grades that authority actually has.
+
+**Goal.** Replace the single grouped dropdown with a board dropdown and a grade dropdown. All is the first board option. Choosing a board rebuilds the grade options. CBE still offers its published ranges. Other boards offer elementary, junior high, and unknown only when that board has those schools.
+
+**Assumptions.**
+- The page still opens on CBE and K–6.
+- All grades under one board, or All boards, mixes Grade 6 and Grade 9, so that view is not one ranking. The score stays, with the grade marked beside it.
+- High schools stay off the list.
+
+**Out of scope.** Splitting private operators, Diploma scores, the map, commits.
+
+**Done when.** Choosing Catholic shows only Catholic grade options. Choosing All shows every non-high-school group. K–6 is unchanged.
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/index.html`, `web/i18n.js`, `web/app.js`, `scripts/screenshot.py`.
+
+**Verify.** Reload the page. Check All, Catholic elementary, and CBE K–6.
+
+## Plan (2026-10-05, authority groups)
+
+Mode: `autonomous`. Design notes: split schools that are not in the CBE directory by the authority the city file names.
+
+**Goal.** Group the grade dropdown by authority: CBE grade ranges, Catholic (CSSD), charter, francophone, other public boards, and private. Inside each non-CBE group, elementary and junior high stay separate so Grade 6 and Grade 9 are not one list.
+
+**Assumptions.**
+- Charter means the board name contains “Charter”, plus Calgary Girls' School Society, Calgary Arts Academy Society, Almadina School Society, STEM Innovation Academy Society, and Alberta Classical Academy Ltd.
+- Other public boards are Palliser, Pembina Hills, and Prairie Land, matched by “School Division” or “Education Region”.
+- Rows with no board are post-secondary campuses and stay off the list.
+- High schools stay off the list.
+
+**Out of scope.** Diploma scores, the map, commits.
+
+**Done when.** Catholic elementary and private elementary are different options. K–6 is unchanged.
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/i18n.js`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload the page. Check Catholic elementary, private elementary, and K–6.
+
+## Plan (2026-10-05, note for schools outside the CBE directory)
+
+Mode: `autonomous`. Design notes: the dropdown label “不在 CBE 目录” needs a remark on the page.
+
+**Goal.** Show a short note under the grade dropdown, in English and 简体中文, saying those options are Catholic and private schools. The CBE directory lists only its own schools, so these come from the city list and only have elementary or junior high, not a range such as K–6.
+
+**Out of scope.** Changing which schools are in those groups, the map, commits.
+
+**Done when.** The note is visible on the Chinese page without opening the dropdown.
+
+**Pre-flight.** `PLAN.md`, `web/index.html`, `web/i18n.js`, `web/style.css`.
+
+**Verify.** Reload http://127.0.0.1:8765/?lang=zh and read the note.
+
 ## Plan (2026-10-05, one grade control)
 
 Mode: `autonomous`. Design notes: the grade-range dropdown and the K–9 checkboxes overlap. The dropdown is the one that matches how CBE lists a school.

@@ -11,7 +11,7 @@
   const state = { lang: params.get("lang") === "zh" ? "zh" : "en", metric: params.get("metric") || "school_score",
                   sortKey: "school_score", sortAsc: false, selected: params.get("zone") || params.get("community"), query: "",
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
-                  config: "K-6", program: "all", letter: "all" };
+                  board: "cbe", grade: "K-6", program: "all", letter: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
@@ -182,60 +182,120 @@
     return { score: null, year: null, exam, detail: null };
   }
 
-  function outsideBucket(school) {
-    if (school.cbe_grades || isHighSchool(school)) return null;
+  // These authorities run Calgary public charter schools. Their legal names do not contain "Charter".
+  const CHARTER_BOARDS = new Set([
+    "Calgary Girls' School Society",
+    "Calgary Arts Academy Society",
+    "Almadina School Society",
+    "STEM Innovation Academy Society",
+    "Alberta Classical Academy Ltd.",
+  ]);
+
+  function boardGroup(school) {
+    const board = school.board || "";
+    if (!board) return null;
+    if (board === "The Calgary School Division") return "cbe";
+    if (board === "The Calgary Roman Catholic Separate School Division") return "cssd";
+    if (board === "The Southern Francophone Education Region") return "franco";
+    if (board.includes("Charter") || CHARTER_BOARDS.has(board)) return "charter";
+    if (board.includes("School Division") || board.includes("Education Region")) return "other_public";
+    return "private";
+  }
+
+  function gradeBand(school) {
     const exam = listedExam(school);
-    if (exam === "pat9") return "other_junior";
-    if (exam === "pat6") return "other_elem";
-    return "other_unknown";
+    if (exam === "pat6") return "elem";
+    if (exam === "pat9") return "junior";
+    return "unknown";
   }
 
   function inConfig(school) {
-    if (isHighSchool(school)) return false;
-    if (state.config === "other_elem" || state.config === "other_junior" || state.config === "other_unknown") {
-      return outsideBucket(school) === state.config;
+    if (isHighSchool(school) || !school.board) return false;
+    if (state.board !== "all" && boardGroup(school) !== state.board) return false;
+    if (state.grade === "all") return true;
+    if (state.grade === "elem") return gradeBand(school) === "elem";
+    if (state.grade === "junior") return gradeBand(school) === "junior";
+    if (state.grade === "unlisted") return !school.cbe_grades && gradeBand(school) === "elem";
+    if (state.grade === "unknown") {
+      if (state.board === "cbe") return !school.cbe_grades && gradeBand(school) === "unknown";
+      return gradeBand(school) === "unknown";
     }
-    return school.cbe_grades === state.config;
+    return school.cbe_grades === state.grade;
   }
 
   function noteForConfig() {
-    if (state.config === "other_elem") return "rank_note_other_elem";
-    if (state.config === "other_junior") return "rank_note_other_junior";
-    if (state.config === "other_unknown") return "rank_note_unknown";
-    const span = rangeEnds(state.config);
-    const exam = examForSpan(span);
+    if (state.grade === "all") return "rank_note_all";
+    if (state.grade === "junior") return "rank_note_pat9";
+    if (state.grade === "elem" || state.grade === "unlisted") return "rank_note_pat6";
+    if (state.grade === "unknown") return "rank_note_unknown";
+    const exam = examForSpan(rangeEnds(state.grade));
     if (exam === "pat9") return "rank_note_pat9";
     if (exam === "pat6") return "rank_note_pat6";
     return "rank_note_noscore";
   }
 
-  function fillGradeConfig() {
-    const labels = new Set();
-    schools.forEach((school) => {
-      if (!isHighSchool(school) && school.cbe_grades) labels.add(school.cbe_grades);
+  function labeledOption(value, key) {
+    const option = document.createElement("option");
+    option.value = value;
+    if (key) {
+      option.dataset.label = key;
+      option.textContent = t(key);
+    } else {
+      option.textContent = value;
+    }
+    return option;
+  }
+
+  function refreshFilterLabels() {
+    document.querySelectorAll("#boardFilter option[data-label], #gradeFilter option[data-label]").forEach((option) => {
+      option.textContent = t(option.dataset.label);
     });
-    const select = document.getElementById("gradeConfig");
+  }
+
+  function schoolsInBoard(board) {
+    return schools.filter((school) => !isHighSchool(school) && school.board && (board === "all" || boardGroup(school) === board));
+  }
+
+  function fillBoardFilter() {
+    const select = document.getElementById("boardFilter");
     if (!select) return;
     select.replaceChildren();
-    [...labels].sort((a, b) => {
-      const [al, ah] = rangeEnds(a);
-      const [bl, bh] = rangeEnds(b);
-      return al - bl || ah - bh || a.localeCompare(b);
-    }).forEach((label) => {
-      const option = document.createElement("option");
-      option.value = label;
-      option.textContent = label;
-      select.appendChild(option);
+    ["all", "cbe", "cssd", "charter", "franco", "other_public", "private"].forEach((group) => {
+      if (group !== "all" && !schoolsInBoard(group).length) return;
+      const key = group === "all" ? "filter_all" : "group_" + group;
+      select.appendChild(labeledOption(group, key));
     });
-    ["other_elem", "other_junior", "other_unknown"].forEach((value) => {
-      if (!schools.some((school) => outsideBucket(school) === value)) return;
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = t("config_" + value);
-      select.appendChild(option);
-    });
-    if (![...select.options].some((option) => option.value === state.config)) state.config = "K-6";
-    select.value = state.config;
+    if (![...select.options].some((option) => option.value === state.board)) state.board = "all";
+    select.value = state.board;
+    fillGradeFilter();
+  }
+
+  function fillGradeFilter() {
+    const select = document.getElementById("gradeFilter");
+    if (!select) return;
+    const list = schoolsInBoard(state.board);
+    select.replaceChildren();
+    select.appendChild(labeledOption("all", "filter_all"));
+    if (state.board === "cbe") {
+      const labels = new Set(list.map((school) => school.cbe_grades).filter(Boolean));
+      [...labels].sort((a, b) => {
+        const [al, ah] = rangeEnds(a);
+        const [bl, bh] = rangeEnds(b);
+        return al - bl || ah - bh || a.localeCompare(b);
+      }).forEach((label) => select.appendChild(labeledOption(label)));
+      if (list.some((school) => !school.cbe_grades && gradeBand(school) === "elem")) {
+        select.appendChild(labeledOption("unlisted", "rank_band_unlisted"));
+      }
+      if (list.some((school) => !school.cbe_grades && gradeBand(school) === "unknown")) {
+        select.appendChild(labeledOption("unknown", "rank_band_unknown"));
+      }
+    } else {
+      if (list.some((school) => gradeBand(school) === "elem")) select.appendChild(labeledOption("elem", "rank_band_elem"));
+      if (list.some((school) => gradeBand(school) === "junior")) select.appendChild(labeledOption("junior", "rank_band_junior"));
+      if (list.some((school) => gradeBand(school) === "unknown")) select.appendChild(labeledOption("unknown", "rank_band_unknown"));
+    }
+    if (![...select.options].some((option) => option.value === state.grade)) state.grade = "all";
+    select.value = state.grade;
   }
 
   function passesDirectory(school) {
@@ -249,29 +309,39 @@
 
   function renderRank() {
     document.querySelectorAll("#letterFilters button").forEach((btn) => btn.classList.toggle("on", btn.dataset.letter === state.letter));
-    ["other_elem", "other_junior", "other_unknown"].forEach((value) => {
-      const option = document.querySelector("#gradeConfig option[value=" + value + "]");
-      if (option) option.textContent = t("config_" + value);
-    });
+    refreshFilterLabels();
     const rows = schools.filter((s) => inConfig(s) && passesDirectory(s));
+    const mixed = state.grade === "all";
     const shown = rows.map((s) => ({ school: s, result: listedResult(s) }));
+    const examOrder = { pat6: 0, pat9: 1 };
     shown.sort((a, b) => {
+      if (mixed && (a.result.exam || "") !== (b.result.exam || "")) {
+        return (examOrder[a.result.exam] ?? 2) - (examOrder[b.result.exam] ?? 2);
+      }
       if (a.result.score == null && b.result.score == null) return displayName(a.school).localeCompare(displayName(b.school));
       if (a.result.score == null) return 1;
       if (b.result.score == null) return -1;
       return b.result.score - a.result.score || displayName(a.school).localeCompare(displayName(b.school));
     });
-    let place = 0;
+    const placeByExam = {};
+    let scored = 0;
     document.querySelector("#rankTable tbody").innerHTML = shown.map(({ school: s, result }) => {
-      const rank = result.score == null ? "–" : String(++place);
+      let rank = "–";
+      if (result.score != null) {
+        scored += 1;
+        const key = mixed ? (result.exam || "") : "one";
+        placeByExam[key] = (placeByExam[key] || 0) + 1;
+        rank = String(placeByExam[key]);
+      }
       const detail = result.detail;
       const tip = detail && detail.acc != null ? `${t("pat_acc")} ${detail.acc} · ${t("pat_exc")} ${detail.exc}` : "";
       const nameShown = displayName(s);
       const name = s.website ? `<a href="${esc(s.website)}" target="_blank" rel="noopener">${esc(nameShown)}</a>` : esc(nameShown);
       const extra = [s.phone, (s.cbe_programs || []).map((p) => p.label).join(", ")].filter(Boolean).join(" · ");
+      const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
       return `<tr><td class="num">${rank}</td><td>${name}${extra ? `<div class="small">${esc(extra)}</div>` : ""}</td>
         <td>${esc(s.board || "–")}</td><td>${esc(s.cbe_grades || s.grades || "–")}</td>
-        <td class="num" title="${esc(tip)}">${orNA(fmtScore(result.score))}</td><td class="num">${result.year || "–"}</td></tr>`;
+        <td class="num" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td></tr>`;
     }).join("");
     const allPrograms = document.querySelector("#programFilter option[value=all]");
     if (allPrograms) allPrograms.textContent = t("filter_all_programs");
@@ -280,7 +350,7 @@
     const filtered = state.program !== "all" || state.letter !== "all" || state.query;
     document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig())
       .replace("{n}", String(rows.length))
-      .replace("{scored}", String(place));
+      .replace("{scored}", String(scored));
   }
 
   function fillProgramFilter(names) {
@@ -322,7 +392,7 @@
       });
     });
     fillProgramFilter(directory.programs);
-    fillGradeConfig();
+    fillBoardFilter();
   }
 
   function sourceHref(entry) {
@@ -561,7 +631,7 @@
     maxZoom: 19, opacity: 0.6 }).addTo(map);
   }
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005f";
+  const dataUrl = (name) => "data/" + name + "?v=20261005j";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory]) => {
@@ -604,8 +674,13 @@
   document.getElementById("showSchools").addEventListener("change", renderSchools);
   document.getElementById("showWalk").addEventListener("change", () => { renderGeo(false); renderSchools(); });
   document.getElementById("lang").addEventListener("click", () => { state.lang = state.lang === "en" ? "zh" : "en"; rerenderAll(); });
-  document.getElementById("gradeConfig").addEventListener("change", (e) => {
-    state.config = e.target.value;
+  document.getElementById("boardFilter").addEventListener("change", (e) => {
+    state.board = e.target.value;
+    fillGradeFilter();
+    renderRank();
+  });
+  document.getElementById("gradeFilter").addEventListener("change", (e) => {
+    state.grade = e.target.value;
     renderRank();
   });
   if (RANK_FIRST) {

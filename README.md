@@ -4,13 +4,13 @@ A local prototype for **immigrant / newcomer parents in Calgary** who know littl
 
 The page opens on a **school ranking list**. The map is still in the project and is not shown on this page.
 
-- Schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest), not by an exam bucket.
+- CBE schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest). Other schools are grouped by authority: Catholic, charter, francophone, other public boards, and private.
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
 - High schools are omitted. No current school-level Diploma file is public.
 
 The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used by the community map data below. Schools with no published result stay at the bottom and are not numbered.
 
-CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page groups schools by that grade range. It can also filter by program and by the first letter of the name. `scripts/fetch_cbe_directory.py` refreshes that file. Catholic schools are not in that directory.
+CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters: board first (including All), then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program and by the first letter of the name. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label.
 
 The map data, when brought back, shows every residential community as a choropleth, coloured by one of these metrics:
 
