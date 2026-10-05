@@ -15,6 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_data import normalize_name
+from store import write_if_changed
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "web" / "data" / "cbe_directory.json"
@@ -192,7 +193,8 @@ def main() -> int:
         "programs": searchable,
         "schools": schools,
     }
-    OUT.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    text = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    write_if_changed(OUT, text)
     matched = sum(1 for row in schools if row["school_id"] is not None)
     print(f"directory schools {len(schools)}, matched {matched}, new {len(schools) - matched}, programs {len(searchable)}")
     return 0

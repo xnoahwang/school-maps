@@ -359,7 +359,7 @@ Mode from `CURSOR_PRIME_CLOUD_MODE` or `.cursor/cursor-prime-cloud-mode` overrid
 <!-- cursor-prime-cloud:end -->
 ## Project: Calgary School & Community Explorer
 
-Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the plan and verify record.
+Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the current plan and verify record. The page that opens is the ranking list and school map. Community scores are still written to `web/data/` and are not shown.
 
 ### Layout
 - `scripts/build_data.py`: official community data is downloaded, joined, and scored. Output goes to `web/data/`.
@@ -367,7 +367,8 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 - `scripts/fetch_reviews.py`: optional Google/Reddit review layer. Exits 0 without API keys and does not change exam scores.
 - `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program and grade filters.
 - `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.
-- `scripts/verify.py`: data sanity checks (exit 1 on failure). `scripts/screenshot.py`: headless screenshots.
+- `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values or diploma results. `--install-task` registers a weekly Sunday 09:00 run.
+- `scripts/verify.py`: data sanity checks (exit 1 on failure).
 - `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en + zh), and any new key must be added to both languages.
 - `data/raw/`: download cache. **Do not commit** (about 50 MB). `web/data/` is generated but committed.
 
@@ -379,7 +380,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Verify
 ```bash
-.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py && .venv/bin/python scripts/screenshot.py
+.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py
 ```
 
 ### Forbidden zones

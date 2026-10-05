@@ -2,8 +2,9 @@
 
 Responsibility: turn the KMZ files published by the CBE Find a School tool
 into web/data/zones.geojson, one attendance polygon and one walk zone per
-program that publishes them. The community choropleth still uses the regular
-program only. CSSD zones are not in this file. Run after scripts/build_data.py.
+program that publishes them. Grade 10–12 zones are skipped. The community
+choropleth still uses the regular program only. CSSD zones are not in this
+file. Run after scripts/build_data.py.
 """
 from __future__ import annotations
 
@@ -23,6 +24,7 @@ from shapely.validation import make_valid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_data import normalize_name, percentile_ranks  # noqa: E402
+from store import write_if_changed  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "cbe_kmz"
@@ -98,23 +100,30 @@ def load_kmz(path: Path):
     return geom.simplify(0.00012, preserve_topology=True)
 
 
-def download(url_path: str) -> Path | None:
-    """Cache one CBE document under data/raw/cbe_kmz. None on HTTP failure."""
+def download(url_path: str, refresh: bool = False) -> Path | None:
+    """Cache one CBE document under data/raw/cbe_kmz. None on HTTP failure.
+
+    A cached file is reused unless refresh is set. On refresh, identical
+    bytes are left in place. A failed refresh keeps the cache when it exists.
+    """
     RAW.mkdir(parents=True, exist_ok=True)
     name = url_path.rstrip("/").split("/")[-1] or "zone.kmz"
     dest = RAW / name
-    if dest.exists() and dest.stat().st_size > 500:
+    cached = dest.exists() and dest.stat().st_size > 500
+    if cached and not refresh:
         return dest
     try:
         resp = requests.get(CBE + url_path, headers={"User-Agent": USER_AGENT}, timeout=60)
         resp.raise_for_status()
         if len(resp.content) < 500:
-            return None
+            return dest if cached else None
+        if cached and dest.read_bytes() == resp.content:
+            return dest
         dest.write_bytes(resp.content)
         return dest
     except Exception as exc:  # noqa: BLE001
         print(f"WARN zone download {url_path}: {exc}", file=sys.stderr)
-        return None
+        return dest if cached else None
 
 
 def grade_band(low: int, high: int) -> str:
@@ -148,8 +157,12 @@ def program_names() -> dict[str, str]:
     return names
 
 
-def main() -> int:
-    """CLI entry. Exit 0 when zones.geojson is written, 1 when the API fails."""
+def main(refresh: bool = False) -> int:
+    """CLI entry. Exit 0 when zones.geojson is current, 1 when the API fails.
+
+    refresh re-downloads each zone file and keeps it when the bytes match.
+    Grade 10–12 zones are skipped: there is no public diploma score for them.
+    """
     schools_path = OUT / "schools.json"
     communities_path = OUT / "communities.geojson"
     if not schools_path.exists() or not communities_path.exists():
@@ -189,11 +202,14 @@ def main() -> int:
                 continue
             low = int(program.get("programLowGrade") or 0)
             high = int(program.get("programHighGrade") or 0)
+            band = grade_band(low, high)
+            if band == "senior":
+                continue
             jobs.append({
                 "name": profile.get("schoolname") or row.get("title"),
                 "school_code": str(profile.get("schoolcode") or ""),
                 "program": program_name,
-                "low": low, "high": high, "band": grade_band(low, high),
+                "low": low, "high": high, "band": band,
                 "overlay": program.get("overlay") or "",
                 "walkzone": program.get("walkzone") or "",
             })
@@ -201,7 +217,7 @@ def main() -> int:
     paths: dict[str, Path | None] = {}
     urls = sorted({u for job in jobs for u in (job["overlay"], job["walkzone"]) if u})
     with ThreadPoolExecutor(max_workers=8) as pool:
-        future = {pool.submit(download, url): url for url in urls}
+        future = {pool.submit(download, url, refresh): url for url in urls}
         for done in as_completed(future):
             paths[future[done]] = done.result()
     print(f"zone files: {sum(1 for p in paths.values() if p)}/{len(urls)}")
@@ -278,10 +294,8 @@ def main() -> int:
             sp, pp = school_pct[code], price_pct[code]
             feat["properties"]["value_score"] = None if sp is None or pp is None else round((sp - pp + 100) / 2, 1)
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "zones.geojson").write_text(
-        json.dumps({"type": "FeatureCollection", "features": features}, separators=(",", ":"), allow_nan=False),
-        encoding="utf-8")
+    text = json.dumps({"type": "FeatureCollection", "features": features}, separators=(",", ":"), allow_nan=False)
+    write_if_changed(OUT / "zones.geojson", text)
     print(f"attendance {len(attendance)} regular {len(regular)} walk {sum(1 for f in features if f['properties']['kind']=='walk')} skipped {skipped}")
     return 0 if len(regular) >= 80 else 1
 

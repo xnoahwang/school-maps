@@ -1,8 +1,9 @@
 /* Front-end logic for the Calgary School & Community Explorer.
- * Loads web/data/*.json produced by scripts/build_data.py, draws the Leaflet
- * choropleth, the sortable community table and the detail panel, and handles
- * the EN/中文 toggle. It never computes scores itself; it only displays them.
- * Optional URL params: ?lang=zh&metric=home_value&community=<CODE>
+ * The page that opens is the school ranking list beside the map. Scores come
+ * from web/data/ and are displayed, not recalculated, except when a CBE grade
+ * range calls for the other exam's latest-year block. Clicking a school draws
+ * its CBE zone from zones.geojson. The community choropleth stays in this file
+ * and is hidden while body.rank-first is set. Optional URL param: ?lang=zh
  */
 (function () {
   "use strict";
@@ -401,7 +402,12 @@
         ...fields,
       });
     });
-    fillProgramFilter(directory.programs);
+    const listedPrograms = new Set();
+    schools.forEach((school) => {
+      if (isHighSchool(school)) return;
+      (school.program_names || []).forEach((name) => listedPrograms.add(name));
+    });
+    fillProgramFilter([...listedPrograms].sort((a, b) => a.localeCompare(b)));
     fillBoardFilter();
   }
 

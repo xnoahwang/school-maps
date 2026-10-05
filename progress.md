@@ -5,21 +5,24 @@ The ranking list is a left sidebar called the school filter area. The page is a 
 
 ## Completed
 - cursor-prime-cloud rules installed (autonomous mode), and the plan recorded in PLAN.md.
-- Data pipeline, scoring, verify script, static bilingual front end, and screenshots.
+- Data pipeline, scoring, verify script, and a bilingual ranking page: board, grade, and program filters, with the list beside the map.
+- Clicking a school draws the CBE attendance zone and walk zone from the public finder files.
+- CBE directory for phone, website, grades, and programs. Alberta's directory fills a phone or website only when one is missing.
 - 2025-to-2026 assessed-value change, 2021 census children and families, school enrolment, source as-of dates.
 - Optional review script (`scripts/fetch_reviews.py`) that skips cleanly without API keys.
+- Weekly school update (`scripts/update_schools.py`): directory, contacts, and zones, written only when the text changes. Home values and diploma results are not part of it.
 
 ## Next Steps
-- Diploma results for high schools, once a current school-level file is public.
 - Show the PAT cohort size (`n_cells`) in the UI, and optionally add a minimum cohort rule.
-- Official attendance-area data from CBE/CSSD, if they publish it or agree to share it.
+- CSSD attendance areas, if that board publishes a file the page can use. CBE zones are already drawn.
 - Equity Index when the City publishes a community or census-tract table, not only PDF maps.
 - Run `fetch_reviews.py` once Google and Reddit keys exist.
 
 ## Known Issues
-- Catchment is approximated. Home value is the assessed value, not the market price, and mixes houses with condos.
+- A school with no CBE zone, including CSSD, charter, and private schools, has no polygon. Community scores still use nearby schools and are not shown on the page.
+- Home value is the assessed value, not the market price, and mixes houses with condos. The weekly school update does not refresh it.
 - Rent and community crime are not available as open community-level data.
-- High-school score is null for every community until a current Diploma file exists.
+- High schools stay off the list. There is no current diploma file, so they are not ranked or given a grade 10–12 zone.
 
 ## Handoff
-Verify: `.venv/Scripts/python scripts/build_data.py && .venv/Scripts/python scripts/verify.py && .venv/Scripts/python scripts/fetch_reviews.py && .venv/Scripts/python scripts/screenshot.py`
+Verify: `.venv\Scripts\python scripts\build_data.py` then `fetch_cbe_directory.py`, `fetch_ab_contacts.py`, `verify.py`, and `fetch_reviews.py`.

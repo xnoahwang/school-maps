@@ -70,7 +70,8 @@ def run_checks() -> list[tuple[str, bool, str]]:
         attendance = [f for f in zfeats if f.get("properties", {}).get("kind") == "attendance"]
         walks = [f for f in zfeats if f.get("properties", {}).get("kind") == "walk"]
         elem = [f for f in attendance if f["properties"].get("band") == "elem"]
-        out.append(("CBE regular attendance zones", len(attendance) >= 80, f"{len(attendance)}"))
+        regular = [f for f in attendance if f["properties"].get("program") == "Regular"]
+        out.append(("CBE regular attendance zones", len(regular) >= 80, f"{len(regular)} regular of {len(attendance)}"))
         out.append(("CBE walk zones", len(walks) >= 50, f"{len(walks)}"))
         out.append(("elementary attendance zones", len(elem) >= 40, f"{len(elem)}"))
     ranked = [s for s in schools if "rank_exam" in s]

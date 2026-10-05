@@ -14,6 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_data import normalize_name
+from store import write_if_changed
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "authority_and_school.xlsx"
@@ -123,7 +124,8 @@ def main() -> None:
         "as_of": as_of,
         "schools": rows,
     }
-    OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+    text = json.dumps(payload, ensure_ascii=False, indent=1)
+    write_if_changed(OUT, text)
     with_site = sum(1 for row in rows if row["website"])
     print(f"ab contacts: {len(rows)} schools, {with_site} with a website, as of {as_of}")
 

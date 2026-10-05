@@ -6,30 +6,18 @@ The page opens with a left sidebar, the school filter area, holding the ranking 
 
 - CBE schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest). Other schools are grouped by authority: Catholic, charter, francophone, other public boards, and private.
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
-- High schools are omitted. No current school-level Diploma file is public.
+- High schools are left off the list. There is no current school-level Diploma file, so they are not ranked and their grade 10–12 zones are not built.
+- With the grade filter on All, Grade 6 and Grade 9 are separate lists. Grade 6 comes first, then Grade 9. Rank numbers start again for each exam, and the score cell names the grade.
 
-The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used by the community map data below. Schools with no published result stay at the bottom and are not numbered. The circle beside the score heading opens this explanation and links to Alberta's [PAT results page](https://www.alberta.ca/provincial-achievement-tests#jumplinks-3), under Multiyear results (by school).
+The score is (% acceptable + % excellence) / 2 for that one year. It is not the three-year average used for the community figures in the tables below. Schools with no published result stay at the bottom and are not numbered. Hovering a score shows the two rates with the percent mark after the number, for example 达标率 96.5%. The circle beside the score heading opens this explanation and links to Alberta's [PAT results page](https://www.alberta.ca/provincial-achievement-tests#jumplinks-3), under Multiyear results (by school).
 
-CBE schools also carry the public [school directory](https://www.cbe.ab.ca/school-directory): phone, address, website, grade span, and programs. The page has two filters, and both open on All: board first, then the grades that board actually offers. CBE schools use the published grade range. Every other school is grouped by its board. It can also filter by program. `scripts/fetch_cbe_directory.py` refreshes the CBE file. Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label. Their official website and phone, when published, come from Alberta's [school directory](https://open.alberta.ca/opendata/alberta-education-schools-and-authorities). `scripts/fetch_ab_contacts.py` refreshes that file. It fills a phone or website only when the school does not already have one, and it does not invent a site the file left blank.
+Filters are board, grade, and program. Each opens on All. Board and grade sit on one row. CBE grade options are the ranges that board publishes, such as K–6 and 7–9. Other schools use elementary, junior high, or unknown. The list can also filter by a CBE program name. `scripts/fetch_cbe_directory.py` refreshes the [CBE school directory](https://www.cbe.ab.ca/school-directory) (phone, address, website, grade span, and programs). Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label. A phone or website the directory does not already have comes from Alberta's [school directory](https://open.alberta.ca/opendata/alberta-education-schools-and-authorities). `scripts/fetch_ab_contacts.py` refreshes that file. It does not invent a site the file left blank.
 
-The community view is not on this page. Its data still colours every residential community as a choropleth, by one of these metrics:
+The UI switches between English and 简体中文. CSSD zones are not drawn. Always confirm the designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school) and the [CSSD School Finder](https://www.cssd.ab.ca/schools).
 
-- **School score**: Alberta Provincial Achievement Test (PAT) results of the community's *nearby* schools. Grade 6 (elementary) and grade 9 (junior high) are scored separately and combined.
-- **Median assessed home value**: 2026 City of Calgary property assessment roll.
-- **Value for money**: the school score compared with the price.
-- **Context** (not part of the school score): 2021 census share of residents age 0–14, share of census families with children, and the change in median assessed value from the 2025 roll to the 2026 roll.
-- **High-school Diploma score**: the picker is there, but every community is "no data" until a current school-level file is published. See Limitations.
-- **Review score**: a separate opinion layer from `scripts/fetch_reviews.py`. It is not mixed into the exam score. Without API keys the script skips and the map shows "no data".
-
-Click a community to see its nearby schools (board, grades, PAT % acceptable / % excellence and the years they come from), its home value, amenity counts, and source links. The UI switches between English and 简体中文.
-
-The default map is divided by **CBE regular-program attendance zones** (the designated school area), with **walk zones** drawn inside them. A walk zone is the part of that area where students are not eligible for yellow-bus service. Switch "Divide by" to Community for the older community choropleth. CSSD zones are not included. Always confirm the designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school) and the [CSSD School Finder](https://www.cssd.ab.ca/schools).
-
-School markers are on by default.
+Community scores, home values, amenities, and the optional review score are still built by the pipeline. They are not shown on this page. Their definitions are in the tables below.
 
 Status: prototype. Code and comments are in English.
-
-**Read first:** [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) explains why this exists, who it is for, how it differs from FamilyRoost, and the roadmap. [`docs/CURSOR_PROMPT.md`](docs/CURSOR_PROMPT.md) is the ready-to-use prompt for the next development phase (fresher data, plus Reddit and Google Maps reviews).
 
 ## Run
 
@@ -37,11 +25,11 @@ Status: prototype. Code and comments are in English.
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # Windows: .venv\Scripts\pip
 .venv/bin/python scripts/build_data.py          # optional: downloads into data/raw/ (cached), rewrites web/data/
 python3 -m http.server 8765 -d web               # then open http://localhost:8765/
-
-`web/data/` is committed, so the map runs with only the last command.
 ```
 
-URL parameters (optional): `?lang=zh`, `?metric=school_score|elem_score|junior_score|home_value|value_score`, `?community=VAR` (community code).
+`web/data/` is committed, so the map runs with only the last command.
+
+URL parameter (optional): `?lang=zh`.
 
 `build_data.py --refresh` re-downloads every source. Without it, files already in `data/raw/` are reused.
 
@@ -55,13 +43,27 @@ $env:REDDIT_CLIENT_SECRET = "..."
 .venv/Scripts/python scripts/fetch_reviews.py
 ```
 
+## School data update
+
+The page reads the JSON already in `web/data/`. It does not call CBE when you open it.
+
+`scripts/update_schools.py` refreshes the CBE directory, Alberta phone and website file, and CBE zones. A file is replaced only when the new text differs. A source that fails or comes back empty keeps the file on disk. Home values are not downloaded. High-school diploma results are not fetched.
+
+On this computer the update is scheduled weekly, Sunday at 09:00 local time, and runs after a missed start once the machine is on. Register it again with:
+
+```bash
+.venv/bin/python scripts/update_schools.py --install-task
+```
+
+The log is `data/raw/update_schools.log` (not committed).
+
 ## Verify
 
 ```bash
-.venv/bin/python scripts/build_data.py    # prints counts + PAT match rate, exit 0
-.venv/bin/python scripts/verify.py        # PASS/FAIL data checks, exit 0 when all pass
-.venv/bin/python scripts/screenshot.py    # serves web/ on :8765, writes screenshots/*.png (needs Chrome or `playwright install chromium`)
+.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py
 ```
+
+On Windows, use `.venv\Scripts\python` instead of `.venv/bin/python`. `verify.py` exits 0 when the data checks pass. `fetch_reviews.py` exits 0 when the API keys are unset.
 
 ## How the numbers are made (simple on purpose)
 
@@ -100,13 +102,16 @@ Any missing input gives "no data" (grey), never zero. A real published 0.0 (for 
 | 2021 census age | [f9wk-wej9 Population and Dwellings by Community](https://data.calgary.ca/d/f9wk-wej9) | OGL – City of Calgary |
 | 2021 census families | [msjx-5ygv Families and Households by Community](https://data.calgary.ca/d/msjx-5ygv) | OGL – City of Calgary |
 | Enrolment | [9qye-mibh School Enrolment Data](https://data.calgary.ca/d/9qye-mibh). Newest year in the file, not class size. | OGL – City of Calgary |
+| CBE school directory | [cbe.ab.ca/school-directory](https://www.cbe.ab.ca/school-directory). Phone, address, website, grades, and programs. | CBE public pages |
+| Alberta school contacts | [Schools and authorities](https://open.alberta.ca/opendata/alberta-education-schools-and-authorities), file as of 2026-10-04. Phone and website only, and only when the school does not already have them. | OGL – Alberta |
+| CBE attendance and walk zones | KMZ files loaded by the public [CBE School Finder](https://www.cbe.ab.ca/find-a-school). `scripts/build_zones.py` writes `web/data/zones.geojson`. | CBE public pages |
 | Basemap | © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL), standard tile server. For anything beyond prototype traffic, follow the OSM tile usage policy or self-host. | ODbL |
 
-As-of dates for each downloaded source are in `web/data/meta.json` (`sources.*.as_of`). Sources that were checked and not used are in `meta.json → gaps`.
+As-of dates for the Open Calgary and PAT downloads are in `web/data/meta.json` (`sources.*.as_of`). The Alberta contacts file date is in `web/data/ab_contacts.json`. Sources that were checked and not used are in `meta.json → gaps`.
 
 ## Limitations
 
-- **The catchment is an approximation**, not the official CBE or CSSD designation. Programs of choice, French immersion, and Catholic eligibility are not modelled.
+- Clicking a school draws the attendance area and walk zone CBE publishes. With the program filter on All, a school that has a regular program uses that zone; otherwise it uses the program zone CBE publishes. A chosen program uses that program's zone when the school has one. Schools with no CBE zone, including CSSD, charter, and private schools, show "no data" and no polygon. CSSD zones are not in the file. The community scores in the data still treat nearby schools as an approximation, and that choropleth is not on this page.
 - PAT data covers grades 6 and 9 only. Schools that end before grade 6 (for example K–4) have no PAT score. **High-school Diploma results are not included**: no school-level Diploma XLSX newer than 2015/16 was found (the alberta.ca URL returns 404, and open.alberta.ca lists only 2015/16). Current per-school multiyear PDFs are embargoed for school-authority use until Alberta lifts the embargo, so they are not downloaded.
 - PAT match: 372 of 423 elementary or junior-high schools in the City list (87.9%) are matched by board and normalised name. 299 of the 322 CBE/CSSD-named schools in the PAT file (92.9%) are matched. Most unmatched City schools are K–4/K–5 schools or private schools that do not appear in the PAT file. See `web/data/meta.json → stats`.
 - Small cohorts make PAT averages noisy. The number of non-suppressed cells is kept per school (`n_cells` in `schools.json`) but not yet shown in the UI.
@@ -125,12 +130,11 @@ scripts/build_zones.py  CBE attendance and walk zones, per published program -> 
 scripts/verify.py       data sanity checks
 scripts/fetch_cbe_directory.py  CBE directory -> web/data/cbe_directory.json
 scripts/fetch_ab_contacts.py  Alberta school phone and website -> web/data/ab_contacts.json
+scripts/update_schools.py  refresh directory, contacts, and zones; write only if changed
 scripts/fetch_reviews.py  optional Google/Reddit reviews -> web/data/reviews.json (skips without keys)
-scripts/screenshot.py   headless screenshots -> screenshots/
 web/index.html, app.js, i18n.js, style.css   static front end (Leaflet via unpkg CDN)
 web/data/               generated, committed so the site runs without a rebuild
 data/raw/               download cache (large, not committed)
-PLAN.md                 plan / verify record (cursor-prime-cloud autonomous mode)
-docs/PROJECT_BRIEF.md   why / who / direction / risks
-docs/CURSOR_PROMPT.md   prompt for the next Cursor agent phase
+PLAN.md                 current plan / verify record
+progress.md             working log
 ```
