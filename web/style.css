@@ -57,3 +57,12 @@ body.rank-first #rankTable th { position: sticky; top: 0; z-index: 2; white-spac
 .school-pop div { margin-top: 2px; }
 .school-pop .k { color: #52606d; margin-right: 4px; }
 .leaflet-popup-content a { color: #12355b; }
+.school-pop .official { margin-top: 8px; padding-top: 6px; border-top: 1px solid #e4e8ec; font-size: 12px; }
+.school-pop .official a { display: inline-block; }
+.school-pop .note { color: #52606d; margin-top: 2px; }
+#zoneKey { position: absolute; z-index: 800; left: 10px; bottom: 18px; max-width: 220px; background: #fff; padding: 6px 8px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.3); font-size: 12px; line-height: 18px; color: #12355b; }
+#zoneKey[hidden] { display: none; }
+#zoneKey .zone-program { font-weight: 650; margin-bottom: 2px; }
+#zoneKey i { display: inline-block; width: 16px; height: 12px; margin-right: 4px; vertical-align: middle; box-sizing: border-box; }
+#zoneKey i.area { background: rgba(47, 111, 173, .45); border: 2px solid #12355b; }
+#zoneKey i.walk { background: rgba(245, 166, 35, .35); border: 2px dashed #c45c26; }

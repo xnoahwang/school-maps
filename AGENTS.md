@@ -363,7 +363,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Layout
 - `scripts/build_data.py`: official community data is downloaded, joined, and scored. Output goes to `web/data/`.
-- `scripts/build_zones.py`: CBE regular-program attendance areas and walk zones, from the public finder KMZ files. Run it after `build_data.py`.
+- `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, from the public finder KMZ files. The community choropleth uses the regular program. The ranking map draws a zone when a school is clicked. Run it after `build_data.py`.
 - `scripts/fetch_reviews.py`: optional Google/Reddit review layer. Exits 0 without API keys and does not change exam scores.
 - `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program and grade filters.
 - `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.

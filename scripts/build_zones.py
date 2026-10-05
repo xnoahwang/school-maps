@@ -1,16 +1,14 @@
-"""Download CBE regular-program attendance areas and walk zones.
+"""Download CBE attendance areas and walk zones.
 
-Responsibility: turn the KMZ files already published by the CBE Find a School
-tool into web/data/zones.geojson. It does not scrape the finder page. CSSD
-zones and alternative-program zones (French immersion, IB, bilingual) are out
-of scope. Run after scripts/build_data.py, because community home values and
-school scores are read from web/data/.
-
-Run:  .venv/bin/python scripts/build_zones.py
+Responsibility: turn the KMZ files published by the CBE Find a School tool
+into web/data/zones.geojson, one attendance polygon and one walk zone per
+program that publishes them. The community choropleth still uses the regular
+program only. CSSD zones are not in this file. Run after scripts/build_data.py.
 """
 from __future__ import annotations
 
 import json
+import re
 import sys
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -130,6 +128,26 @@ def grade_band(low: int, high: int) -> str:
     return "junior" if high >= 7 else "elem"
 
 
+def program_names() -> dict[str, str]:
+    """Map a CBE program fragment id to its display name.
+
+    Returns {} when the program list cannot be read. Callers then keep only
+    the regular program, whose fragment id is already known.
+    """
+    try:
+        rows = fetch_rows("program_fragment")
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN program names: {exc}", file=sys.stderr)
+        return {}
+    names = {}
+    for row in rows:
+        programs = (row.get("data") or {}).get("programs") or {}
+        name = (programs.get("name") or "").strip()
+        if name and row.get("id"):
+            names[str(row["id"])] = name
+    return names
+
+
 def main() -> int:
     """CLI entry. Exit 0 when zones.geojson is written, 1 when the API fails."""
     schools_path = OUT / "schools.json"
@@ -155,6 +173,7 @@ def main() -> int:
                             "prep": None, "geom": geom})
 
     rows = fetch_rows("school_profile_fragment")
+    names = program_names()
     jobs = []
     for row in rows:
         data = row.get("data") or {}
@@ -162,13 +181,18 @@ def main() -> int:
         if str(profile.get("hidden") or "0") not in ("0", "no", ""):
             continue
         for program in data.get("programs") or []:
-            if program.get("programFragment") != REGULAR_FRAGMENT:
+            fragment = str(program.get("programFragment") or "").replace("fragment://", "")
+            program_name = names.get(fragment)
+            if not program_name and program.get("programFragment") == REGULAR_FRAGMENT:
+                program_name = "Regular"
+            if not program_name or not program.get("overlay"):
                 continue
             low = int(program.get("programLowGrade") or 0)
             high = int(program.get("programHighGrade") or 0)
             jobs.append({
                 "name": profile.get("schoolname") or row.get("title"),
                 "school_code": str(profile.get("schoolcode") or ""),
+                "program": program_name,
                 "low": low, "high": high, "band": grade_band(low, high),
                 "overlay": program.get("overlay") or "",
                 "walkzone": program.get("walkzone") or "",
@@ -211,19 +235,25 @@ def main() -> int:
         if walk is not None and not walk.is_empty:
             walk_ready = prep(walk.buffer(0) if not walk.is_valid else walk)
         places = []
-        for community in communities:
-            if not ready.contains(community["rep"]):
-                continue
-            in_walk = bool(walk_ready and walk_ready.contains(community["rep"]))
-            places.append({"code": community["code"], "name": community["name"],
-                           "home_value": community["home_value"], "in_walk": in_walk})
-        values = [p["home_value"] for p in places if p["home_value"]]
-        values.sort()
-        home = values[len(values) // 2] if values else None
+        home = None
+        # Community lists feed the older choropleth. Other programs are drawn only when that school is clicked.
+        if job["program"] == "Regular":
+            for community in communities:
+                if not ready.contains(community["rep"]):
+                    continue
+                in_walk = bool(walk_ready and walk_ready.contains(community["rep"]))
+                places.append({"code": community["code"], "name": community["name"],
+                               "home_value": community["home_value"], "in_walk": in_walk})
+            values = [p["home_value"] for p in places if p["home_value"]]
+            values.sort()
+            home = values[len(values) // 2] if values else None
         code = f"{job['school_code']}-{job['low']}-{job['high']}"
+        if job["program"] != "Regular":
+            slug = re.sub(r"[^a-z0-9]+", "-", job["program"].lower()).strip("-")
+            code = f"{code}-{slug}"
         base = {
             "code": code, "name": job["name"], "school_code": job["school_code"],
-            "program": "Regular", "low": job["low"], "high": job["high"], "band": job["band"],
+            "program": job["program"], "low": job["low"], "high": job["high"], "band": job["band"],
             "grades": f"K-{job['high']}" if job["low"] == 0 else f"{job['low']}-{job['high']}",
             "school_score": band_score, "elem_score": score6, "junior_score": score9,
             "senior_score": None, "home_value": home, "places": places,
@@ -236,8 +266,9 @@ def main() -> int:
                              "geometry": json.loads(json.dumps(walk.__geo_interface__))})
 
     attendance = [f for f in features if f["properties"]["kind"] == "attendance"]
+    regular = [f for f in attendance if f["properties"]["program"] == "Regular"]
     for band in ("elem", "junior", "senior"):
-        group = [f for f in attendance if f["properties"]["band"] == band]
+        group = [f for f in regular if f["properties"]["band"] == band]
         scores = {f["properties"]["code"]: f["properties"]["school_score"] for f in group}
         prices = {f["properties"]["code"]: f["properties"]["home_value"] for f in group}
         school_pct = percentile_ranks(scores)
@@ -251,8 +282,8 @@ def main() -> int:
     (OUT / "zones.geojson").write_text(
         json.dumps({"type": "FeatureCollection", "features": features}, separators=(",", ":"), allow_nan=False),
         encoding="utf-8")
-    print(f"attendance {len(attendance)} walk {sum(1 for f in features if f['properties']['kind']=='walk')} skipped {skipped}")
-    return 0 if len(attendance) >= 80 else 1
+    print(f"attendance {len(attendance)} regular {len(regular)} walk {sum(1 for f in features if f['properties']['kind']=='walk')} skipped {skipped}")
+    return 0 if len(regular) >= 80 else 1
 
 
 if __name__ == "__main__":

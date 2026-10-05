@@ -1,5 +1,93 @@
 # PLAN.md
 
+## Plan (2026-10-05, official note on the card)
+
+Mode: `autonomous`. Design notes: skipped. The school site stays the website row. The card also needs a way into CBE Find a School, and a line that the official source is the final word.
+
+**Goal.** Every school card ends with a CBE Find a School link and, under it, the disclaimer.
+
+**Out of scope.** Changing the school website link, attendance zones, commits.
+
+**Done when.** Olympic Heights shows both. The school site link is unchanged.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/app.js`, `web/i18n.js`, `web/style.css`, `web/index.html`.
+
+**Verify.** Reload and open Olympic Heights.
+
+## Verify (2026-10-05, official note on the card)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=33`: Olympic Heights still links to `https://olympicheights.cbe.ab.ca/`. Under the details, the card links to `https://www.cbe.ab.ca/find-a-school` and says 最终信息以官方为准。
+
+## Plan (2026-10-05, school website again)
+
+Mode: `autonomous`. Design notes: skipped. The CBE finder link cannot open the clicked school, so the card should use each school's own site.
+
+**Goal.** The website row links to the school's published site. A CBE school uses its CBE site. A school with no site stays "no data".
+
+**Out of scope.** The CBE finder, attendance zones, commits.
+
+**Done when.** Olympic Heights links to olympicheights.cbe.ab.ca. Master's Academy still links to masters.ab.ca.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload and open those two cards.
+
+## Verify (2026-10-05, school website again)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=32`: Olympic Heights links to `https://olympicheights.cbe.ab.ca/`. Master's Academy links to `http://www.masters.ab.ca/`.
+
+## Plan (2026-10-05, CBE finder link)
+
+Mode: `autonomous`. Design notes: skipped. The card already links a CBE school to its own site, such as olympicheights.cbe.ab.ca. The page in the screenshot is CBE Find a School, which has hours, programs, and attendance, and CBE does not publish a per-school URL for that panel.
+
+**Goal.** For a CBE school, the website row opens https://www.cbe.ab.ca/find-a-school. Other schools keep the official site already on the card.
+
+**Out of scope.** Inventing a deep link the finder does not read, CSSD pages, commits.
+
+**Done when.** Olympic Heights links to the CBE finder. Master's Academy still links to masters.ab.ca.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `web/app.js`, `web/index.html`.
+
+**Verify.** Reload and open those two cards.
+
+## Verify (2026-10-05, CBE finder link)
+
+Browser at `http://127.0.0.1:8765/?lang=zh&v=31`: Olympic Heights website row is `https://www.cbe.ab.ca/find-a-school` labeled CBE 学校查询. Master's Academy still links to `http://www.masters.ab.ca/`.
+
+## Plan (2026-10-05, school zone on click)
+
+Mode: `autonomous`. Design notes: skipped. CBE publishes an attendance polygon and a walk zone per program. The page already has the regular-program file and does not draw it in the ranking view.
+
+**Goal.** Clicking a school draws that school's attendance zone and walk zone. A school with a regular program shows the regular zone. A school with no regular zone shows the program zone it does publish. A school with no published zone shows "no data" and no polygon.
+
+**Out of scope.** CSSD zones, colouring communities by the zone, refitting the map when the filter changes, commits.
+
+**Done when.** Briar Hill shows a regular zone and walk zone. Brentwood shows its TLC zone. Master's Academy shows no polygon.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `progress.md`, `README.md`, `AGENTS.md`, `scripts/build_zones.py`, `web/data/zones.geojson`, `web/app.js`, `web/i18n.js`, `web/style.css`, `web/index.html`.
+
+**Verify.** Rebuild zones, reload, and open those three schools.
+
+## Verify (2026-10-05, school zone on click)
+
+```
+$ .venv\Scripts\python.exe scripts\build_zones.py
+zone files: 613/614
+attendance 342 regular 231 walk 338 skipped 0
+$ node --check web/app.js
+exit 0
+```
+
+One walk file returned 404 (A.E. Cross 7-9). Browser at `http://127.0.0.1:8765/?lang=zh&v=30`: Briar Hill draws the regular zone and walk zone, legend 普通课程. Brentwood draws the TLC zone and walk zone. Master's Academy clears the polygon and the card says 学区 无数据. With the Early French Immersion filter, F.E. Osborne's legend is that program.
+
 ## Plan (2026-10-05, plain card title)
 
 Mode: `autonomous`. Design notes: skipped. The card title and the website row both linked to the same official site.

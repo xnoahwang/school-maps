@@ -1,7 +1,7 @@
 # progress.md
 
 ## Current Focus
-The ranking list is a left sidebar called the school filter area. The map shows the same schools. Clicking a row moves the map to that school and opens its card. Clicking a point opens the same card. The card's website and phone come from the CBE directory, then from Alberta's public school directory when those are missing. Attendance areas are not drawn yet.
+The ranking list is a left sidebar called the school filter area. The map shows the same schools. Clicking a row or a point opens that school's card and draws its CBE attendance zone and walk zone. The website row links to that school's own site. The card also links to CBE Find a School and says the official source is the final word.
 
 ## Completed
 - cursor-prime-cloud rules installed (autonomous mode), and the plan recorded in PLAN.md.

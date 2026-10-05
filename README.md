@@ -2,7 +2,7 @@
 
 A local prototype for **immigrant / newcomer parents in Calgary** who know little about how schools and communities compare.
 
-The page opens with a left sidebar, the school filter area, holding the ranking list. The map on the right draws one point for each school in that list. With every filter on All, that is every listed school. A board, grade, program, or search filter draws only the schools still in the list. Click a row, including the school name, to move the map to that school and open its card (official website, phone, address, board, grades, and score). Click a point for the same card. The website row on the card is the link to the school site. The school name itself is plain text. A missing website, phone, or address is "no data". Attendance areas are not on this map yet.
+The page opens with a left sidebar, the school filter area, holding the ranking list. The map on the right draws one point for each school in that list. With every filter on All, that is every listed school. A board, grade, program, or search filter draws only the schools still in the list. Click a row, including the school name, to move the map to that school and open its card (official website, phone, address, board, grades, and score). Click a point for the same card. The map then draws that school's CBE attendance zone, and the walk zone inside it. A regular program is used when the school has one; otherwise the program zone CBE publishes is used. The website row on the card links to that school's own site. A CBE school uses the site CBE publishes. Under that, every card links to CBE Find a School and says the official source is the final word. The school name itself is plain text. A missing website, phone, address, or zone is "no data". Attendance areas for schools outside the CBE file are not drawn.
 
 - CBE schools are grouped by the grade range CBE publishes (K–6, 7–9, and the rest). Other schools are grouped by authority: Catholic, charter, francophone, other public boards, and private.
 - A range that includes grade 9 is ranked on its **latest Grade 9 PAT** year. A range that includes grade 6 but not grade 9 is ranked on its **latest Grade 6 PAT** year.
@@ -121,7 +121,7 @@ As-of dates for each downloaded source are in `web/data/meta.json` (`sources.*.a
 
 ```
 scripts/build_data.py   data pipeline (download + cache + scoring) -> web/data/
-scripts/build_zones.py  CBE regular attendance + walk zones -> web/data/zones.geojson
+scripts/build_zones.py  CBE attendance and walk zones, per published program -> web/data/zones.geojson
 scripts/verify.py       data sanity checks
 scripts/fetch_cbe_directory.py  CBE directory -> web/data/cbe_directory.json
 scripts/fetch_ab_contacts.py  Alberta school phone and website -> web/data/ab_contacts.json

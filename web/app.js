@@ -13,6 +13,7 @@
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
                   board: "all", grade: "all", program: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
+  let pickedZoneLayer = null, pickedWalkLayer = null;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
   const RAMP_GOOD = ["#d7191c", "#fdae61", "#ffffbf", "#a6d96a", "#1a9641"];
@@ -375,7 +376,7 @@
     const byId = new Map(schools.map((s) => [s.id, s]));
     directory.schools.forEach((row) => {
       const fields = {
-        cbe_name: row.name, phone: row.phone, website: row.website, address: row.address,
+        cbe_name: row.name, cbe_code: row.code, phone: row.phone, website: row.website, address: row.address,
         grade_min: row.grade_min, grade_max: row.grade_max, cbe_grades: row.grades,
         cbe_programs: row.programs, program_names: row.program_names,
       };
@@ -584,6 +585,10 @@
       ? `<a href="${esc(school.website)}" target="_blank" rel="noopener">${esc(siteHost)}</a>`
       : `<span class="na">${t("no_data")}</span>`;
     const address = school.address ? esc(school.address) : `<span class="na">${t("no_data")}</span>`;
+    const zone = chooseZones(school);
+    const zoneLine = zone.attendance.length
+      ? ""
+      : `<div><span class="k">${esc(t("attendance_zone"))}</span><span class="na">${t("no_data")}</span></div>`;
     const exam = result.exam === "pat9" ? t("grade9") : result.exam === "pat6" ? t("grade6") : "";
     const score = result.score == null
       ? t("no_data")
@@ -591,14 +596,16 @@
     const programs = (school.program_names || []).filter(Boolean);
     const programLine = programs.length ? `<div><span class="k">${esc(t("filter_program"))}</span>${esc(programs.join(", "))}</div>` : "";
     const enrol = school.enrolment == null ? "" : `<div><span class="k">${esc(t("enrolment"))}</span>${Number(school.enrolment).toLocaleString()}</div>`;
+    const official = `<div class="official"><a href="https://www.cbe.ab.ca/find-a-school" target="_blank" rel="noopener">${esc(t("cbe_finder"))}</a><div class="note">${esc(t("official_note"))}</div></div>`;
     return `<div class="school-pop"><strong>${esc(name)}</strong>
       <div><span class="k">${esc(t("website"))}</span>${site}</div>
       <div><span class="k">${esc(t("phone"))}</span>${phone}</div>
       <div><span class="k">${esc(t("address"))}</span>${address}</div>
+      ${zoneLine}
       <div><span class="k">${esc(t("board"))}</span>${esc(school.board || "–")}</div>
       <div><span class="k">${esc(t("grades"))}</span>${esc(school.cbe_grades || school.grades || "–")}</div>
       <div><span class="k">${esc(t("col_score"))}</span>${esc(score)}</div>
-      ${enrol}${programLine}</div>`;
+      ${enrol}${programLine}${official}</div>`;
   }
   // pinToTop is for a map click: the sticky header was covering the row, so it never looked like the first one.
   function revealRankRow(id, pinToTop) {
@@ -625,6 +632,64 @@
     const marker = markerById.get(nextId);
     if (school && marker) marker.setStyle(pointStyle(school, true));
   }
+  function zonesForSchool(school) {
+    if (!school) return [];
+    const code = contactCode(school.cbe_code);
+    if (code) return zones.filter((f) => contactCode(f.properties.school_code) === code);
+    const key = contactKey(school.cbe_name || school.name);
+    if (!key) return [];
+    return zones.filter((f) => contactKey(f.properties.name) === key);
+  }
+  function chooseZones(school) {
+    const matched = zonesForSchool(school);
+    let attendance = matched.filter((f) => f.properties.kind === "attendance" && f.properties.band !== "senior");
+    if (!attendance.length) attendance = matched.filter((f) => f.properties.kind === "attendance");
+    if (state.program !== "all") {
+      const filtered = attendance.filter((f) => f.properties.program === state.program);
+      if (filtered.length) attendance = filtered;
+    } else {
+      const regular = attendance.filter((f) => f.properties.program === "Regular");
+      if (regular.length) attendance = regular;
+    }
+    const codes = new Set(attendance.map((f) => f.properties.code));
+    const walks = matched.filter((f) => f.properties.kind === "walk" && codes.has(f.properties.code));
+    const programs = [...new Set(attendance.map((f) => f.properties.program))];
+    return { attendance, walks, program: programs.join(" · ") };
+  }
+  function programLabel(name) {
+    return name === "Regular" ? t("program_regular") : name;
+  }
+  function clearSchoolZone() {
+    if (pickedZoneLayer) { pickedZoneLayer.remove(); pickedZoneLayer = null; }
+    if (pickedWalkLayer) { pickedWalkLayer.remove(); pickedWalkLayer = null; }
+    const box = document.getElementById("zoneKey");
+    if (box) box.hidden = true;
+  }
+  function drawSchoolZone(school) {
+    clearSchoolZone();
+    const picked = chooseZones(school);
+    if (!picked.attendance.length) return false;
+    const areaStyle = { color: "#12355b", weight: 2, fillColor: "#2f6fad", fillOpacity: 0.28 };
+    const walkStyle = { color: "#c45c26", weight: 2.5, dashArray: "6 4", fillColor: "#f5a623", fillOpacity: 0.2 };
+    pickedZoneLayer = L.geoJSON({ type: "FeatureCollection", features: picked.attendance }, { pane: "zonePane", style: areaStyle }).addTo(map);
+    if (picked.walks.length) {
+      pickedWalkLayer = L.geoJSON({ type: "FeatureCollection", features: picked.walks }, { pane: "zonePane", style: walkStyle }).addTo(map);
+    }
+    const box = document.getElementById("zoneKey");
+    if (box) {
+      const title = picked.program.split(" · ").map((name) => esc(programLabel(name))).join(" · ");
+      box.innerHTML = `<div class="zone-program">${title}</div><div><i class="area"></i>${esc(t("attendance_zone"))}</div><div><i class="walk"></i>${esc(t("walk_zone"))}</div>`;
+      box.hidden = false;
+    }
+    return true;
+  }
+  function schoolZoneBounds() {
+    const layers = [pickedZoneLayer, pickedWalkLayer].filter(Boolean);
+    if (!layers.length) return null;
+    let bounds = layers[0].getBounds();
+    layers.slice(1).forEach((layer) => { bounds = bounds.extend(layer.getBounds()); });
+    return bounds.isValid() ? bounds : null;
+  }
   // Row clicks and point clicks share this. The list name is plain text; the website link lives on the map card.
   function focusSchool(id, pinToTop) {
     const key = String(id);
@@ -633,12 +698,23 @@
     const token = ++focusToken;
     restylePicked(key);
     revealRankRow(key, pinToTop);
-    if (!school || !marker) return;
+    if (!school || !marker) { clearSchoolZone(); return; }
+    const drawn = drawSchoolZone(school);
+    const bounds = drawn ? schoolZoneBounds() : null;
     const point = schoolPoint(school);
+    const open = () => { if (token === focusToken && markerById.get(key) === marker) marker.openPopup(); };
+    if (bounds) {
+      const view = map.getBounds();
+      if (view.contains(bounds) && bounds.contains(map.getCenter())) open();
+      else {
+        map.once("moveend", open);
+        map.flyToBounds(bounds, { padding: [28, 28], maxZoom: 14, duration: 0.45 });
+      }
+      return;
+    }
     if (!point) return;
     const latlng = L.latLng(point);
     const zoom = Math.max(map.getZoom(), 15);
-    const open = () => { if (token === focusToken && markerById.get(key) === marker) marker.openPopup(); };
     const there = map.getZoom() >= 15 && map.getCenter().distanceTo(latlng) < 40;
     if (there) open();
     else {
@@ -664,6 +740,11 @@
       rankMapFitted = true;
       map.fitBounds(L.latLngBounds(rows.map((s) => schoolPoint(s))), { padding: [28, 28], maxZoom: 13 });
     }
+    if (pickedId) {
+      const still = rows.find((s) => String(s.id) === pickedId);
+      if (still) drawSchoolZone(still);
+      else clearSchoolZone();
+    }
   }
 
   function renderSchools() {
@@ -682,7 +763,7 @@
     document.getElementById("bandWrap").hidden = state.unit !== "zone";
     document.getElementById("walkWrap").hidden = state.unit !== "zone";
     if (state.unit === "zone" && zones.length) {
-      viewFeatures = zones.filter((f) => f.properties.kind === "attendance" && f.properties.band === state.band);
+      viewFeatures = zones.filter((f) => f.properties.kind === "attendance" && f.properties.band === state.band && (f.properties.program || "Regular") === "Regular");
     } else {
       viewFeatures = communities;
     }
@@ -738,6 +819,12 @@
     scrollWheelZoom: false,
     wheelPxPerZoomLevel: 60
   }).setView([51.045, -114.07], 11);
+  map.createPane("zonePane");
+  map.getPane("zonePane").style.zIndex = 350;
+  const zoneKey = document.createElement("div");
+  zoneKey.id = "zoneKey";
+  zoneKey.hidden = true;
+  map.getContainer().appendChild(zoneKey);
   // Leaflet ends a zoom animation on a 250ms timer. A later notch in the same
   // gesture must retarget that animation; letting the timer commit mid-gesture
   // reloads the tiles. Commit only after the wheel has been quiet.
@@ -791,7 +878,7 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19, opacity: 0.6 }).addTo(map);
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005z";
+  const dataUrl = (name) => "data/" + name + "?v=20261005ab";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory, contacts]) => {
@@ -802,9 +889,10 @@
       document.getElementById("metric").value = state.metric;
       document.getElementById("unit").value = state.unit;
       document.getElementById("band").value = state.band;
-      if (RANK_FIRST) return [{ features: [] }, null];
+      const zonesPromise = fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }));
+      if (RANK_FIRST) return Promise.all([zonesPromise, Promise.resolve(null)]);
       return Promise.all([
-        fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] })),
+        zonesPromise,
         fetch(dataUrl("reviews.json")).then((r) => r.ok ? r.json() : null).catch(() => null),
       ]);
     })
