@@ -2,6 +2,92 @@
 
 Older plans and verify receipts are in git history. This file keeps the current record only.
 
+## Plan (2026-10-06, docs and GitHub)
+
+Mode: `autonomous`. Design notes: skipped. The page name and the six languages are already in the UI. README, AGENTS, progress, and the project rule still use the old project name.
+
+**Goal.** Those docs use Calgary school ranking (by PAT). The change is committed and pushed to `main`.
+
+**Out of scope.** Rewriting older verify receipts, and renaming the GitHub repository.
+
+**Done when.** `git status` is clean and `main` matches `origin/main`.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `README.md`, `AGENTS.md`, `progress.md`, `.cursor/rules/project.mdc`, `web/app.js`, `web/index.html`.
+
+**Verify.** `git status` and `git log -1` after the push.
+
+## Plan (2026-10-06, app name)
+
+Mode: `autonomous`. Design notes: skipped. The visible name is the `title` string. The header and the browser tab both use it. The static `<title>` shows only before the script runs.
+
+**Goal.** The name is 卡尔加里学校排名（按PAT） in Simplified Chinese, and the same meaning in English, Traditional Chinese, French, Japanese, and Korean.
+
+**Out of scope.** Renaming the repo, README, or AGENTS heading, and a git commit.
+
+**Done when.** Each of the six languages shows its new title in the header and the browser tab.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** `node --check web/i18n.js`, then read the title in en, zh, zh-Hant, fr, ja, and ko.
+
+## Verify (2026-10-06, app name)
+
+`node --check web/i18n.js` exited 0. On `http://127.0.0.1:8765/?v=63` the header and the browser tab matched: English `Calgary school ranking (by PAT)`, 简体 `卡尔加里学校排名（按PAT）`, 繁体 `卡爾加里學校排名（按PAT）`, French `Classement des écoles de Calgary (par PAT)`, Japanese `カルガリー学校ランキング（PAT順）`, Korean `캘거리 학교 순위 (PAT 기준)`.
+
+## Plan (2026-10-06, English default)
+
+Mode: `autonomous`. Design notes: skipped. The fallback is already English, but a language saved in the browser replaces it, so a plain visit can open in Chinese.
+
+**Goal.** A visit with no valid `?lang=` opens in English. `?lang=zh` and the other five codes still switch the page.
+
+**Out of scope.** Removing the language menu, and a git commit.
+
+**Done when.** With a saved Chinese language, `http://127.0.0.1:8765/` shows the English title and the English option. `?lang=zh` still shows Simplified Chinese.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/index.html`, `README.md`, `progress.md`.
+
+**Verify.** `node --check web/app.js`, then open the bare URL after saving `zh` in the browser, and open `?lang=zh`.
+
+## Verify (2026-10-06, English default)
+
+`node --check web/app.js` exited 0. After `localStorage` was set to `zh`, `http://127.0.0.1:8765/?v=62` showed the title `Calgary school results, ranked` and the menu on English. `http://127.0.0.1:8765/?lang=zh&v=62` still showed `卡尔加里学校成绩排名`.
+
+## Plan (2026-10-06, six languages)
+
+Mode: `autonomous`. Design notes: grilled earlier. The page is English and Simplified Chinese. The languages to add are Traditional Chinese, French, Japanese, and Korean. Punjabi, Hindi, Urdu, and Arabic stay out.
+
+**Goal.** The header offers English, 简体中文, 繁體中文, Français, 日本語, and 한국어. Each language has every UI string. `?lang=zh` still opens Simplified Chinese.
+
+**Out of scope.** Tagalog, Punjabi, Spanish, Arabic, Vietnamese, and a git commit.
+
+**Done when.** A node check shows the six catalogs have the same keys and the same `{placeholders}`. The French, Japanese, Korean, and Traditional Chinese pages show a translated title and the language menu.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/i18n.js`, `web/app.js`, `web/index.html`, `web/style.css`, `README.md`, `AGENTS.md`.
+
+**Verify.** Node key check, then open `?lang=fr`, `?lang=ja`, `?lang=ko`, and `?lang=zh-Hant`.
+
+**Pre-flight added.** `progress.md`, so the handoff names the six languages.
+
+## Verify (2026-10-06, six languages)
+
+```
+node --check web/i18n.js
+node --check web/app.js
+```
+
+Both exited 0. A second node check loaded the file and printed `keys and placeholders match` for zh, zh-Hant, fr, ja, and ko against en (236 keys each).
+
+On http://127.0.0.1:8765/?lang=fr the title is `Classement des écoles de Calgary` and the menu shows Français. Japanese title: `カルガリーの学校成績ランキング`. Korean: `캘거리 학교 성적 순위`. Traditional Chinese: `卡爾加里學校成績排名`, search placeholder `搜尋學校…`. `?lang=zh` stays Simplified: `卡尔加里学校成绩排名`, `搜索学校…`. Master's Academy in French shows the cream callout `Cette école n’a pas de zone de fréquentation CBE publiée…`. Briar Hill’s open panel switches to Japanese `この通学区域に入るコミュニティ` and Traditional Chinese `這個學區覆蓋的社區`. An unknown `?lang=xx` keeps the language already saved in the browser.
+
+
 ## Plan (2026-10-05, home-community notice)
 
 Mode: `autonomous`. Design notes: skipped. The sentence under a school with no CBE zone is gray 12.5px body text, so it disappears under the school name.

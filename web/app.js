@@ -1,15 +1,24 @@
-/* Front-end logic for the Calgary School & Community Explorer.
+/* Front-end logic for Calgary school ranking (by PAT).
  * The page that opens is the school ranking list beside the map. Scores come
  * from web/data/ and are displayed, not recalculated, except when a CBE grade
  * range calls for the other exam's latest-year block. Clicking a school draws
  * its CBE zone from zones.geojson. The community choropleth stays in this file
- * and is hidden while body.rank-first is set. Optional URL param: ?lang=zh
+ * and is hidden while body.rank-first is set. Optional URL param: ?lang=fr
  */
 (function () {
   "use strict";
   const params = new URLSearchParams(location.search);
   const RANK_FIRST = document.body.classList.contains("rank-first");
-  const state = { lang: params.get("lang") === "zh" ? "zh" : "en", metric: params.get("metric") || "school_score",
+  const LANGS = ["en", "zh", "zh-Hant", "fr", "ja", "ko"];
+  const HTML_LANG = { en: "en", zh: "zh-Hans", "zh-Hant": "zh-Hant", fr: "fr", ja: "ja", ko: "ko" };
+  function storedLang() {
+    const fromUrl = params.get("lang");
+    if (LANGS.includes(fromUrl)) return fromUrl;
+    // A remembered choice must not replace the English default. ?lang= is the only override.
+    try { localStorage.removeItem("school-maps-lang"); } catch (e) { /* private browsing can block storage */ }
+    return "en";
+  }
+  const state = { lang: storedLang(), metric: params.get("metric") || "school_score",
                   sortKey: "school_score", sortAsc: false, selected: params.get("zone") || params.get("community"), query: "",
                   unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
                   board: "all", grade: "all", program: "all" };
@@ -50,12 +59,13 @@
   }
 
   function applyI18n() {
-    document.documentElement.lang = state.lang === "zh" ? "zh-CN" : "en";
+    document.documentElement.lang = HTML_LANG[state.lang] || "en";
     document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
     const scoreSource = document.getElementById("scoreSource");
     if (scoreSource) scoreSource.setAttribute("aria-label", t("score_source_label"));
     document.getElementById("search").placeholder = RANK_FIRST ? t("search_school") : (state.unit === "zone" ? t("search_zone") : t("search"));
-    document.getElementById("lang").textContent = t("lang_btn");
+    const langSelect = document.getElementById("lang");
+    if (langSelect && langSelect.value !== state.lang) langSelect.value = state.lang;
     document.title = t("title");
   }
 
@@ -1164,7 +1174,15 @@
   });
   document.getElementById("showSchools").addEventListener("change", renderSchools);
   document.getElementById("showWalk").addEventListener("change", () => { renderGeo(false); renderSchools(); });
-  document.getElementById("lang").addEventListener("click", () => { state.lang = state.lang === "en" ? "zh" : "en"; rerenderAll(); });
+  document.getElementById("lang").addEventListener("change", (e) => {
+    const next = e.target.value;
+    if (!LANGS.includes(next)) return;
+    state.lang = next;
+    const url = new URL(location.href);
+    url.searchParams.set("lang", next);
+    history.replaceState(null, "", url);
+    rerenderAll();
+  });
   document.getElementById("boardFilter").addEventListener("change", (e) => {
     state.board = e.target.value;
     fillGradeFilter();

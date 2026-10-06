@@ -1,6 +1,6 @@
 /* Layout and colours for the explorer; no logic here. */
 * { box-sizing: border-box; }
-body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", "Noto Sans SC", "PingFang SC", sans-serif; color: #1f2933; height: 100vh; display: flex; flex-direction: column; }
+body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", "PingFang SC", "PingFang TC", "Microsoft YaHei", "Microsoft JhengHei", "Yu Gothic UI", "Malgun Gothic", sans-serif; color: #1f2933; height: 100vh; display: flex; flex-direction: column; }
 header { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #12355b; color: #fff; gap: 12px; flex-wrap: wrap; }
 h1 { margin: 0; font-size: 19px; } .sub { font-size: 12px; opacity: .85; }
 .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -34,7 +34,7 @@ body.rank-first { overflow: hidden; background: #f7f6f3; color: #1c1917; }
 body.rank-first header { background: #fff; color: #1c1917; height: 56px; padding: 0 16px; border-bottom: 1px solid #ebe7e0; flex-wrap: nowrap; }
 body.rank-first h1 { font-size: 16px; font-weight: 650; letter-spacing: -0.01em; }
 body.rank-first .sub { display: none; }
-body.rank-first #lang { background: #fff; color: #1c1917; border: 1px solid #e4e0d8; border-radius: 999px; padding: 6px 12px; font-weight: 600; cursor: pointer; }
+body.rank-first #lang { background: #fff; color: #1c1917; border: 1px solid #e4e0d8; border-radius: 999px; padding: 6px 28px 6px 12px; font-weight: 600; cursor: pointer; }
 body.rank-first #lang:hover { background: #f6f5f2; }
 body.rank-first main { grid-template-columns: clamp(560px, 52vw, 820px) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); background: #ebe7e0; }
 body.rank-first #map { order: 0; height: 100%; min-height: 0; }

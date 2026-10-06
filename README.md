@@ -1,4 +1,4 @@
-# Calgary School & Community Explorer (prototype)
+# Calgary school ranking (by PAT)
 
 A local prototype for **immigrant / newcomer parents in Calgary** who know little about how schools and communities compare.
 
@@ -13,7 +13,7 @@ The score is (% acceptable + % excellence) / 2 for that one year. It is not the 
 
 Filters are board, grade, and program. Each opens on All. Board and grade sit on one row. CBE grade options are the ranges that board publishes, such as K–6 and 7–9. Other schools use elementary, junior high, or unknown. The list can also filter by a CBE program name. `scripts/fetch_cbe_directory.py` refreshes the [CBE school directory](https://www.cbe.ab.ca/school-directory) (phone, address, website, grade span, and programs). Catholic, charter, francophone, and private schools are not in that directory, so their grade is the city's elementary or junior-high label. A phone or website the directory does not already have comes from Alberta's [school directory](https://open.alberta.ca/opendata/alberta-education-schools-and-authorities). `scripts/fetch_ab_contacts.py` refreshes that file. It does not invent a site the file left blank.
 
-The UI switches between English and 简体中文. CSSD zones are not drawn. Always confirm the designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school) and the [CSSD School Finder](https://www.cssd.ab.ca/schools).
+The page opens in English as Calgary school ranking (by PAT). The same title is 卡尔加里学校排名（按PAT）, 卡爾加里學校排名（按PAT）, Classement des écoles de Calgary (par PAT), カルガリー学校ランキング（PAT順）, and 캘거리 학교 순위 (PAT 기준). The menu also offers 简体中文, 繁體中文, Français, 日本語, and 한국어. CSSD zones are not drawn. Always confirm the designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school) and the [CSSD School Finder](https://www.cssd.ab.ca/schools).
 
 Community scores, home values, amenities, and the optional review score are still built by the pipeline. They are not shown on this page. Their definitions are in the tables below.
 
@@ -29,7 +29,7 @@ python3 -m http.server 8765 -d web               # then open http://localhost:87
 
 `web/data/` is committed, so the map runs with only the last command.
 
-URL parameter (optional): `?lang=zh`.
+URL parameter (optional): `?lang=` with `en`, `zh`, `zh-Hant`, `fr`, `ja`, or `ko`. Without it, the page is English.
 
 `build_data.py --refresh` re-downloads every source. Without it, files already in `data/raw/` are reused.
 

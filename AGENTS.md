@@ -357,7 +357,7 @@ Tier A/B: skip the checklist unless docs became wrong because of your change.
 
 Mode from `CURSOR_PRIME_CLOUD_MODE` or `.cursor/cursor-prime-cloud-mode` overrides any "stop and wait for GO" line above and in `/plan`. `autonomous` writes the plan, records it, and continues. `plan-only` writes the plan and stops. `interactive` waits for `GO`.
 <!-- cursor-prime-cloud:end -->
-## Project: Calgary School & Community Explorer
+## Project: Calgary school ranking (by PAT)
 
 Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the current plan and verify record. The page that opens is the ranking list and school map. Community scores are still written to `web/data/` and are not shown.
 
@@ -370,7 +370,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 - `scripts/fetch_community_profiles.py`: 2021 census fields from the City's community-profile PDFs. Output is `web/data/community_profiles.json`. The HTML profile pages do not contain the tables. Not part of the weekly school update.
 - `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values or diploma results. `--install-task` registers a weekly Sunday 09:00 run.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure).
-- `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en + zh), and any new key must be added to both languages.
+- `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language.
 - `data/raw/`: download cache. **Do not commit** (about 50 MB). `web/data/` is generated but committed.
 
 ### Conventions
