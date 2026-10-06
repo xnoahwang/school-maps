@@ -2,6 +2,67 @@
 
 Older plans and verify receipts are in git history. This file keeps the current record only.
 
+## Plan (2026-10-06, drop reviews)
+
+Mode: `autonomous`. Design notes: skipped. The ranking page does not show Google or Reddit reviews. The script and the README key snippet are leftover.
+
+**Goal.** `scripts/fetch_reviews.py` is gone, and the page, docs, and verify command no longer mention Google or Reddit reviews.
+
+**Out of scope.** Removing Calgary open-data downloads, the CBE directory fetch, or OpenStreetMap tiles, and a git commit.
+
+**Done when.** A search of the project finds no `fetch_reviews` or `GOOGLE_MAPS_API_KEY`, and `node --check` passes for `web/app.js` and `web/i18n.js`.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `scripts/fetch_reviews.py`, `web/app.js`, `web/i18n.js`, `web/index.html`, `README.md`, `AGENTS.md`, `progress.md`, `.cursor/rules/project.mdc`.
+
+**Verify.** `node --check web/app.js` and `node --check web/i18n.js`, then search for `fetch_reviews`.
+
+### Verify receipt
+
+```
+node --check web/app.js
+node --check web/i18n.js
+```
+
+Both exited 0 with no output. i18n key check: langs en,zh,zh-Hant,fr,ja,ko; keys 235; reviewish none; PASS. A search of source files finds `fetch_reviews` only in this plan.
+
+## Plan (2026-10-06, assurance survey)
+
+Mode: `autonomous`. Design notes: skipped. The user asked to add the Assurance survey from each CBE School Improvement Results report. The summary table is an image in that PDF. The repo is treated as private for this copy.
+
+**Goal.** Each CBE school card shows the six survey percentages from the latest report: education quality, parental involvement, learning engagement, citizenship, safe and caring, and access to supports. A missing or suppressed cell stays null. The numbers are not mixed into the PAT rank.
+
+**Out of scope.** CSSD and private schools, a parent-only split the report does not print, and a git commit.
+
+**Done when.** Dalhousie School shows education quality 89.7 and parental involvement 74.9 for Fall 2025, and `scripts/verify.py` passes.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `scripts/fetch_assurance.py`, `scripts/verify.py`, `requirements.txt`, `web/data/assurance.json`, `web/app.js`, `web/i18n.js`, `web/style.css`, `web/index.html`, `README.md`, `AGENTS.md`, `progress.md`.
+
+**Verify.** `.venv\Scripts\python scripts\fetch_assurance.py`, then `.venv\Scripts\python scripts\verify.py`, then open Dalhousie School’s card.
+
+## Plan (2026-10-06, income and language gaps)
+
+Mode: `autonomous`. Design notes: skipped. `meta.json` still lists income and languages as missing. `scripts/fetch_community_profiles.py` already writes both from the 2021 community-profile PDFs.
+
+**Goal.** Those two gap entries are gone from `meta.json` and from the list `build_data.py` writes. The README limitation no longer says the figures were not found.
+
+**Out of scope.** Re-running the full data download, moving the figures into `communities.geojson`, and a git commit.
+
+**Done when.** `meta.json` gaps have no `income` or `languages` field, and `scripts/verify.py` still passes the gap-count check.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `scripts/build_data.py`, `web/data/meta.json`, `README.md`.
+
+**Verify.** `.venv\Scripts\python scripts\verify.py`
+
+## Verify (2026-10-06, income and language gaps)
+
+`.venv\Scripts\python scripts\verify.py` exited 0. The gap check printed `PASS  gaps recorded for sources that were not used  (6 gaps)`. `income` and `languages` are no longer in that list.
+
 ## Plan (2026-10-06, docs and GitHub)
 
 Mode: `autonomous`. Design notes: skipped. The page name and the six languages are already in the UI. README, AGENTS, progress, and the project rule still use the old project name.

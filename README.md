@@ -15,7 +15,7 @@ Filters are board, grade, and program. Each opens on All. Board and grade sit on
 
 The page opens in English as Calgary school ranking (by PAT). The same title is 卡尔加里学校排名（按PAT）, 卡爾加里學校排名（按PAT）, Classement des écoles de Calgary (par PAT), カルガリー学校ランキング（PAT順）, and 캘거리 학교 순위 (PAT 기준). The menu also offers 简体中文, 繁體中文, Français, 日本語, and 한국어. CSSD zones are not drawn. Always confirm the designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school) and the [CSSD School Finder](https://www.cssd.ab.ca/schools).
 
-Community scores, home values, amenities, and the optional review score are still built by the pipeline. They are not shown on this page. Their definitions are in the tables below.
+Community scores, home values, and amenities are still built by the pipeline. They are not shown on this page. Their definitions are in the tables below.
 
 Status: prototype. Code and comments are in English.
 
@@ -32,16 +32,6 @@ python3 -m http.server 8765 -d web               # then open http://localhost:87
 URL parameter (optional): `?lang=` with `en`, `zh`, `zh-Hant`, `fr`, `ja`, or `ko`. Without it, the page is English.
 
 `build_data.py --refresh` re-downloads every source. Without it, files already in `data/raw/` are reused.
-
-Reviews are optional and never required for the map:
-
-```bash
-# PowerShell. Skip (exit 0) when these are unset.
-$env:GOOGLE_MAPS_API_KEY = "..."
-$env:REDDIT_CLIENT_ID = "..."
-$env:REDDIT_CLIENT_SECRET = "..."
-.venv/Scripts/python scripts/fetch_reviews.py
-```
 
 ## School data update
 
@@ -60,10 +50,10 @@ The log is `data/raw/update_schools.log` (not committed).
 ## Verify
 
 ```bash
-.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py
+.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py
 ```
 
-On Windows, use `.venv\Scripts\python` instead of `.venv/bin/python`. `verify.py` exits 0 when the data checks pass. `fetch_reviews.py` exits 0 when the API keys are unset.
+On Windows, use `.venv\Scripts\python` instead of `.venv/bin/python`. `verify.py` exits 0 when the data checks pass.
 
 ## How the numbers are made (simple on purpose)
 
@@ -83,7 +73,6 @@ On Windows, use `.venv\Scripts\python` instead of `.venv/bin/python`. `verify.py
 | Assessed-value change | Percent change from the 2025 median to the 2026 median. Both use class RE, property type LI, and at least 50 accounts. |
 | Enrolment | Headcount from Open Calgary `9qye-mibh` for the newest school year in that file (2023–2024 as of this build). This is not class size. |
 | High-school score | **Not available.** No current school-level Diploma file. See Limitations. |
-| Review score (0–100) | Optional. Bayesian-smoothed Google rating (prior 3.7, weight 10, then scaled from 1–5 onto 0–100). When a school also has at least 3 matched Reddit posts, 30% of the score is a word-list sentiment of those titles. Under 5 Google ratings and 3 Reddit posts, the UI says "too few reviews". Reviews are opinions, biased toward people who post, and are never mixed into the exam score. Google review text is not stored. Reddit stores post id, date and permalink only. |
 
 Any missing input gives "no data" (grey), never zero. A real published 0.0 (for example, a small specialised school) is kept as published.
 
@@ -118,9 +107,10 @@ As-of dates for the Open Calgary and PAT downloads are in `web/data/meta.json` (
 - Assessed value is not the same as market price, and the median mixes houses and condos.
 - Calgary Equity Index is not included. The 2024 release (`i6pu-a35d`) is a PDF/zip, and `hy6b-89wc` returns no rows.
 - Community crime is not included. `78gh-n26t` requires a login. The open table `848s-4m4z` ends in 2019 and its methodology was retired.
-- 2021 census income and language by community were not found on Open Calgary. The 2016 income table was not used because it is too old to present as current.
+- 2020 median household income and languages spoken most often at home come from the City's 2021 community-profile PDFs (`web/data/community_profiles.json`). They are not an Open Calgary table. The 2016 income table (`wj3a-wgmh`) is not used.
+- The school card's Assurance survey is the six survey rows from that school's CBE School Improvement Results report. Except parental involvement (parents and teachers), each percentage combines students, parents, and teachers. A suppressed cell is "no data". It is not part of the exam score. CSSD and private schools are not in those reports.
 - Class size is not published in `9qye-mibh` or in the CBE 2025–26 enrolment report. CBE programs come from the public directory API. CSSD programs, lottery-only flags, and overflow schools are still not listed.
-- Test scores reflect demographics as much as teaching quality. They are only one input for families. Reviews, when loaded, are opinions and are labelled separately.
+- Test scores reflect demographics as much as teaching quality. They are only one input for families.
 
 ## Layout
 
@@ -131,8 +121,8 @@ scripts/verify.py       data sanity checks
 scripts/fetch_cbe_directory.py  CBE directory -> web/data/cbe_directory.json
 scripts/fetch_ab_contacts.py  Alberta school phone and website -> web/data/ab_contacts.json
 scripts/update_schools.py  refresh directory, contacts, and zones; write only if changed
-scripts/fetch_reviews.py  optional Google/Reddit reviews -> web/data/reviews.json (skips without keys)
 scripts/fetch_community_profiles.py  2021 census fields from City profile PDFs -> web/data/community_profiles.json
+scripts/fetch_assurance.py  CBE School Improvement Results survey -> web/data/assurance.json
 web/index.html, app.js, i18n.js, style.css   static front end (Leaflet via unpkg CDN)
 web/data/               generated, committed so the site runs without a rebuild
 data/raw/               download cache (large, not committed)

@@ -588,8 +588,6 @@ def main() -> int:
             {"field": "equity_index", "reason": "The 2024 Calgary Equity Index (i6pu-a35d) is a PDF/zip blob, not a community table. hy6b-89wc returns no rows."},
             {"field": "crime", "reason": "Community Crime Statistics (78gh-n26t) requires a logged-in session. The open table 848s-4m4z ends in 2019 and its methodology was retired, so it is not shown as current safety."},
             {"field": "rent", "reason": "CMHC publishes rent by zone only. There is no community-to-zone crosswalk, so a zone figure is not shown as a community figure."},
-            {"field": "income", "reason": "Open Calgary has no 2021 census income-by-community table. The 2016 table (wj3a-wgmh) is too old to present as current."},
-            {"field": "languages", "reason": "Open Calgary has no 2021 census language-by-community table."},
             {"field": "class_size", "reason": "9qye-mibh is enrolment by grade through 2023-2024, not class size. The CBE 2025-26 enrolment report states it does not include class size."},
             {"field": "programs", "reason": "CBE programs come from the public school-directory API (web/data/cbe_directory.json). CSSD programs, lottery-only flags, and overflow schools are still not included."},
         ],

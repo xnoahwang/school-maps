@@ -24,6 +24,7 @@
                   board: "all", grade: "all", program: "all" };
   let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
   let communityProfiles = {};
+  let assuranceByCode = new Map();
   let pickedZoneLayer = null, pickedWalkLayer = null;
   const NO_DATA_COLOR = "#c8ced6";
   // Red→yellow→green "risk map" ramp: green = better schools / better value.
@@ -471,31 +472,6 @@
     return typeof entry === "string" ? entry : (entry.url || "#");
   }
 
-  function reviewLine(review) {
-    if (!review) return `<div class="pat na">${t("reviews_missing")}</div>`;
-    if (review.too_few || review.review_score == null) {
-      const n = (review.google && review.google.count) || 0;
-      const posts = (review.reddit && review.reddit.n) || 0;
-      return `<div class="pat na">${t("too_few")} <span class="small">(${t("google_n")} ${n}, ${t("reddit_n")} ${posts})</span></div>`;
-    }
-    const g = review.google;
-    const range = review.date_range ? review.date_range.join(" – ") : "";
-    const google = g && g.rating != null ? `${t("google_rating")} ${g.rating} (${g.count})` : t("google_na");
-    return `<div class="pat">${t("review_score")}: <b>${fmtScore(review.review_score)}</b> · ${google}
-      <span class="small">${t("reddit_n")} ${(review.reddit && review.reddit.n) || 0}${range ? " · " + range : ""}</span></div>`;
-  }
-
-  function attachReviews(payload) {
-    const byId = (payload && payload.schools) || {};
-    schools.forEach((s) => { s.review = byId[String(s.id)] || null; });
-    communities.forEach((f) => {
-      const scores = f.properties.nearby.map((n) => schools[n.id] && schools[n.id].review)
-        .filter((r) => r && r.review_score != null && !r.too_few).map((r) => r.review_score);
-      f.properties.review_score = scores.length
-        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length * 10) / 10 : null;
-    });
-  }
-
   // The percent mark follows the number: 达标率 96.5%. A missing rate stays a dash.
   function rateShown(value) {
     return value == null || value === "" ? "–" : `${value}%`;
@@ -537,12 +513,10 @@
       const pats = (s.elem ? patLine(t("grade6"), s.g6) : "") + (s.junior ? patLine(t("grade9"), s.g9) : "");
       const needsPat = s.elem || s.junior;
       const enrol = s.enrolment == null ? "" : `<div class="meta">${t("enrolment")}: ${s.enrolment.toLocaleString()} <span class="small">(${s.enrolment_year || ""})</span></div>`;
-      const review = reviewLine(s.review);
       return `<div class="school"><b>${s.name}</b> <span class="small">· ${t("why_" + n.why)} · ${n.km} ${t("km")}</span>
         <div class="meta">${t("board")}: ${s.board || "–"} · ${t("grades")}: ${s.grades || "–"}</div>
         ${enrol}
-        ${pats || (needsPat ? `<div class="pat na">${t("pat_none")}</div>` : `<div class="pat na">${t("senior_note")}</div>`)}
-        ${review}</div>`;
+        ${pats || (needsPat ? `<div class="pat na">${t("pat_none")}</div>` : `<div class="pat na">${t("senior_note")}</div>`)}</div>`;
     }).join("");
     const src = meta.sources || {};
     panel.innerHTML = `<h2>${p.name}</h2><div class="small">${t("sector")}: ${p.sector} · ${p.code}</div>
@@ -553,7 +527,6 @@
         <div class="kpi">${t("junior_score")}<b>${orNA(fmtScore(p.junior_score))}</b></div>
         <div class="kpi">${t("senior_score")}<b>${orNA(fmtScore(p.senior_score))}</b>
           <span class="small">${p.senior_score == null ? t("diploma_gap") : ""}</span></div>
-        <div class="kpi">${t("review_score")}<b>${orNA(fmtScore(p.review_score))}</b></div>
         <div class="kpi" style="grid-column:span 2">${t("home_value")}<b>${orNA(p.home_value == null ? null : "$" + p.home_value.toLocaleString())}</b>
           <span class="small">${p.home_accounts ? p.home_accounts.toLocaleString() + " " + t("accounts") : ""}
           ${p.home_value_change_pct == null ? "" : " · " + t("m_home_value_change_pct") + " " + fmt("home_value_change_pct", p.home_value_change_pct)}</span></div>
@@ -563,7 +536,6 @@
         <div class="kpi" style="grid-column:span 2">${t("safety")}: <span class="na">${t("safety_na")}</span></div>
       </div>
       <p class="small">${t("programs_na")}</p>
-      <p class="small">${t("review_method")}</p>
       <div><b>${t("amenities")}</b>: ${t("libraries")} ${orNA(p.libraries)} · ${t("transit")} ${orNA(p.transit_stops)} · ${t("parks")} ${orNA(p.parks)}</div>
       <h3>${t("nearby")}</h3>${schoolHtml}
       <p class="small">${t("method").replace("{years}", (meta.pat_years || []).join("–"))}</p>
@@ -605,6 +577,36 @@
       fillColor: result.score == null ? "#ffffff" : "#12355b", fillOpacity: 0.9,
     };
   }
+  const SURVEY_FIELDS = [
+    ["survey_quality", "education_quality"],
+    ["survey_parents", "parental_involvement"],
+    ["survey_engagement", "learning_engagement"],
+    ["survey_citizenship", "citizenship"],
+    ["survey_safe", "safe_caring"],
+    ["survey_supports", "access_supports"],
+  ];
+  function applyAssurance(payload) {
+    assuranceByCode = new Map();
+    ((payload && payload.schools) || []).forEach((row) => {
+      if (row && row.code) assuranceByCode.set(contactCode(row.code), row);
+    });
+  }
+  function surveyHtml(school) {
+    const row = assuranceByCode.get(contactCode(school.cbe_code));
+    if (!row) return "";
+    const any = SURVEY_FIELDS.some(([, field]) => row[field] != null);
+    const title = row.report
+      ? `<a href="${esc(row.report)}" target="_blank" rel="noopener">${esc(t("survey_title"))}</a>`
+      : esc(t("survey_title"));
+    const year = row.year ? ` <span class="na">${esc(String(row.year))}</span>` : "";
+    if (!any) return `<div class="survey"><div>${title}${year}</div><div class="na">${t("no_data")}</div></div>`;
+    const lines = SURVEY_FIELDS.map(([key, field]) => {
+      const value = row[field];
+      const shown = value == null ? `<span class="na">${t("no_data")}</span>` : `${esc(Number(value).toFixed(1))}%`;
+      return `<div><span class="k">${esc(t(key))}</span>${shown}</div>`;
+    }).join("");
+    return `<div class="survey"><div>${title}${year}</div>${lines}<div class="note">${esc(t("survey_note"))}</div></div>`;
+  }
   function schoolPopupHtml(school) {
     const result = listedResult(school);
     const name = displayName(school);
@@ -638,7 +640,7 @@
       <div><span class="k">${esc(t("board"))}</span>${esc(school.board || "–")}</div>
       <div><span class="k">${esc(t("grades"))}</span>${esc(school.cbe_grades || school.grades || "–")}</div>
       <div><span class="k">${esc(t("col_score"))}</span>${esc(score)}</div>
-      ${enrol}${programLine}${official}</div>`;
+      ${enrol}${programLine}${surveyHtml(school)}${official}</div>`;
   }
   // pinToTop is for a map click: the sticky header was covering the row, so it never looked like the first one.
   function revealRankRow(id, pinToTop) {
@@ -979,7 +981,7 @@
     const rows = schools.filter((s) => inConfig(s) && passesDirectory(s) && schoolPoint(s));
     schoolLayer = L.layerGroup(rows.map((s) => {
       const marker = L.circleMarker(schoolPoint(s), pointStyle(s, String(s.id) === pickedId))
-        .bindPopup(schoolPopupHtml(s), { maxWidth: 260, autoPan: true, autoPanPadding: [12, 12] });
+        .bindPopup(schoolPopupHtml(s), { maxWidth: 300, autoPan: true, autoPanPadding: [12, 12] });
       marker.off("click");
       marker.on("click", () => focusSchool(s.id, true));
       markerById.set(String(s.id), marker);
@@ -1127,32 +1129,27 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19, opacity: 0.6 }).addTo(map);
 
-  const dataUrl = (name) => "data/" + name + "?v=20261005av";
+  const dataUrl = (name) => "data/" + name + "?v=20261006d";
   Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
     .then(([fc, sch, m, directory, contacts]) => {
       communities = fc.features; schools = sch; meta = m;
       mergeDirectory(directory);
       mergeContacts(contacts);
-      communities.forEach((f) => { f.properties.review_score = null; });
       document.getElementById("metric").value = state.metric;
       document.getElementById("unit").value = state.unit;
       document.getElementById("band").value = state.band;
       const zonesPromise = fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }));
       const profilesPromise = fetch(dataUrl("community_profiles.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
-      if (RANK_FIRST) return Promise.all([zonesPromise, Promise.resolve(null), profilesPromise]);
-      return Promise.all([
-        zonesPromise,
-        fetch(dataUrl("reviews.json")).then((r) => r.ok ? r.json() : null).catch(() => null),
-        profilesPromise,
-      ]);
+      const assurancePromise = fetch(dataUrl("assurance.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
+      return Promise.all([zonesPromise, profilesPromise, assurancePromise]);
     })
-    .then(([zoneFc, reviews, profiles]) => {
+    .then(([zoneFc, profiles, assurance]) => {
       if (!communities.length) return;
       zones = (zoneFc && zoneFc.features) || [];
       communityProfiles = (profiles && profiles.communities) || {};
+      applyAssurance(assurance);
       if (state.unit === "zone" && !zones.length) state.unit = "community";
-      attachReviews(reviews);
       if (RANK_FIRST) {
         rerenderAll();
       } else {

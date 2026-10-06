@@ -9,14 +9,12 @@ The ranking list is a left sidebar called the school filter area. The page is a 
 - Clicking a school draws the CBE attendance zone and walk zone from the public finder files.
 - CBE directory for phone, website, grades, and programs. Alberta's directory fills a phone or website only when one is missing.
 - 2025-to-2026 assessed-value change, 2021 census children and families, school enrolment, source as-of dates.
-- Optional review script (`scripts/fetch_reviews.py`) that skips cleanly without API keys.
 - Weekly school update (`scripts/update_schools.py`): directory, contacts, and zones, written only when the text changes. Home values and diploma results are not part of it.
 
 ## Next Steps
 - Show the PAT cohort size (`n_cells`) in the UI, and optionally add a minimum cohort rule.
 - CSSD attendance areas, if that board publishes a file the page can use. CBE zones are already drawn.
 - Equity Index when the City publishes a community or census-tract table, not only PDF maps.
-- Run `fetch_reviews.py` once Google and Reddit keys exist.
 
 ## Known Issues
 - A school with no CBE zone, including CSSD, charter, and private schools, outlines the community its point falls in. Community scores still use nearby schools and are not shown on the page.
@@ -25,4 +23,4 @@ The ranking list is a left sidebar called the school filter area. The page is a 
 - High schools stay off the list. There is no current diploma file, so they are not ranked or given a grade 10–12 zone.
 
 ## Handoff
-The page is Calgary school ranking (by PAT). It opens in English. The header menu is English, 简体中文, 繁體中文, Français, 日本語, and 한국어. A `?lang=` code still switches the page. Verify: open `http://127.0.0.1:8765/` (English) and `http://127.0.0.1:8765/?lang=zh`. Data check: `.venv\Scripts\python scripts\verify.py`.
+The page is Calgary school ranking (by PAT). A CBE school card shows the Assurance survey from that school's improvement report. It opens in English. The header menu is English, 简体中文, 繁體中文, Français, 日本語, and 한국어. A `?lang=` code still switches the page. Verify: open `http://127.0.0.1:8765/` (English) and `http://127.0.0.1:8765/?lang=zh`. Data check: `.venv\Scripts\python scripts\verify.py`.

@@ -129,6 +129,23 @@ def run_checks() -> list[tuple[str, bool, str]]:
                    or (row.get("population") is not None and row["population"] <= 0)
                    or (row.get("median_household_income") is not None and row["median_household_income"] <= 0)]
     out.append(("profile counts stay positive and percents stay in range", not bad_profile, f"{len(bad_profile)} bad"))
+    assurance_path = DATA / "assurance.json"
+    if not assurance_path.exists():
+        out.append(("assurance survey exists", False, "missing assurance.json; run scripts/fetch_assurance.py"))
+        return out
+    assurance = json.loads(assurance_path.read_text(encoding="utf-8")).get("schools") or []
+    survey_fields = ("education_quality", "parental_involvement", "learning_engagement",
+                     "citizenship", "safe_caring", "access_supports")
+    dal = next((row for row in assurance if row.get("name") == "Dalhousie School"), {})
+    out.append(("Dalhousie Assurance survey matches the Fall 2025 table",
+                dal.get("education_quality") == 89.7 and dal.get("parental_involvement") == 74.9
+                and dal.get("year") == 2025,
+                f"quality {dal.get('education_quality')} parents {dal.get('parental_involvement')}"))
+    bad_survey = [row.get("name") for row in assurance if any(
+        row.get(key) is not None and not 0 <= row[key] <= 100 for key in survey_fields)]
+    with_quality = sum(1 for row in assurance if row.get("education_quality") is not None)
+    out.append(("assurance percents stay in range", not bad_survey, f"{len(bad_survey)} bad"))
+    out.append(("assurance survey covers most CBE schools", with_quality >= 100, f"{with_quality} with education quality"))
     return out
 
 

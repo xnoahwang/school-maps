@@ -76,6 +76,7 @@ body.rank-first #rankTable th { position: sticky; top: 0; z-index: 2; white-spac
 .school-pop .k { color: #52606d; margin-right: 4px; }
 .leaflet-popup-content-wrapper { border-radius: 12px; }
 .leaflet-popup-content a { color: #12355b; }
+.school-pop .survey { margin-top: 6px; padding-top: 6px; border-top: 1px solid #e4e8ec; }
 .school-pop .official { margin-top: 8px; padding-top: 6px; border-top: 1px solid #e4e8ec; font-size: 12px; }
 .school-pop .official a { display: inline-block; }
 .school-pop .note { color: #52606d; margin-top: 2px; }

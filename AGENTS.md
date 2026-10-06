@@ -364,10 +364,10 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 ### Layout
 - `scripts/build_data.py`: official community data is downloaded, joined, and scored. Output goes to `web/data/`.
 - `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, from the public finder KMZ files. The community choropleth uses the regular program. The ranking map draws a zone when a school is clicked. Run it after `build_data.py`.
-- `scripts/fetch_reviews.py`: optional Google/Reddit review layer. Exits 0 without API keys and does not change exam scores.
 - `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program and grade filters.
 - `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.
 - `scripts/fetch_community_profiles.py`: 2021 census fields from the City's community-profile PDFs. Output is `web/data/community_profiles.json`. The HTML profile pages do not contain the tables. Not part of the weekly school update.
+- `scripts/fetch_assurance.py`: the six Assurance survey measures from each CBE School Improvement Results PDF. Output is `web/data/assurance.json`. The summary table is an image. Not part of the weekly school update, and not mixed into the PAT score.
 - `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values or diploma results. `--install-task` registers a weekly Sunday 09:00 run.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure).
 - `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language.
@@ -381,7 +381,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Verify
 ```bash
-.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py && .venv/bin/python scripts/fetch_reviews.py
+.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py
 ```
 
 ### Forbidden zones
