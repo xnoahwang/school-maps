@@ -25,9 +25,9 @@ def run_checks() -> list[tuple[str, bool, str]]:
     missing = [f.name for f in files if not f.exists()]
     if missing:
         return [("output files exist", False, f"missing {missing}; run scripts/build_data.py")]
-    feats = json.loads(files[0].read_text())["features"]
-    schools = json.loads(files[1].read_text())
-    meta = json.loads(files[2].read_text())
+    feats = json.loads(files[0].read_text(encoding="utf-8"))["features"]
+    schools = json.loads(files[1].read_text(encoding="utf-8"))
+    meta = json.loads(files[2].read_text(encoding="utf-8"))
     stats = meta["stats"]
     props = [f["properties"] for f in feats]
     out = [("output files exist", True, "3 files")]
@@ -102,6 +102,15 @@ def run_checks() -> list[tuple[str, bool, str]]:
     out.append(("diploma results only on senior schools", not off_senior, f"{len(off_senior)}"))
     out.append(("diploma block has both rates and a recent year", not bad_diploma and len(diploma) >= 40,
                 f"{len(diploma)} schools, {len(bad_diploma)} incomplete"))
+    without_result = sorted(s["name"] for s in high if (s.get("diploma_latest") or {}).get("acc") is None)
+    with_result = len(high) - len(without_result)
+    diploma_rate = round(with_result / len(high), 3) if high else None
+    out.append(("diploma result rate matches the school file",
+                stats.get("schools_senior") == len(high)
+                and stats.get("schools_with_diploma") == with_result
+                and stats.get("diploma_result_rate") == diploma_rate
+                and stats.get("diploma_without_result_examples") == without_result[:25],
+                f"{with_result}/{len(high)} = {diploma_rate}"))
     years = set(meta.get("pat_years") or [])
     bad_year = [s["name"] for s in schools if s.get("rank_year") is not None and s["rank_year"] not in years]
     missing_year = [s["name"] for s in schools if s.get("rank_score") is not None and s.get("rank_year") is None]

@@ -503,6 +503,12 @@ def main() -> int:
     with_score = [s for s in pat_level if (s.get("g6") or {}).get("acc") is not None or (s.get("g9") or {}).get("acc") is not None]
     calgary_pat = {k for k in pat if "Calgary" in k[0]}
     matched_keys = {(s["board"], normalize_name(s["name"])) for s in matched}
+    # A null diploma_latest mixes a name that missed the file with a school
+    # whose file row has no published exam rate. The rate is coverage, not a
+    # pure name-match rate. An empty senior list leaves the rate unset.
+    senior = [s for s in schools if s.get("senior")]
+    with_diploma = [s for s in senior if (s.get("diploma_latest") or {}).get("acc") is not None]
+    diploma_without = sorted(s["name"] for s in senior if (s.get("diploma_latest") or {}).get("acc") is None)
     stats = {
         "communities_residential": len(out_features),
         "schools_total": len(schools),
@@ -513,7 +519,10 @@ def main() -> int:
         "schools_with_pat_score": len(with_score),
         "schools_ranked_pat6": sum(1 for s in schools if s["rank_exam"] == "pat6" and s["rank_score"] is not None),
         "schools_ranked_pat9": sum(1 for s in schools if s["rank_exam"] == "pat9" and s["rank_score"] is not None),
-        "schools_with_diploma": sum(1 for s in schools if (s.get("diploma_latest") or {}).get("acc") is not None),
+        "schools_senior": len(senior),
+        "schools_with_diploma": len(with_diploma),
+        "diploma_result_rate": round(len(with_diploma) / len(senior), 3) if senior else None,
+        "diploma_without_result_examples": diploma_without[:25],
         "cbe_cssd_pat_schools": len(calgary_pat),
         "cbe_cssd_pat_schools_matched": len(calgary_pat & matched_keys),
         "communities_with_home_value": sum(1 for f in out_features if f["properties"]["home_value"] is not None),
@@ -551,7 +560,7 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "communities.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": out_features}, separators=(",", ":"), allow_nan=False))
     (OUT / "schools.json").write_text(json.dumps(schools, separators=(",", ":"), allow_nan=False))
-    (OUT / "meta.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False, allow_nan=False))
+    (OUT / "meta.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False, allow_nan=False), encoding="utf-8")
     print(json.dumps(stats, indent=1))
     print(f"PAT years averaged: {pat_years}; failed sources: {meta['sources_failed'] or 'none'}")
     return 0

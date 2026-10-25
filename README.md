@@ -135,9 +135,10 @@ As-of dates for the Open Calgary, PAT, and diploma downloads are in `web/data/me
 
 - PAT data covers grades 6 and 9 only. Schools that end before grade 6 (for example K–4) have no PAT score.
 - PAT match: 372 of 423 elementary or junior-high schools in the City list (87.9%) are matched by board and normalised name. 299 of the 322 CBE/CSSD-named schools in the PAT file (92.9%) are matched. Most unmatched City schools are K–4/K–5 schools or private schools that do not appear in the PAT file. See `web/data/meta.json → stats`.
+- Diploma result: 78 of 111 senior schools in the City list (70.3%) have a published diploma exam result for the newest year. The other 33 stay on the high-school list without a number. A school is in that group when its name did not match a row, or when the file publishes no exam rate. See `web/data/meta.json → stats`.
 - Assessed value is not the market price, and the median mixes houses and condos.
 - 2020 median household income and languages spoken most often at home come from the City's 2021 community-profile PDFs (`web/data/community_profiles.json`). They are not an Open Calgary table. The 2016 income table (`wj3a-wgmh`) is not used.
-- The Assurance survey on a CBE card is the six survey rows from that school's School Improvement Results PDF. Except parental involvement, each percentage combines students, parents, and teachers. A suppressed cell, or a cell the reader cannot confirm, is "no data". It is not part of the exam score. CSSD and private schools are not in those reports.
+- The Assurance survey on a CBE card is the six survey rows from that school's School Improvement Results PDF. Except parental involvement, each percentage combines students, parents, and teachers. A suppressed cell, or a cell the reader cannot confirm, is "no data". A second read keeps a number only when that cell comes back as a clean percentage. The reports were not checked school by school by hand. It is not part of the exam score. CSSD and private schools are not in those reports.
 - Test scores reflect demographics as much as teaching quality. They are one input for families.
 
 ## Layout

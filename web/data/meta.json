@@ -54,7 +54,36 @@
    "Italian School of Calgary",
    "James Short Memorial School"
   ],
-  "schools_with_diploma": 78
+  "schools_with_diploma": 78,
+  "schools_senior": 111,
+  "diploma_result_rate": 0.703,
+  "diploma_without_result_examples": [
+   "Adolescent Mental Health Services",
+   "Al-Qaim International School",
+   "Arise Christian Academy",
+   "Aurora Learning Calgary",
+   "Banbury Crossroads Academy",
+   "Calgary Charter School Hub Â– Almadina Campus",
+   "Calgary Chinese Alliance School",
+   "Calgary Chinese Private School",
+   "Calgary German Language School Society",
+   "Calgary Home Education",
+   "Calgary Quest School",
+   "Capstone Engineering Academy",
+   "Christine Meikle School",
+   "Dr. Gordon Townsend School",
+   "Dr. Oakley School",
+   "Eastside Christian Academy",
+   "Fusion Collegiate",
+   "Greek Community School",
+   "Italian School of Calgary",
+   "Janus Academy Junior/Senior High School",
+   "Lycee Louis Pasteur",
+   "North Point School",
+   "Phoenix Education Foundation",
+   "Rundle Studio",
+   "SCcyber E-Learning Institute"
+  ]
  },
  "sources_failed": [],
  "sources": {
