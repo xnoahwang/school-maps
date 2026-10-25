@@ -4,7 +4,7 @@ Responsibility: turn the KMZ files published by the CBE Find a School tool
 into web/data/zones.geojson, one attendance polygon and one walk zone per
 program that publishes them. A community is included when the overlap is at
 least 10% of the zone or of the community, not only when the community's
-representative point falls inside. Grade 10–12 zones are skipped. Community
+representative point falls inside. Grade 10–12 zones are included. Community
 lists are stored on the regular program. Run after scripts/build_data.py.
 """
 from __future__ import annotations
@@ -202,7 +202,7 @@ def main(refresh: bool = False) -> int:
     """CLI entry. Exit 0 when zones.geojson is current, 1 when the API fails.
 
     refresh re-downloads each zone file and keeps it when the bytes match.
-    Grade 10–12 zones are not built. The page ranks elementary and junior high.
+    Grade 10–12 zones are included. The high-school list uses them.
     """
     schools_path = OUT / "schools.json"
     communities_path = OUT / "communities.geojson"
@@ -244,8 +244,6 @@ def main(refresh: bool = False) -> int:
             low = int(program.get("programLowGrade") or 0)
             high = int(program.get("programHighGrade") or 0)
             band = grade_band(low, high)
-            if band == "senior":
-                continue
             jobs.append({
                 "name": profile.get("schoolname") or row.get("title"),
                 "school_code": str(profile.get("schoolcode") or ""),

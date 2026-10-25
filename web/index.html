@@ -1,16 +1,16 @@
 <!doctype html>
-<!-- Calgary school ranking (by PAT): static entry page.
+<!-- Calgary school ranking: static entry page.
      Layout only. app.js loads the data and connects rank.js, zone.js, and map.js.
      Strings live in i18n.js. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calgary School Ranking (by PAT)</title>
+  <title>Calgary School Ranking</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script>
     // Change this when style.css, the page scripts, or web/data change.
-    globalThis.ASSET_VERSION = "20261024p";
+    globalThis.ASSET_VERSION = "20261025r";
     document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(ASSET_VERSION) + '">');
   </script>
 </head>
@@ -33,11 +33,16 @@
       <div id="rankChrome">
       <h2 id="filterRegionTitle" data-i18n="filter_region"></h2>
       <div id="dirFilters">
+        <div id="levelSwitch" role="group">
+          <button type="button" id="levelElem" data-level="elem" aria-pressed="true"><span data-i18n="level_elem"></span> <span class="level-by"><span data-i18n="level_by_pat_before"></span><span class="level-exam" data-exam="pat" data-i18n="level_exam_pat"></span><span data-i18n="level_by_pat_after"></span></span></button>
+          <button type="button" id="levelJunior" data-level="junior" aria-pressed="false"><span data-i18n="level_junior"></span> <span class="level-by"><span data-i18n="level_by_pat_before"></span><span class="level-exam" data-exam="pat" data-i18n="level_exam_pat"></span><span data-i18n="level_by_pat_after"></span></span></button>
+          <button type="button" id="levelHigh" data-level="high" aria-pressed="false"><span data-i18n="level_high"></span> <span class="level-by"><span data-i18n="level_by_diploma_before"></span><span class="level-exam" data-exam="diploma" data-i18n="level_exam_diploma"></span><span data-i18n="level_by_diploma_after"></span></span></button>
+        </div>
         <div class="filter-row">
           <label class="dir-program"><span data-i18n="filter_board"></span>
             <select id="boardFilter"></select>
           </label>
-          <label class="dir-program"><span data-i18n="filter_grade_layer"></span>
+          <label class="dir-program" id="gradeFilterWrap"><span data-i18n="filter_grade_layer"></span>
             <select id="gradeFilter"></select>
           </label>
         </div>
@@ -60,10 +65,9 @@
         <th data-i18n="col_school_name"></th>
         <th data-i18n="col_board"></th>
         <th data-i18n="col_grades"></th>
-        <th class="score-col">
-          <span data-i18n="col_score"></span>
-          <button type="button" id="scoreSource" class="source-mark" aria-expanded="false" aria-controls="scoreSourcePop">!</button>
-        </th>
+        <th class="sort-col" data-sort="score" aria-sort="descending"><button type="button" data-i18n="col_score"></button></th>
+        <th class="sort-col" data-sort="acc" aria-sort="none"><button type="button" data-i18n="col_acc" data-i18n-title="pat_acc"></button></th>
+        <th class="sort-col" data-sort="exc" aria-sort="none"><button type="button" data-i18n="col_exc" data-i18n-title="pat_exc"></button></th>
         <th data-i18n="col_year"></th>
         <th class="more-col"><span class="visually-hidden" data-i18n="more_zone"></span></th>
       </tr></thead><tbody></tbody></table>
@@ -82,7 +86,7 @@
     <p data-i18n="score_source_body"></p>
     <p data-i18n="score_source_acc"></p>
     <p data-i18n="score_source_exc"></p>
-    <a href="https://www.alberta.ca/provincial-achievement-tests#jumplinks-3" target="_blank" rel="noopener" data-i18n="score_source_link"></a>
+    <a id="scoreSourceLink" href="https://www.alberta.ca/provincial-achievement-tests#jumplinks-3" target="_blank" rel="noopener" data-i18n="score_source_link"></a>
   </div>
   <div id="termPop" hidden></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

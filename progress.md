@@ -2,7 +2,7 @@
 
 ## Now
 
-Calgary school ranking, marked Prototype. The public page is https://school-maps-beta.vercel.app/. Vercel publishes `web/` when `main` changes. `school-maps-xujun.vercel.app` asks for a Vercel login. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. The zone file loads the first time a school is selected. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
+Calgary school ranking, marked Prototype. The page has elementary, junior high, and high-school lists. A school that teaches more than one level appears on each list with that level's score. High schools use the diploma exam file dated 2025-11-14, through the 2025 year. The public page is https://school-maps-beta.vercel.app/. The high-school list is local until the next publish. Vercel publishes `web/` when `main` changes. `school-maps-xujun.vercel.app` asks for a Vercel login. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. The zone file loads the first time a school is selected. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
 
 The page was built with AI in Cursor, using the cursor-prime standard described in the README.
 

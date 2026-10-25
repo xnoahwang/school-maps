@@ -53,7 +53,8 @@
    "Highwood School",
    "Italian School of Calgary",
    "James Short Memorial School"
-  ]
+  ],
+  "schools_with_diploma": 78
  },
  "sources_failed": [],
  "sources": {
@@ -96,6 +97,12 @@
    "as_of": "2025-03-06",
    "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa",
    "note": "Headcount by school for the newest year in the file."
+  },
+  "diploma": {
+   "url": "https://www.alberta.ca/system/files/custom_downloaded_images/diploma-multiyear-sch-list-annual.xlsx",
+   "as_of": "2025-11-14",
+   "licence": "https://open.alberta.ca/licence",
+   "note": "Diploma exam mark, not the school-awarded mark. Each school uses its newest year."
   }
  }
 }

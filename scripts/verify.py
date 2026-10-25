@@ -59,10 +59,9 @@ def run_checks() -> list[tuple[str, bool, str]]:
     leftover = [p["code"] for p in props if "senior_score" in p or "rent" in p]
     cell_counts = [s["name"] for s in schools for g in ("g6", "g9", "g6_latest", "g9_latest")
                    if s.get(g) and "n_cells" in s[g]]
-    diploma_rows = [s["name"] for s in schools if s.get("rank_exam") == "diploma" or "g12" in s or "score12" in s]
-    out.append(("no stored diploma, rent, or cohort-count fields",
-                not leftover and not cell_counts and not diploma_rows and not meta.get("gaps"),
-                f"{len(leftover)} communities, {len(cell_counts)} cells, {len(diploma_rows)} schools"))
+    out.append(("no stored rent or cohort-count fields",
+                not leftover and not cell_counts and not meta.get("gaps"),
+                f"{len(leftover)} communities, {len(cell_counts)} cells"))
     zone_path = DATA / "zones.geojson"
     if not zone_path.exists():
         out.append(("CBE attendance zones exist", False, "missing zones.geojson; run scripts/build_zones.py"))
@@ -74,7 +73,9 @@ def run_checks() -> list[tuple[str, bool, str]]:
         regular = [f for f in attendance if f["properties"].get("program") == "Regular"]
         out.append(("CBE regular attendance zones", len(regular) >= 80, f"{len(regular)} regular of {len(attendance)}"))
         out.append(("CBE walk zones", len(walks) >= 50, f"{len(walks)}"))
+        senior_zones = [f for f in attendance if f["properties"].get("band") == "senior"]
         out.append(("elementary attendance zones", len(elem) >= 40, f"{len(elem)}"))
+        out.append(("high-school attendance zones", len(senior_zones) >= 10, f"{len(senior_zones)}"))
         coffin = next((f for f in regular if "coffin" in f["properties"].get("name", "").lower()
                        and f["properties"].get("band") == "elem"), None)
         coffin_codes = [p.get("code") for p in (coffin or {}).get("properties", {}).get("places") or []]
@@ -90,9 +91,17 @@ def run_checks() -> list[tuple[str, bool, str]]:
     high = [s for s in schools if s.get("senior")]
     out.append(("elementary rank is grade 6 only", all(s["elem"] and not s["junior"] and not s["senior"] for s in pat6), f"{len(pat6)}"))
     out.append(("junior rank is grade 9, not high school", all(s["junior"] and not s["senior"] for s in pat9), f"{len(pat9)}"))
-    out.append(("high schools are not ranked",
+    diploma = [s for s in high if s.get("diploma_latest")]
+    off_senior = [s["name"] for s in schools if s.get("diploma_latest") and not s.get("senior")]
+    bad_diploma = [s["name"] for s in diploma
+                   if s["diploma_latest"].get("acc") is None or s["diploma_latest"].get("exc") is None
+                   or s["diploma_latest"].get("year") not in (2022, 2023, 2024, 2025)]
+    out.append(("high schools are not ranked on PAT",
                 all(s.get("rank_exam") is None and s.get("rank_score") is None for s in high) and len(high) >= 40,
                 f"{len(high)}"))
+    out.append(("diploma results only on senior schools", not off_senior, f"{len(off_senior)}"))
+    out.append(("diploma block has both rates and a recent year", not bad_diploma and len(diploma) >= 40,
+                f"{len(diploma)} schools, {len(bad_diploma)} incomplete"))
     years = set(meta.get("pat_years") or [])
     bad_year = [s["name"] for s in schools if s.get("rank_year") is not None and s["rank_year"] not in years]
     missing_year = [s["name"] for s in schools if s.get("rank_score") is not None and s.get("rank_year") is None]

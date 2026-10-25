@@ -4,7 +4,7 @@ The page is a Calgary school ranking for elementary and junior high, scored on t
 
 These choices are already in the code:
 
-- Grade 10 and above is not ranked. Diploma results are not in the public file this page uses.
+- Elementary, junior high, and high school are three lists. Elementary uses the Grade 6 PAT, junior high the Grade 9 PAT, and high school the diploma exam mark. A school that teaches more than one level is on each of those lists.
 - A missing number stays blank. It is not stored or shown as zero.
 - Catholic, charter, francophone, and private schools stay on the list when they have a grade 6 or grade 9 PAT. Schools outside the CBE have no attendance polygon, so the map outlines the community the school sits in.
 - The old community colouring map is not part of the page. Community school scores, value for money, amenity counts, and the 2025-to-2026 assessed-value change are not built.

@@ -11,6 +11,21 @@ const CHARTER_BOARDS = new Set([
   "Alberta Classical Academy Ltd.",
 ]);
 
+const GRADE_SHORT = {
+  "Elementary": "Elem",
+  "Junior High": "Jr",
+  "Senior High": "Sr",
+  "Elementary/Junior High": "Elem/Jr",
+  "Junior High/Senior High": "Jr/Sr",
+  "Elementary/Junior High/Senior High": "Elem/Jr/Sr",
+};
+
+/** Short display label. CBE spans, Unknown, and anything else stay as stored. */
+export function shortGrades(grades) {
+  if (!grades) return grades;
+  return GRADE_SHORT[grades] || grades;
+}
+
 /** City grade labels are bands. Returns [low, high], or null when the label is missing. */
 export function citySpan(grades) {
   if (!grades || grades === "Unknown") return null;
@@ -35,11 +50,26 @@ export function displayName(school) {
   return school.cbe_name || school.name;
 }
 
-/** Grade 10 and above stays off the list. This ranking is elementary and junior high. */
+/** Grade 10 and above. These schools also stay on an earlier list when they teach it. */
 export function isHighSchool(school) {
   if (school.senior) return true;
   const span = schoolSpan(school);
   return !!(span && span[1] >= 10);
+}
+
+/** Whether this school teaches elementary, junior high, or high school. */
+export function teachesLevel(school, level) {
+  const span = schoolSpan(school);
+  if (level === "high") return isHighSchool(school);
+  if (level === "junior") {
+    if (span) return span[0] <= 9 && span[1] >= 9;
+    return !!school.junior;
+  }
+  if (span) {
+    if (span[1] < 6) return true;
+    return span[0] <= 6 && span[1] >= 6;
+  }
+  return !!school.elem;
 }
 
 /** "K-6" or "7-9" as [low, high]. A single grade uses that grade for both ends. */
@@ -73,17 +103,23 @@ export function listedExam(school) {
 }
 
 /**
- * The score, year, and exam shown on one row.
- * Uses the pipeline score when the exam matches. Recomputes only when a CBE
- * grade range calls for the other exam's latest-year block.
+ * The score for one level. Elementary is the Grade 6 block, junior high the
+ * Grade 9 block, high school the diploma block. A K-4 school has no Grade 6
+ * exam, so its elementary score stays null. The stored rank_score is not used,
+ * because one school can have a different score on each level.
  */
-export function listedResult(school) {
-  const exam = listedExam(school);
-  const block = exam === "pat9" ? school.g9_latest : exam === "pat6" ? school.g6_latest : null;
-  if (exam && school.rank_exam === exam) return { score: school.rank_score, year: school.rank_year, exam, detail: block };
-  const fromBlock = blockScore(block);
-  if (fromBlock != null) return { score: fromBlock, year: block.year || null, exam, detail: block };
-  return { score: null, year: null, exam, detail: null };
+export function listedResult(school, level) {
+  const which = level === "junior" || level === "high" ? level : "elem";
+  if (which === "high") return scoreFromBlock(school.diploma_latest, "diploma");
+  if (which === "junior") return scoreFromBlock(school.g9_latest, "pat9");
+  const span = schoolSpan(school);
+  if (span && (span[0] > 6 || span[1] < 6)) return { score: null, year: null, exam: "pat6", detail: null };
+  return scoreFromBlock(school.g6_latest, "pat6");
+}
+
+function scoreFromBlock(block, exam) {
+  const score = blockScore(block);
+  return { score, year: score == null || !block ? null : block.year || null, exam, detail: score == null ? null : block };
 }
 
 /** Public board bucket: cbe, cssd, franco, charter, other_public, private, or null. */
@@ -110,8 +146,10 @@ export function gradeBand(school) {
  * filter.board and filter.grade use the select values ("all", "cbe", "K-6", ...).
  */
 export function inConfig(school, filter) {
-  if (isHighSchool(school) || !school.board) return false;
+  const level = filter.level === "junior" || filter.level === "high" ? filter.level : "elem";
+  if (!teachesLevel(school, level) || !school.board) return false;
   if (filter.board !== "all" && boardGroup(school) !== filter.board) return false;
+  if (level === "high") return true;
   if (filter.grade === "all") return true;
   if (filter.grade === "elem") return gradeBand(school) === "elem";
   if (filter.grade === "junior") return gradeBand(school) === "junior";
@@ -125,14 +163,10 @@ export function inConfig(school, filter) {
 
 /** i18n key for the note under the filters. Does not include a program or search filter. */
 export function noteForConfig(filter) {
-  if (filter.grade === "all") return "rank_note_all";
-  if (filter.grade === "junior") return "rank_note_pat9";
-  if (filter.grade === "elem" || filter.grade === "unlisted") return "rank_note_pat6";
+  if (filter.level === "high") return "rank_note_diploma";
+  if (filter.level === "junior") return "rank_note_pat9";
   if (filter.grade === "unknown") return "rank_note_unknown";
-  const exam = examForSpan(rangeEnds(filter.grade));
-  if (exam === "pat9") return "rank_note_pat9";
-  if (exam === "pat6") return "rank_note_pat6";
-  return "rank_note_noscore";
+  return "rank_note_pat6";
 }
 
 /** Program select and the search box. An empty query matches every school. */
@@ -145,19 +179,41 @@ export function passesDirectory(school, filter) {
 }
 
 /**
- * Grade 6 before Grade 9 when both are on screen. A missing score sorts last
- * inside that exam. `entries` are { school, result } from listedResult.
+ * Grade 6 before Grade 9 when both are on screen. A missing value sorts last
+ * inside that exam, in either direction. `entries` are { school, result }.
+ * `order.by` is "score", "acc", or "exc"; anything else uses the score.
+ * `order.dir` "asc" is low to high. The default is the score, high to low.
+ * Acceptable ties break on excellence, and excellence ties break on acceptable,
+ * in the same direction. The name is used only when those rates are also equal.
  */
-export function sortListed(entries, mixed) {
+export function sortListed(entries, mixed, order) {
   const examOrder = { pat6: 0, pat9: 1 };
+  const by = order && (order.by === "acc" || order.by === "exc") ? order.by : "score";
+  const tie = by === "acc" ? "exc" : by === "exc" ? "acc" : null;
+  const asc = !!(order && order.dir === "asc");
+  const rate = (entry, key) => {
+    if (key === "score") return entry.result.score;
+    const detail = entry.result.detail;
+    const value = detail ? detail[key] : null;
+    return value == null ? null : value;
+  };
+  const compareRate = (av, bv) => {
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    return asc ? av - bv : bv - av;
+  };
   return [...entries].sort((a, b) => {
     if (mixed && (a.result.exam || "") !== (b.result.exam || "")) {
       return (examOrder[a.result.exam] ?? 2) - (examOrder[b.result.exam] ?? 2);
     }
-    if (a.result.score == null && b.result.score == null) return displayName(a.school).localeCompare(displayName(b.school));
-    if (a.result.score == null) return 1;
-    if (b.result.score == null) return -1;
-    return b.result.score - a.result.score || displayName(a.school).localeCompare(displayName(b.school));
+    const primary = compareRate(rate(a, by), rate(b, by));
+    if (primary) return primary;
+    if (tie) {
+      const secondary = compareRate(rate(a, tie), rate(b, tie));
+      if (secondary) return secondary;
+    }
+    return displayName(a.school).localeCompare(displayName(b.school));
   });
 }
 

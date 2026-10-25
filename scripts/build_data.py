@@ -34,6 +34,8 @@ SOURCES = {
     "communities": f"{SOCRATA}/surr-xmvs.geojson?$limit=5000",
     "schools": f"{SOCRATA}/fd9t-tdn2.json?$limit=5000",
     "pat": "https://www.alberta.ca/system/files/custom_downloaded_images/ed-pat-multiyear-sch-list.xlsx",
+    # The Open Data catalogue copy of this report stopped at 2015/2016.
+    "diploma": "https://www.alberta.ca/system/files/custom_downloaded_images/diploma-multiyear-sch-list-annual.xlsx",
     # p84b-7zbi (Assessments by Community) only holds 2016-2017, so we take the
     # current parcel roll and compute medians ourselves.
     "parcels": (f"{SOCRATA}/4bsw-nn7w.csv?$select=comm_code,comm_name,assessed_value"
@@ -46,6 +48,7 @@ SOURCES = {
 }
 RAW_FILES = {
     "communities": "communities.geojson", "schools": "schools.json", "pat": "pat.xlsx",
+    "diploma": "diploma.xlsx",
     "parcels": "parcels_res.csv", "census_age": "census_age.json",
     "census_families": "census_families.json", "enrolment": "enrolment.json",
 }
@@ -57,9 +60,10 @@ SOCRATA_IDS = {
 }
 LICENCES = {
     "pat": "https://open.alberta.ca/licence",
+    "diploma": "https://open.alberta.ca/licence",
 }
 OGL_CALGARY = "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa"
-REQUIRED = {"communities", "schools", "pat"}
+REQUIRED = {"communities", "schools", "pat", "diploma"}
 PAT_YEARS_TO_AVERAGE = 3
 MIN_ACCOUNTS_FOR_MEDIAN = 50
 USER_AGENT = "Mozilla/5.0 (school-map prototype; data build)"
@@ -196,6 +200,67 @@ def assign_rank_score(school: dict) -> None:
     school["rank_year"] = latest.get("year") if latest and score is not None else None
 
 
+def diploma_latest_by_school(frame) -> dict:
+    """Newest-year diploma exam rates, keyed by (authority, normalised name).
+
+    Uses the exam mark columns, not the school-awarded mark. Suppressed cells
+    are skipped. A school with no published exam rate is omitted. The footnote
+    row in the Diploma Course column is not a course. An empty frame returns {}.
+    A frame missing the course, authority, or school columns raises KeyError.
+    """
+    if frame is None or len(frame) == 0:
+        return {}
+    data = frame[~frame["Diploma Course"].fillna("").astype(str).str.startswith("1. Due")].copy()
+    years = sorted({int(column[:4]) for column in data.columns if column[:4].isdigit() and column.endswith("Sch Exam Mark % Acc")})
+    results: dict = {}
+    grouped = data.groupby(["Authority Name", "School Code", "School Name"], dropna=False)
+    for (auth, code, school), grp in grouped:
+        present = []
+        for year in years:
+            acc_col = f"{year} Sch Exam Mark % Acc"
+            exc_col = f"{year} Sch Exam Mark % Exc"
+            if acc_col not in grp.columns or exc_col not in grp.columns:
+                continue
+            acc = [v for v in grp[acc_col].map(to_float) if pd.notna(v)]
+            exc = [v for v in grp[exc_col].map(to_float) if pd.notna(v)]
+            if acc or exc:
+                present.append((year, acc, exc))
+        if not present:
+            continue
+        year, acc, exc = present[-1]
+        record = _pat_record(acc, exc, [year])
+        record["year"] = year
+        if record["acc"] is None or record["exc"] is None:
+            continue
+        authority = str(auth or "").strip()
+        results[(authority, normalize_name(str(school or "")))] = {"code": code, "diploma_latest": record}
+    return results
+
+
+def diploma_school_results(xlsx: Path) -> dict:
+    """Read the school diploma workbook and return diploma_latest_by_school."""
+    return diploma_latest_by_school(pd.read_excel(xlsx, dtype=str))
+
+
+def attach_diploma(schools: list[dict], results: dict) -> None:
+    """Set diploma_latest on senior schools. Other schools are left unchanged.
+
+    Board and name match first. A name that occurs once in the file matches
+    when the board does not. A senior school with no row gets null, not 0.
+    """
+    by_name: dict[str, list] = {}
+    for (auth, norm), res in results.items():
+        by_name.setdefault(norm, []).append((auth, res))
+    for school in schools:
+        if not school.get("senior"):
+            continue
+        norm = normalize_name(school.get("name") or "")
+        result = results.get((school.get("board"), norm))
+        if result is None and len(by_name.get(norm, [])) == 1:
+            result = by_name[norm][0][1]
+        school["diploma_latest"] = None if result is None else result["diploma_latest"]
+
+
 def school_score(result: dict | None) -> float | None:
     """0-100 school score = mean of % acceptable and % excellence (both of enrolled).
 
@@ -286,15 +351,30 @@ def families_with_children_pct(row: dict | None) -> float | None:
     return round(100 * sum(parts) / total, 1)
 
 
+def _file_as_of(url: str, key: str) -> str | None:
+    """Last-Modified date for an Alberta workbook. None when the header is missing."""
+    try:
+        resp = requests.head(url, headers={"User-Agent": USER_AGENT}, timeout=60, allow_redirects=True)
+        resp.raise_for_status()
+        return parsedate_to_datetime(resp.headers["Last-Modified"]).date().isoformat()
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN [{key}] as-of date unavailable: {exc}", file=sys.stderr)
+        return None
+
+
 def source_as_of(refresh: bool) -> dict[str, str | None]:
-    """As-of dates: Socrata rowsUpdatedAt, plus the PAT file's Last-Modified header.
+    """As-of dates: Socrata rowsUpdatedAt, plus each Alberta file's Last-Modified header.
 
     Cached in data/raw/build/. A metadata failure leaves that date null; it does not
     fail the build, because the data files themselves are the source of truth.
     """
     cache = RAW / "source_as_of.json"
     if cache.exists() and not refresh:
-        return json.loads(cache.read_text())
+        dates = json.loads(cache.read_text())
+        if "diploma" not in dates:
+            dates["diploma"] = _file_as_of(SOURCES["diploma"], "diploma")
+            cache.write_text(json.dumps(dates, indent=1))
+        return dates
     RAW.mkdir(parents=True, exist_ok=True)
     dates: dict[str, str | None] = {}
     for key, dataset_id in SOCRATA_IDS.items():
@@ -307,13 +387,8 @@ def source_as_of(refresh: bool) -> dict[str, str | None]:
         except Exception as exc:  # noqa: BLE001
             print(f"WARN [{key}] as-of date unavailable: {exc}", file=sys.stderr)
             dates[key] = None
-    try:
-        resp = requests.head(SOURCES["pat"], headers={"User-Agent": USER_AGENT}, timeout=60, allow_redirects=True)
-        resp.raise_for_status()
-        dates["pat"] = parsedate_to_datetime(resp.headers["Last-Modified"]).date().isoformat()
-    except Exception as exc:  # noqa: BLE001
-        print(f"WARN [pat] as-of date unavailable: {exc}", file=sys.stderr)
-        dates["pat"] = None
+    dates["pat"] = _file_as_of(SOURCES["pat"], "pat")
+    dates["diploma"] = _file_as_of(SOURCES["diploma"], "diploma")
     cache.write_text(json.dumps(dates, indent=1))
     return dates
 
@@ -386,6 +461,7 @@ def main() -> int:
         s["community"] = next((c["code"] for c in communities if c["prepared"].contains(pt)), None)
     for s in schools:
         assign_rank_score(s)
+    attach_diploma(schools, diploma_school_results(paths["diploma"]))
 
     # --- home values (median assessed value, residential with building) ---
     median_value, accounts = {}, {}
@@ -435,6 +511,7 @@ def main() -> int:
         "schools_with_pat_score": len(with_score),
         "schools_ranked_pat6": sum(1 for s in schools if s["rank_exam"] == "pat6" and s["rank_score"] is not None),
         "schools_ranked_pat9": sum(1 for s in schools if s["rank_exam"] == "pat9" and s["rank_score"] is not None),
+        "schools_with_diploma": sum(1 for s in schools if (s.get("diploma_latest") or {}).get("acc") is not None),
         "cbe_cssd_pat_schools": len(calgary_pat),
         "cbe_cssd_pat_schools_matched": len(calgary_pat & matched_keys),
         "communities_with_home_value": sum(1 for f in out_features if f["properties"]["home_value"] is not None),
@@ -462,6 +539,7 @@ def main() -> int:
             "communities": source("communities", "https://data.calgary.ca/d/surr-xmvs", OGL_CALGARY),
             "schools": source("schools", "https://data.calgary.ca/d/fd9t-tdn2", OGL_CALGARY),
             "pat": source("pat", SOURCES["pat"], LICENCES["pat"], "Grades 6 and 9, latest 3 years present in the file."),
+            "diploma": source("diploma", SOURCES["diploma"], LICENCES["diploma"], "Diploma exam mark, not the school-awarded mark. Each school uses its newest year."),
             "parcels": source("parcels", "https://data.calgary.ca/d/4bsw-nn7w", OGL_CALGARY, "2026 roll, class RE, property type LI."),
             "census_age": source("census_age", "https://data.calgary.ca/d/f9wk-wej9", OGL_CALGARY, "2021 census, share of residents age 0-14."),
             "census_families": source("census_families", "https://data.calgary.ca/d/msjx-5ygv", OGL_CALGARY, "2021 census families with children."),

@@ -2,8 +2,7 @@
 
 Runs the CBE directory, Alberta contacts, and CBE zones. Each file is
 replaced only when the new text differs. A source that fails or comes back
-empty keeps the file already on disk. Grade 10–12 zones are left out by
-build_zones.py.
+empty keeps the file already on disk. Grade 10–12 zones are included.
 
 The page does not run this. Windows Task Scheduler does, weekly on Sunday
 at 09:00 local time, including after a missed start once the computer is on.

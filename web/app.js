@@ -3,8 +3,8 @@
  * Points and zoom live in map.js. This file does not recompute PAT scores.
  */
 import {
-  boardGroup, contactCode, contactKey, displayName, gradeBand, inConfig, isHighSchool,
-  listedResult, noteForConfig, passesDirectory, rangeEnds, sortListed,
+  boardGroup, contactCode, contactKey, displayName, inConfig, listedResult,
+  noteForConfig, passesDirectory, rangeEnds, schoolSpan, shortGrades, sortListed, teachesLevel,
 } from "./rank.js";
 import { chooseZones, createZonePanel, esc } from "./zone.js";
 import { createMap } from "./map.js";
@@ -22,7 +22,8 @@ function storedLang() {
   return "en";
 }
 
-const state = { lang: storedLang(), query: "", board: "all", grade: "all", program: "all" };
+const openedLevel = params.get("level");
+const state = { lang: storedLang(), query: "", board: "all", grade: "all", program: "all", level: openedLevel === "junior" || openedLevel === "high" ? openedLevel : "elem", sortBy: "score", sortDir: "desc" };
 let communities = [], schools = [], zones = [];
 let zonesState = "unloaded";
 let zonesPromise = null;
@@ -32,9 +33,10 @@ let assuranceByCode = new Map();
 const t = (key) => (I18N[state.lang][key] ?? I18N.en[key] ?? key);
 const fmtScore = (v) => v == null ? null : v.toFixed(1);
 const orNA = (s) => s == null ? `<span class="na">${t("no_data")}</span>` : s;
-const filterOf = () => ({ board: state.board, grade: state.grade, program: state.program, query: state.query });
+const filterOf = () => ({ board: state.board, grade: state.grade, program: state.program, query: state.query, level: state.level });
 
 let notesOpen = false;
+let scoreSourceMark = null;
 function syncNotesMore() {
   const box = document.getElementById("listNotes");
   const body = document.getElementById("listNotesBody");
@@ -46,15 +48,40 @@ function syncNotesMore() {
   button.setAttribute("aria-expanded", notesOpen ? "true" : "false");
 }
 
+function openScoreExam() {
+  return scoreSourceMark ? scoreSourceMark.dataset.exam : (state.level === "high" ? "diploma" : "pat");
+}
+
+function fillScoreSource(exam) {
+  const diploma = exam === "diploma";
+  const sourceBody = document.querySelector("#scoreSourcePop [data-i18n='score_source_body']");
+  if (sourceBody) sourceBody.textContent = t(diploma ? "score_source_body_diploma" : "score_source_body");
+  const sourceLink = document.getElementById("scoreSourceLink");
+  if (sourceLink) {
+    sourceLink.textContent = t(diploma ? "score_source_link_diploma" : "score_source_link");
+    sourceLink.href = diploma
+      ? "https://www.alberta.ca/administering-diploma-exams"
+      : "https://www.alberta.ca/provincial-achievement-tests#jumplinks-3";
+  }
+}
+
 function applyI18n() {
   document.documentElement.lang = HTML_LANG[state.lang] || "en";
   document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
-  const scoreSource = document.getElementById("scoreSource");
-  if (scoreSource) scoreSource.setAttribute("aria-label", t("score_source_label"));
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    const full = t(el.dataset.i18nTitle);
+    el.title = full;
+    el.setAttribute("aria-label", full);
+  });
   document.getElementById("search").placeholder = t("search_school");
   const langSelect = document.getElementById("lang");
   if (langSelect && langSelect.value !== state.lang) langSelect.value = state.lang;
   document.title = t("title");
+  fillScoreSource(openScoreExam());
+  document.body.classList.toggle("level-high", state.level === "high");
+  document.querySelectorAll("#levelSwitch button").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.level === state.level ? "true" : "false");
+  });
   syncNotesMore();
 }
 
@@ -77,35 +104,35 @@ function refreshFilterLabels() {
 }
 
 function schoolsInBoard(board) {
-  return schools.filter((school) => !isHighSchool(school) && school.board && (board === "all" || boardGroup(school) === board));
+  return schools.filter((school) => teachesLevel(school, state.level) && school.board && (board === "all" || boardGroup(school) === board));
 }
 
 function fillGradeFilter() {
   const select = document.getElementById("gradeFilter");
+  const wrap = document.getElementById("gradeFilterWrap");
+  const row = select && select.closest(".filter-row");
   if (!select) return;
   const list = schoolsInBoard(state.board);
   select.replaceChildren();
   select.appendChild(labeledOption("all", "filter_all"));
-  if (state.board === "cbe") {
+  if (state.level !== "high" && state.board === "cbe") {
     const labels = new Set(list.map((school) => school.cbe_grades).filter(Boolean));
     [...labels].sort((a, b) => {
       const [al, ah] = rangeEnds(a);
       const [bl, bh] = rangeEnds(b);
       return al - bl || ah - bh || a.localeCompare(b);
     }).forEach((label) => select.appendChild(labeledOption(label)));
-    if (list.some((school) => !school.cbe_grades && gradeBand(school) === "elem")) {
-      select.appendChild(labeledOption("unlisted", "rank_band_unlisted"));
-    }
-    if (list.some((school) => !school.cbe_grades && gradeBand(school) === "unknown")) {
+    if (list.some((school) => !school.cbe_grades && !schoolSpan(school))) {
       select.appendChild(labeledOption("unknown", "rank_band_unknown"));
     }
-  } else {
-    if (list.some((school) => gradeBand(school) === "elem")) select.appendChild(labeledOption("elem", "rank_band_elem"));
-    if (list.some((school) => gradeBand(school) === "junior")) select.appendChild(labeledOption("junior", "rank_band_junior"));
-    if (list.some((school) => gradeBand(school) === "unknown")) select.appendChild(labeledOption("unknown", "rank_band_unknown"));
+  } else if (state.level !== "high" && list.some((school) => !schoolSpan(school))) {
+    select.appendChild(labeledOption("unknown", "rank_band_unknown"));
   }
   if (![...select.options].some((option) => option.value === state.grade)) state.grade = "all";
   select.value = state.grade;
+  const hide = state.level === "high" || select.options.length <= 1;
+  if (wrap) wrap.hidden = hide;
+  if (row) row.classList.toggle("board-only", hide);
 }
 
 function fillBoardFilter() {
@@ -168,13 +195,17 @@ function mergeDirectory(directory) {
       ...fields,
     });
   });
+  refreshPrograms();
+  fillBoardFilter();
+}
+
+function refreshPrograms() {
   const listedPrograms = new Set();
   schools.forEach((school) => {
-    if (isHighSchool(school)) return;
+    if (!teachesLevel(school, state.level)) return;
     (school.program_names || []).forEach((name) => listedPrograms.add(name));
   });
   fillProgramFilter([...listedPrograms].sort((a, b) => a.localeCompare(b)));
-  fillBoardFilter();
 }
 
 function mergeContacts(payload) {
@@ -202,13 +233,6 @@ function mergeContacts(payload) {
     if (!school.phone && row.phone) school.phone = row.phone;
     if (!school.website && row.website) school.website = row.website;
   });
-}
-
-function rateShown(value) {
-  return value == null || value === "" ? "–" : `${value}%`;
-}
-function rateText(labelKey, value) {
-  return `${t(labelKey)} ${rateShown(value)}`;
 }
 
 const SURVEY_FIELDS = [
@@ -242,7 +266,7 @@ function surveyHtml(school) {
   return `<div class="survey"><div>${title}${year}</div>${lines}<div class="note">${esc(t("survey_note"))}</div></div>`;
 }
 function schoolPopupHtml(school) {
-  const result = listedResult(school);
+  const result = listedResult(school, state.level);
   const name = displayName(school);
   const phoneDigits = String(school.phone || "").replace(/[^\d+]/g, "");
   const phone = phoneDigits
@@ -268,6 +292,7 @@ function schoolPopupHtml(school) {
   const programLine = programs.length ? `<div><span class="k">${esc(t("filter_program"))}</span>${esc(programs.join(", "))}</div>` : "";
   const enrol = school.enrolment == null ? "" : `<div><span class="k">${esc(t("enrolment"))}</span>${Number(school.enrolment).toLocaleString()}</div>`;
   const official = `<div class="official"><a href="https://www.cbe.ab.ca/find-a-school" target="_blank" rel="noopener">${esc(t("cbe_finder"))}</a><div class="note">${esc(t("official_note"))}</div></div>`;
+  // The map popup keeps the stored grade phrase. The ranking table abbreviates it.
   return `<div class="school-pop"><strong>${esc(name)}</strong>
     <div><span class="k">${esc(t("website"))}</span>${site}</div>
     <div><span class="k">${esc(t("phone"))}</span>${phone}</div>
@@ -335,36 +360,40 @@ function renderRank() {
   refreshFilterLabels();
   const filter = filterOf();
   const rows = schools.filter((s) => inConfig(s, filter) && passesDirectory(s, filter));
-  const mixed = state.grade === "all";
-  const shown = sortListed(rows.map((s) => ({ school: s, result: listedResult(s) })), mixed);
+  const shown = sortListed(rows.map((s) => ({ school: s, result: listedResult(s, state.level) })), false, { by: state.sortBy, dir: state.sortDir });
   const placeByExam = {};
   let scored = 0;
   const withBreak = (value) => esc(value).replaceAll("/", "/\u200b");
   const picked = mapView.pickedId();
   document.querySelector("#rankTable tbody").innerHTML = shown.map(({ school: s, result }) => {
-    let rank = "–";
-    if (result.score != null) {
-      scored += 1;
-      const key = mixed ? (result.exam || "") : "one";
-      placeByExam[key] = (placeByExam[key] || 0) + 1;
-      rank = String(placeByExam[key]);
-    }
     const detail = result.detail;
-    const tip = detail && detail.acc != null ? `${rateText("pat_acc", detail.acc)} · ${rateText("pat_exc", detail.exc)}` : "";
+    const metric = state.sortBy === "acc" || state.sortBy === "exc" ? (detail ? detail[state.sortBy] : null) : result.score;
+    let rank = "–";
+    if (metric != null) {
+      scored += 1;
+      placeByExam.one = (placeByExam.one || 0) + 1;
+      rank = String(placeByExam.one);
+    }
     const name = withBreak(displayName(s));
-    const examTag = mixed && result.exam ? ` <span class="small">${esc(t(result.exam === "pat9" ? "grade9" : "grade6"))}</span>` : "";
+    const grades = shortGrades(s.cbe_grades || s.grades) || "–";
+    const rate = (value) => orNA(fmtScore(value));
     return `<tr data-id="${esc(s.id)}" class="${String(s.id) === picked ? "sel" : ""}"><td class="num">${rank}</td><td>${name}</td>
-      <td>${esc(s.board || "–")}</td><td>${withBreak(s.cbe_grades || s.grades || "–")}</td>
-      <td class="num score" title="${esc(tip)}">${orNA(fmtScore(result.score))}${examTag}</td><td class="num">${result.year || "–"}</td>
+      <td>${esc(s.board || "–")}</td><td class="grades">${withBreak(grades)}</td>
+      <td class="num score">${rate(result.score)}</td><td class="num">${rate(detail && detail.acc)}</td><td class="num">${rate(detail && detail.exc)}</td><td class="num">${result.year || "–"}</td>
       <td class="more"><button type="button" class="more-btn" data-more="${esc(s.id)}" aria-label="${esc(t("more_zone"))}">»</button></td></tr>`;
   }).join("");
   const allPrograms = document.querySelector("#programFilter option[value=all]");
   if (allPrograms) allPrograms.textContent = t("filter_all_programs");
   const filtered = state.program !== "all" || state.query;
-  document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig(filter))
+  const noteKey = filtered && state.level === "high" ? "rank_note_filter_diploma" : filtered ? "rank_note_filter" : noteForConfig(filter);
+  document.getElementById("rankNote").textContent = t(noteKey)
     .replace("{n}", String(rows.length))
     .replace("{scored}", String(scored));
   syncNotesMore();
+  document.querySelectorAll("#rankTable th[data-sort]").forEach((th) => {
+    const active = th.dataset.sort === state.sortBy;
+    th.setAttribute("aria-sort", active ? (state.sortDir === "asc" ? "ascending" : "descending") : "none");
+  });
   const panelId = zonePanel.panelSchoolId();
   if (panelId && !shown.some(({ school }) => String(school.id) === panelId)) zonePanel.closeZonePanel();
   else if (panelId) zonePanel.fillZonePanel(panelId);
@@ -400,6 +429,32 @@ Promise.all(["communities.geojson", "schools.json", "cbe_directory.json", "ab_co
     note.textContent = t("load_failed").replace("{detail}", detail).trim();
   });
 
+function setLevel(level) {
+  state.level = level === "junior" || level === "high" ? level : "elem";
+  state.grade = "all";
+  state.sortBy = "score";
+  state.sortDir = "desc";
+  const url = new URL(location.href);
+  if (state.level === "elem") url.searchParams.delete("level");
+  else url.searchParams.set("level", state.level);
+  history.replaceState(null, "", url);
+  fillBoardFilter();
+  refreshPrograms();
+  applyI18n();
+  renderRank();
+}
+
+document.querySelectorAll("#levelSwitch button").forEach((button) => {
+  button.addEventListener("click", () => setLevel(button.dataset.level));
+});
+document.querySelector("#rankTable thead").addEventListener("click", (e) => {
+  const th = e.target.closest("th[data-sort]");
+  if (!th) return;
+  if (state.sortBy === th.dataset.sort) state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
+  else { state.sortBy = th.dataset.sort; state.sortDir = "desc"; }
+  renderRank();
+});
+
 document.getElementById("lang").addEventListener("change", (e) => {
   const next = e.target.value;
   if (!LANGS.includes(next)) return;
@@ -423,29 +478,59 @@ document.getElementById("programFilter").addEventListener("change", (e) => {
   renderRank();
 });
 
-const scoreSource = document.getElementById("scoreSource");
 const scoreSourcePop = document.getElementById("scoreSourcePop");
+const levelSwitch = document.getElementById("levelSwitch");
+let scoreSourceTimer = 0;
+const scoreSourceHovers = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 function placeScoreSource() {
-  const mark = scoreSource.getBoundingClientRect();
+  if (!scoreSourceMark) return;
+  const mark = scoreSourceMark.getBoundingClientRect();
   const pop = scoreSourcePop.getBoundingClientRect();
-  let left = mark.right - pop.width;
+  let left = mark.left;
   left = Math.max(8, Math.min(left, window.innerWidth - pop.width - 8));
   let top = mark.bottom + 6;
   if (top + pop.height > window.innerHeight - 8) top = Math.max(8, mark.top - pop.height - 6);
   scoreSourcePop.style.left = left + "px";
   scoreSourcePop.style.top = top + "px";
 }
-function setScoreSource(open) {
+function setScoreSource(open, mark) {
+  window.clearTimeout(scoreSourceTimer);
   scoreSourcePop.hidden = !open;
-  scoreSource.setAttribute("aria-expanded", open ? "true" : "false");
-  if (open) placeScoreSource();
+  if (scoreSourceMark && scoreSourceMark !== mark) scoreSourceMark.removeAttribute("aria-expanded");
+  if (open && mark) {
+    scoreSourceMark = mark;
+    mark.setAttribute("aria-expanded", "true");
+    fillScoreSource(mark.dataset.exam);
+    placeScoreSource();
+  } else {
+    if (scoreSourceMark) scoreSourceMark.removeAttribute("aria-expanded");
+    scoreSourceMark = null;
+  }
 }
-scoreSource.addEventListener("click", (e) => {
-  e.stopPropagation();
-  closeTerm();
-  setScoreSource(scoreSourcePop.hidden);
-});
+function scheduleScoreSourceClose() {
+  window.clearTimeout(scoreSourceTimer);
+  scoreSourceTimer = window.setTimeout(() => setScoreSource(false), 150);
+}
 scoreSourcePop.addEventListener("click", (e) => e.stopPropagation());
+if (scoreSourceHovers) {
+  levelSwitch.addEventListener("mouseover", (e) => {
+    const mark = e.target.closest(".level-exam");
+    if (!mark) return;
+    window.clearTimeout(scoreSourceTimer);
+    closeTerm();
+    setScoreSource(true, mark);
+  });
+  levelSwitch.addEventListener("mouseout", (e) => {
+    const mark = e.target.closest(".level-exam");
+    if (!mark) return;
+    const next = e.relatedTarget;
+    if (next && (mark.contains(next) || scoreSourcePop.contains(next))) return;
+    scheduleScoreSourceClose();
+  });
+  scoreSourcePop.addEventListener("mouseenter", () => window.clearTimeout(scoreSourceTimer));
+  scoreSourcePop.addEventListener("mouseleave", scheduleScoreSourceClose);
+}
+window.addEventListener("resize", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
 const termPop = document.getElementById("termPop");
 let termButton = null;
 function closeTerm() {

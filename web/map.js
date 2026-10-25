@@ -14,8 +14,9 @@ export function schoolPoint(school) {
   return [lat, lon];
 }
 
-function pointStyle(school, picked) {
-  const result = listedResult(school);
+// Outside createMap, so the level is passed in. deps is not in scope here.
+function pointStyle(school, picked, level) {
+  const result = listedResult(school, level);
   return {
     radius: picked ? 8 : 5, weight: picked ? 3 : 1,
     color: picked ? "#f5a623" : "#12355b",
@@ -175,7 +176,7 @@ export function createMap(deps) {
   function restylePicked(nextId) {
     if (pickedId && pickedId !== nextId && markerById.has(pickedId)) {
       const prev = deps.schools().find((s) => String(s.id) === pickedId);
-      if (prev) markerById.get(pickedId).setStyle(pointStyle(prev, false));
+      if (prev) markerById.get(pickedId).setStyle(pointStyle(prev, false, deps.filter().level));
     }
     pickedId = nextId;
     document.querySelectorAll("#rankTable tbody tr").forEach((tr) => {
@@ -183,7 +184,7 @@ export function createMap(deps) {
     });
     const school = deps.schools().find((s) => String(s.id) === nextId);
     const marker = markerById.get(nextId);
-    if (school && marker) marker.setStyle(pointStyle(school, true));
+    if (school && marker) marker.setStyle(pointStyle(school, true, deps.filter().level));
   }
   function focusSchool(id, pinToTop) {
     const key = String(id);
@@ -241,7 +242,7 @@ export function createMap(deps) {
     const filter = deps.filter();
     const rows = deps.schools().filter((s) => inConfig(s, filter) && passesDirectory(s, filter) && schoolPoint(s));
     schoolLayer = L.layerGroup(rows.map((s) => {
-      const marker = L.circleMarker(schoolPoint(s), pointStyle(s, String(s.id) === pickedId))
+      const marker = L.circleMarker(schoolPoint(s), pointStyle(s, String(s.id) === pickedId, filter.level))
         .bindPopup(deps.popupHtml(s), { maxWidth: 300, autoPan: true, autoPanPadding: [12, 12] });
       marker.off("click");
       marker.on("click", () => focusSchool(s.id, true));

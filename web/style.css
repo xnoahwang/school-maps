@@ -19,6 +19,14 @@ td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; } td.num { text-align: 
 .small { font-size: 11.5px; color: #52606d; } .small a { color: #12355b; }
 #filterRegionTitle { margin: 0 0 12px; font-size: 13px; font-weight: 650; letter-spacing: .01em; color: #1c1917; }
 #dirFilters { display: flex; flex-direction: column; gap: 12px; margin: 0 0 12px; }
+#levelSwitch { min-width: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.filter-row.board-only { grid-template-columns: 1fr; }
+#levelSwitch button { font: inherit; font-weight: 650; font-size: 13px; line-height: 1.25; text-align: center; color: #52606d; padding: 8px 10px; border: 1px solid #e4e0d8; border-radius: 10px; background: #fff; cursor: pointer; }
+#levelSwitch button[aria-pressed="true"] { background: #e7eef6; color: #12355b; border-color: #c5d4e4; }
+#levelSwitch .level-by { font-size: 11px; white-space: nowrap; }
+#levelSwitch .level-exam { cursor: help; text-decoration: underline dotted; text-underline-offset: 2px; }
+body.level-high #gradeFilterWrap, #gradeFilterWrap[hidden] { display: none; }
+body.level-high .filter-row { grid-template-columns: 1fr; }
 .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .dir-program { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 12px; font-weight: 600; color: #52606d; }
 .dir-program select, #search {
@@ -45,7 +53,10 @@ td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; } td.num { text-align: 
 #rankChrome { flex: none; }
 #rankScroll { flex: 1; min-height: 0; overflow: auto; }
 #rankTable th { position: sticky; top: 0; z-index: 2; white-space: nowrap; }
-#rankTable th.score-col { cursor: default; white-space: nowrap; overflow: visible; }
+#rankTable th.sort-col { white-space: normal; vertical-align: middle; }
+#rankTable th.sort-col button { font: inherit; font-weight: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+#rankTable th[aria-sort="descending"] button::after { content: " \2193"; }
+#rankTable th[aria-sort="ascending"] button::after { content: " \2191"; }
 .source-mark { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 4px; padding: 0; border: 1.5px solid #12355b; border-radius: 50%; background: #fff; color: #12355b; font: 700 12px/1 system-ui, sans-serif; cursor: pointer; vertical-align: middle; }
 .source-mark[aria-expanded="true"] { background: #12355b; color: #fff; }
 #scoreSourcePop { position: fixed; z-index: 2000; width: min(340px, calc(100vw - 16px)); padding: 8px 10px; background: #fff; border: 1px solid #c4ccd5; border-radius: 6px; box-shadow: 0 4px 16px rgba(18, 53, 91, .16); font-size: 12.5px; font-weight: 400; line-height: 1.45; text-align: left; white-space: normal; cursor: default; }
@@ -55,7 +66,8 @@ td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; } td.num { text-align: 
 #termPop[hidden] { display: none; }
 #rankTable a { color: #12355b; }
 #rankTable { font-size: 14px; }
-#rankTable td { padding: 8px 6px; }
+#rankTable td { padding: 8px 2px; }
+#rankTable td.grades { text-align: center; }
 #rankTable td.score { white-space: nowrap; }
 #rankTable td.score .small { margin-left: 6px; white-space: nowrap; }
 #rankTable tr:hover { background: #f6f5f2; }

@@ -36,14 +36,14 @@ Windows: `.venv\Scripts\python` and `.venv\Scripts\pip`.
 
 ## What the page does
 
-- The list on the left is the ranking. The map on the right draws one point per school still in that list.
+- The list on the left is the ranking. The switch above the filters chooses elementary, junior high, or high school. The map on the right draws one point per school still in that list. `?level=junior` opens junior high, and `?level=high` opens high school.
 - Filters are board, grade, and program. Each opens on All. Search matches the school name, board, and program.
 - Click a row or a point to move the map and open the card: website, phone, address, board, grades, and score. The school name on the row is plain text. The website link is on the card.
 - » on a row opens the communities in that CBE attendance zone, their 2026 assessed values, and 2021 census figures. A circled ! explains a figure.
 - A school with no CBE zone, including Catholic, charter, and private schools, outlines the community its point falls in. The panel says that outline is the community, not an attendance zone.
 - A missing website, phone, address, zone, or score is "no data".
 
-Grade 9 is ranked on the latest Grade 9 PAT. A range that includes grade 6 but not grade 9 is ranked on the latest Grade 6 PAT. Grade 10 and above is not on the list. With the grade filter on All, Grade 6 comes first and Grade 9 starts its own rank numbers.
+Elementary uses the latest Grade 6 PAT. Junior high uses the latest Grade 9 PAT. High school uses the diploma exam. A school that teaches more than one level appears on each of those lists, with that level's score. A school with no published result for the level stays at the bottom and is not numbered.
 
 Confirm a designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school). The page does not call CBE when you open it.
 
@@ -61,7 +61,7 @@ The pipeline also stores a three-year average of those rates (2023, 2024, 2025 i
 
 The browser only reads files in `web/`. Python joins the public sources first, so opening the page does not download spreadsheets or call a city API. There is no frontend framework and no build step.
 
-Grade 9 is ranked on the Grade 9 PAT. A range that includes grade 6 but not grade 9 is ranked on the Grade 6 PAT. Grade 10 and above is off the list. The rank uses the newest year. The stored three-year average is not the rank.
+Elementary is the Grade 6 PAT, junior high is the Grade 9 PAT, and high school is the diploma exam mark. Each list uses the newest year for that exam. The stored three-year average is not the rank. A school that teaches more than one level is on each list.
 
 School names match through `normalize_name`, which drops filler words and rewrites `St.` and `&`. A name that still differs is left unmatched. The Assurance table is an image. OCR tokens within 16 pixels vertically count as one row. A blank cell stays blank.
 
