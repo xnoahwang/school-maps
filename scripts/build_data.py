@@ -1,8 +1,9 @@
-"""Build the front-end data for the Calgary school-community map.
+"""Build the front-end data for the Calgary school ranking page.
 
-Responsibility: download public sources into data/raw/ (cached; delete a file
-to refetch), join them, compute transparent per-community scores, and write
-compact JSON/GeoJSON into web/data/. It does NOT serve or render anything.
+Responsibility: download public sources into data/raw/build/ (cached; delete a
+file to refetch), join them, and write compact JSON/GeoJSON into web/data/.
+Community features keep the boundary, the 2026 assessed value, and the census
+shares the zone panel shows. It does NOT serve or render anything.
 
 Run:  .venv/bin/python scripts/build_data.py [--refresh]
 """
@@ -23,7 +24,7 @@ from shapely.geometry import Point, shape
 from shapely.prepared import prep
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW = ROOT / "data" / "raw"
+RAW = ROOT / "data" / "raw" / "build"
 OUT = ROOT / "web" / "data"
 
 SOCRATA = "https://data.calgary.ca/resource"
@@ -37,14 +38,6 @@ SOURCES = {
     # current parcel roll and compute medians ourselves.
     "parcels": (f"{SOCRATA}/4bsw-nn7w.csv?$select=comm_code,comm_name,assessed_value"
                 "&$where=assessment_class='RE' AND property_type='LI'&$limit=2000000"),
-    "libraries": f"{SOCRATA}/m9y7-ui7j.json?$limit=5000",
-    "transit": f"{SOCRATA}/muzh-c9qc.json?$select=stop_name,status,point&$limit=100000",
-    "parks": f"{SOCRATA}/kami-qbfh.geojson?$select=site_name,the_geom&$limit=100000",
-    # assessed_value is text in this dataset, so a Socrata median() is
-    # alphabetical and wrong. Download the rows and take the median in pandas.
-    "parcels_2025": (f"{SOCRATA}/4ur7-wsgc.csv?$select=comm_code,assessed_value"
-                     "&$where=roll_year='2025' AND assessment_class='RE' AND property_type='LI'"
-                     "&$limit=2000000"),
     "census_age": (f"{SOCRATA}/f9wk-wej9.json?$select=community_code,pop_age_0_to_14,"
                    "pop_age_0_to_14_percent,total_pop_household&$limit=5000"),
     "census_families": (f"{SOCRATA}/msjx-5ygv.json?$select=community_code,total_census_families,"
@@ -53,16 +46,13 @@ SOURCES = {
 }
 RAW_FILES = {
     "communities": "communities.geojson", "schools": "schools.json", "pat": "pat.xlsx",
-    "parcels": "parcels_res.csv", "libraries": "libraries.json",
-    "transit": "transit.json", "parks": "parks.geojson",
-    "parcels_2025": "parcels_2025.csv", "census_age": "census_age.json",
+    "parcels": "parcels_res.csv", "census_age": "census_age.json",
     "census_families": "census_families.json", "enrolment": "enrolment.json",
 }
 # Socrata view ids, used only to read rowsUpdatedAt. Not all of these are downloaded.
 SOCRATA_IDS = {
     "communities": "surr-xmvs", "schools": "fd9t-tdn2", "parcels": "4bsw-nn7w",
-    "libraries": "m9y7-ui7j", "transit": "muzh-c9qc", "parks": "kami-qbfh",
-    "parcels_2025": "4ur7-wsgc", "census_age": "f9wk-wej9",
+    "census_age": "f9wk-wej9",
     "census_families": "msjx-5ygv", "enrolment": "9qye-mibh",
 }
 LICENCES = {
@@ -138,7 +128,6 @@ def _pat_record(acc: list[float], exc: list[float], years: list[int]) -> dict:
     return {
         "acc": round(sum(acc) / len(acc), 1) if acc else None,
         "exc": round(sum(exc) / len(exc), 1) if exc else None,
-        "n_cells": len(acc),
         "years": years,
     }
 
@@ -183,13 +172,12 @@ def assign_rank_score(school: dict) -> None:
 
     Elementary-only schools use the latest Grade 6 PAT. Schools that continue
     through grade 9 and do not offer high school use the latest Grade 9 PAT,
-    even when they also have a Grade 6 result. High schools would use Diploma
-    results; that file is not open, so `rank_score` stays None. Writes
-    `rank_exam` (`pat6`, `pat9`, `diploma`, or None), `rank_score`, and
-    `rank_year`. A missing or suppressed result stays None, never 0.
+    even when they also have a Grade 6 result. A high school is not ranked.
+    Writes `rank_exam` (`pat6`, `pat9`, or None), `rank_score`, and `rank_year`.
+    A missing or suppressed result stays None, never 0.
     """
     if school["senior"]:
-        school["rank_exam"] = "diploma"
+        school["rank_exam"] = None
         school["rank_score"] = None
         school["rank_year"] = None
         return
@@ -217,31 +205,6 @@ def school_score(result: dict | None) -> float | None:
     if not result or result.get("acc") is None or result.get("exc") is None:
         return None
     return round((result["acc"] + result["exc"]) / 2, 1)
-
-
-def mean_or_none(values) -> float | None:
-    """Mean of the non-None values, or None when there are none."""
-    vals = [v for v in values if v is not None]
-    return round(sum(vals) / len(vals), 1) if vals else None
-
-
-def percentile_ranks(values: dict) -> dict:
-    """Map key -> percentile rank (0-100) among non-None values; None stays None."""
-    present = sorted(v for v in values.values() if v is not None)
-    if len(present) < 2:
-        return {k: (50.0 if v is not None else None) for k, v in values.items()}
-    def rank(v):
-        below = sum(1 for p in present if p < v)
-        equal = sum(1 for p in present if p == v)
-        return 100 * (below + (equal - 1) / 2) / (len(present) - 1)
-    return {k: (round(rank(v), 1) if v is not None else None) for k, v in values.items()}
-
-
-def approx_km(lon1, lat1, lon2, lat2) -> float:
-    """Equirectangular distance in km; accurate to <1% at city scale."""
-    x = math.radians(lon2 - lon1) * math.cos(math.radians((lat1 + lat2) / 2))
-    y = math.radians(lat2 - lat1)
-    return 6371 * math.hypot(x, y)
 
 
 def board_bucket(name: str | None) -> str:
@@ -272,8 +235,8 @@ def load_enrolment(path: Path | None) -> tuple[dict, dict, str | None]:
     """Headcount for the newest year, keyed by Alberta school code and by name.
 
     The 2023-2024 rows in `9qye-mibh` publish a school code but no school name.
-    Names are recovered from earlier years that share that code. This is
-    enrolment, not class size. Returns ({}, {}, None) when the source is missing.
+    Names are recovered from earlier years that share that code.
+    Returns ({}, {}, None) when the source is missing.
     """
     if path is None:
         return {}, {}, None
@@ -305,25 +268,6 @@ def load_enrolment(path: Path | None) -> tuple[dict, dict, str | None]:
     return by_code, by_name, newest.replace("_", "-")
 
 
-def load_prior_medians(path: Path | None) -> dict[str, int]:
-    """Community code -> 2025 median assessed value, same LI filter as the 2026 roll.
-
-    The download stores assessed_value as text. It is parsed numerically here.
-    Samples under MIN_ACCOUNTS_FOR_MEDIAN are dropped, matching the current roll.
-    """
-    if path is None:
-        return {}
-    frame = pd.read_csv(path, dtype={"comm_code": str})
-    # Socrata CSV exports this column with thousands separators ("547,000").
-    frame["assessed_value"] = pd.to_numeric(
-        frame["assessed_value"].astype(str).str.replace(",", "", regex=False), errors="coerce")
-    frame = frame[frame["assessed_value"] > 0]
-    grouped = frame.groupby("comm_code")["assessed_value"]
-    counts = grouped.size()
-    return {code: int(round(value, -3)) for code, value in grouped.median().items()
-            if counts[code] >= MIN_ACCOUNTS_FOR_MEDIAN}
-
-
 def index_by_code(path: Path | None) -> dict[str, dict]:
     """Index a small Socrata JSON list by community_code. {} if the source failed."""
     if path is None:
@@ -345,7 +289,7 @@ def families_with_children_pct(row: dict | None) -> float | None:
 def source_as_of(refresh: bool) -> dict[str, str | None]:
     """As-of dates: Socrata rowsUpdatedAt, plus the PAT file's Last-Modified header.
 
-    Cached in data/raw/. A metadata failure leaves that date null; it does not
+    Cached in data/raw/build/. A metadata failure leaves that date null; it does not
     fail the build, because the data files themselves are the source of truth.
     """
     cache = RAW / "source_as_of.json"
@@ -372,24 +316,6 @@ def source_as_of(refresh: bool) -> dict[str, str | None]:
         dates["pat"] = None
     cache.write_text(json.dumps(dates, indent=1))
     return dates
-
-
-def load_points(path: Path | None, kind: str) -> list[Point] | None:
-    """Read point features for amenity counts; None if the source failed."""
-    if path is None:
-        return None
-    if kind == "transit":
-        rows = json.loads(path.read_text())
-        return [Point(r["point"]["coordinates"]) for r in rows
-                if r.get("point") and r.get("status", "ACTIVE").upper() == "ACTIVE"]
-    if kind == "libraries":
-        rows = json.loads(path.read_text())
-        return [Point(float(r["location"]["longitude"]), float(r["location"]["latitude"]))
-                for r in rows if r.get("location", {}).get("latitude")]
-    if kind == "parks":
-        feats = json.loads(path.read_text())["features"]
-        return [shape(f["geometry"]).representative_point() for f in feats if f.get("geometry")]
-    raise ValueError(kind)
 
 
 def main() -> int:
@@ -436,11 +362,7 @@ def main() -> int:
             "pat_code": result.get("code") if result else None, "pat_match": how,
             "g6": (result or {}).get("g6"), "g9": (result or {}).get("g9"),
             "g6_latest": (result or {}).get("g6_latest"), "g9_latest": (result or {}).get("g9_latest"),
-            "score6": school_score((result or {}).get("g6")) if row.get("elem") == "Y" else None,
-            "score9": school_score((result or {}).get("g9")) if row.get("junior_h") == "Y" else None,
             "rank_exam": None, "rank_score": None, "rank_year": None,
-            # Diploma school-level results newer than 2015/16 are not open data. See meta.gaps.
-            "g12": None, "score12": None,
             "enrolment": None, "enrolment_year": None,
             "community": None,
         })
@@ -479,72 +401,28 @@ def main() -> int:
         median_value = {code: int(round(v, -3)) for code, v in grouped.median().items()
                         if accounts[code] >= MIN_ACCOUNTS_FOR_MEDIAN}
 
-    prior_value = load_prior_medians(paths["parcels_2025"])
     census_age = index_by_code(paths["census_age"])
     census_families = index_by_code(paths["census_families"])
 
-    # --- amenities ---
-    amenity_points = {k: load_points(paths[k], k) for k in ("libraries", "transit", "parks")}
-
-    # --- per-community aggregation ---
-    out_features, school_cut = [], {}
+    out_features = []
     for c in communities:
-        inside = [s for s in schools if s["community"] == c["code"]]
-        nearby = {s["id"]: "inside" for s in inside}
-        rx, ry = c["rep"].x, c["rep"].y
-        for level in ("elem", "junior", "senior"):
-            cands = [s for s in schools if s[level]]
-            if cands:
-                nearest = min(cands, key=lambda s: approx_km(rx, ry, s["lon"], s["lat"]))
-                nearby.setdefault(nearest["id"], f"nearest_{level}")
-        near_list = [schools[i] for i in nearby]
-        elem_score = mean_or_none(s["score6"] for s in near_list)
-        junior_score = mean_or_none(s["score9"] for s in near_list)
-        combined = mean_or_none([elem_score, junior_score])
-        senior_score = mean_or_none(s["score12"] for s in near_list)
-        enrol_vals = [s["enrolment"] for s in near_list if s["enrolment"] is not None]
         age = census_age.get(c["code"])
-        current = median_value.get(c["code"])
-        previous = prior_value.get(c["code"])
-        change = None if current is None or previous is None or previous == 0 else round(100 * (current - previous) / previous, 1)
-        amen = {}
-        for k, pts in amenity_points.items():
-            amen[k] = None if pts is None else sum(1 for p in pts if c["prepared"].contains(p))
         props = {
-            "code": c["code"], "name": c["name"], "sector": c["sector"], "srg": c["srg"],
-            "elem_score": elem_score, "junior_score": junior_score, "school_score": combined,
-            "senior_score": senior_score,
-            "home_value": current, "home_value_prev": previous, "home_value_change_pct": change,
-            "home_accounts": accounts.get(c["code"]),
-            "rent": None,  # CMHC is zone-level only; no community crosswalk, so not estimated
+            "code": c["code"], "name": c["name"],
+            "home_value": median_value.get(c["code"]),
             "children_pct": to_float(age.get("pop_age_0_to_14_percent")) if age else None,
             "children_count": None if not age or to_float(age.get("pop_age_0_to_14")) is None else int(to_float(age.get("pop_age_0_to_14"))),
             "families_with_children_pct": families_with_children_pct(census_families.get(c["code"])),
-            "enrolment": int(sum(enrol_vals)) if enrol_vals else None,
-            "libraries": amen["libraries"], "transit_stops": amen["transit"], "parks": amen["parks"],
-            "nearby": [{"id": i, "why": why,
-                        "km": round(approx_km(rx, ry, schools[i]["lon"], schools[i]["lat"]), 2)}
-                       for i, why in nearby.items()],
         }
         # Simplify to ~10 m: keeps shapes recognisable while shrinking the file a lot.
         geom = c["geom"].simplify(0.0001, preserve_topology=True)
         out_features.append({"type": "Feature", "properties": props,
                              "geometry": json.loads(json.dumps(geom.__geo_interface__))})
-        school_cut.update({i: schools[i] for i in nearby})
-
-    # value for money: school-percentile minus price-percentile, rescaled 0..100
-    school_pct = percentile_ranks({f["properties"]["code"]: f["properties"]["school_score"] for f in out_features})
-    price_pct = percentile_ranks({f["properties"]["code"]: f["properties"]["home_value"] for f in out_features})
-    for f in out_features:
-        code = f["properties"]["code"]
-        sp, pp = school_pct[code], price_pct[code]
-        f["properties"]["school_pct"], f["properties"]["price_pct"] = sp, pp
-        f["properties"]["value_score"] = None if sp is None or pp is None else round((sp - pp + 100) / 2, 1)
 
     # --- match-rate statistics ---
     pat_level = [s for s in schools if s["elem"] or s["junior"]]
     matched = [s for s in pat_level if s["pat_match"]]
-    with_score = [s for s in pat_level if s["score6"] is not None or s["score9"] is not None]
+    with_score = [s for s in pat_level if (s.get("g6") or {}).get("acc") is not None or (s.get("g9") or {}).get("acc") is not None]
     calgary_pat = {k for k in pat if "Calgary" in k[0]}
     matched_keys = {(s["board"], normalize_name(s["name"])) for s in matched}
     stats = {
@@ -559,9 +437,7 @@ def main() -> int:
         "schools_ranked_pat9": sum(1 for s in schools if s["rank_exam"] == "pat9" and s["rank_score"] is not None),
         "cbe_cssd_pat_schools": len(calgary_pat),
         "cbe_cssd_pat_schools_matched": len(calgary_pat & matched_keys),
-        "communities_with_school_score": sum(1 for f in out_features if f["properties"]["school_score"] is not None),
         "communities_with_home_value": sum(1 for f in out_features if f["properties"]["home_value"] is not None),
-        "communities_with_home_value_prev": sum(1 for f in out_features if f["properties"]["home_value_prev"] is not None),
         "communities_with_children_pct": sum(1 for f in out_features if f["properties"]["children_pct"] is not None),
         "communities_with_families_pct": sum(1 for f in out_features if f["properties"]["families_with_children_pct"] is not None),
         "schools_with_enrolment": sum(1 for s in schools if s["enrolment"] is not None),
@@ -580,29 +456,16 @@ def main() -> int:
     meta = {
         "pat_years": pat_years,
         "home_value_basis": "2026 property assessment roll, class RE, property type LI",
-        "home_value_prev_basis": "2025 historical roll (4ur7-wsgc), same class RE and property type LI filter",
         "stats": stats,
         "sources_failed": [k for k, p in paths.items() if p is None],
-        "gaps": [
-            {"field": "senior_score", "reason": "No school-level Diploma XLSX newer than 2015/16 is on open.alberta.ca. The alberta.ca current-file URL returns 404. Per-school 2024/25 multiyear PDFs are embargoed for school-authority use until the embargo is lifted, so they are not used."},
-            {"field": "equity_index", "reason": "The 2024 Calgary Equity Index (i6pu-a35d) is a PDF/zip blob, not a community table. hy6b-89wc returns no rows."},
-            {"field": "crime", "reason": "Community Crime Statistics (78gh-n26t) requires a logged-in session. The open table 848s-4m4z ends in 2019 and its methodology was retired, so it is not shown as current safety."},
-            {"field": "rent", "reason": "CMHC publishes rent by zone only. There is no community-to-zone crosswalk, so a zone figure is not shown as a community figure."},
-            {"field": "class_size", "reason": "9qye-mibh is enrolment by grade through 2023-2024, not class size. The CBE 2025-26 enrolment report states it does not include class size."},
-            {"field": "programs", "reason": "CBE programs come from the public school-directory API (web/data/cbe_directory.json). CSSD programs, lottery-only flags, and overflow schools are still not included."},
-        ],
         "sources": {
             "communities": source("communities", "https://data.calgary.ca/d/surr-xmvs", OGL_CALGARY),
             "schools": source("schools", "https://data.calgary.ca/d/fd9t-tdn2", OGL_CALGARY),
             "pat": source("pat", SOURCES["pat"], LICENCES["pat"], "Grades 6 and 9, latest 3 years present in the file."),
             "parcels": source("parcels", "https://data.calgary.ca/d/4bsw-nn7w", OGL_CALGARY, "2026 roll, class RE, property type LI."),
-            "parcels_2025": source("parcels_2025", "https://data.calgary.ca/d/4ur7-wsgc", OGL_CALGARY, "2025 roll, same RE/LI filter, median by community."),
             "census_age": source("census_age", "https://data.calgary.ca/d/f9wk-wej9", OGL_CALGARY, "2021 census, share of residents age 0-14."),
             "census_families": source("census_families", "https://data.calgary.ca/d/msjx-5ygv", OGL_CALGARY, "2021 census families with children."),
-            "enrolment": source("enrolment", "https://data.calgary.ca/d/9qye-mibh", OGL_CALGARY, "Headcount by school for the newest year in the file. Not class size."),
-            "libraries": source("libraries", "https://data.calgary.ca/d/m9y7-ui7j", OGL_CALGARY),
-            "transit": source("transit", "https://data.calgary.ca/d/muzh-c9qc", OGL_CALGARY),
-            "parks": source("parks", "https://data.calgary.ca/d/kami-qbfh", OGL_CALGARY),
+            "enrolment": source("enrolment", "https://data.calgary.ca/d/9qye-mibh", OGL_CALGARY, "Headcount by school for the newest year in the file."),
         },
     }
     OUT.mkdir(parents=True, exist_ok=True)

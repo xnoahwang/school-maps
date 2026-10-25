@@ -11,8 +11,9 @@ import sys
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent.parent / "web" / "data"
-SCORE_KEYS = ("elem_score", "junior_score", "school_score", "value_score", "senior_score")
 PCT_KEYS = ("children_pct", "families_with_children_pct")
+MAP_FIELDS = ("elem_score", "junior_score", "school_score", "value_score", "school_pct", "price_pct",
+              "libraries", "transit_stops", "parks", "nearby", "home_value_prev", "home_value_change_pct", "enrolment")
 
 
 def run_checks() -> list[tuple[str, bool, str]]:
@@ -28,19 +29,16 @@ def run_checks() -> list[tuple[str, bool, str]]:
     props = [f["properties"] for f in feats]
     out = [("output files exist", True, "3 files")]
     out.append((">=150 residential communities", len(props) >= 150, f"{len(props)}"))
-    bad = [(p["code"], k, p[k]) for p in props for k in SCORE_KEYS if p[k] is not None and not 0 <= p[k] <= 100]
-    out.append(("scores within 0-100 or null", not bad, f"{len(bad)} out of range"))
-    # A real published 0.0 is allowed (e.g. a small specialised school); what must
-    # never happen is a value that does not come from at least one non-suppressed cell.
-    fabricated = [s["name"] for s in schools for g in ("g6", "g9")
-                  if s.get(g) and s[g]["acc"] is not None and s[g]["n_cells"] == 0]
-    out.append(("every PAT value backed by >=1 non-suppressed cell", not fabricated, f"{len(fabricated)} unbacked"))
-    orphan = [s["name"] for s in schools for g, k in (("g6", "score6"), ("g9", "score9"))
-              if s[k] is not None and not (s.get(g) and s[g]["acc"] is not None)]
-    out.append(("no school score without PAT data", not orphan, f"{len(orphan)}"))
+    map_left = [p["code"] for p in props if any(k in p for k in MAP_FIELDS)]
+    out.append(("communities are boundaries and census figures", not map_left, f"{len(map_left)} with map fields"))
+    # A real published 0.0 is allowed. A score still has to name the years it came from.
+    fabricated = [s["name"] for s in schools for g in ("g6", "g9", "g6_latest", "g9_latest")
+                  if s.get(g) and s[g].get("acc") is not None and not s[g].get("years")]
+    out.append(("every PAT value names the years it came from", not fabricated, f"{len(fabricated)} unbacked"))
+    orphan = [s["name"] for s in schools if "score6" in s or "score9" in s]
+    out.append(("schools do not store a community-map score", not orphan, f"{len(orphan)}"))
     out.append(("PAT match rate reported", "pat_match_rate" in stats,
                 f"{stats.get('pat_matched')}/{stats.get('schools_elem_or_junior')} = {stats.get('pat_match_rate')}"))
-    out.append(("rent left null (no source)", all(p["rent"] is None for p in props), "all null"))
     with_value = sum(1 for p in props if p["home_value"])
     out.append(("home values present for >=90% communities", with_value >= 0.9 * len(props), f"{with_value}/{len(props)}"))
     pct_bad = [(p["code"], k, p.get(k)) for p in props for k in PCT_KEYS
@@ -49,19 +47,19 @@ def run_checks() -> list[tuple[str, bool, str]]:
     with_children = sum(1 for p in props if p.get("children_pct") is not None)
     out.append(("children 0-14 share present for >=80% communities", with_children >= 0.8 * len(props),
                 f"{with_children}/{len(props)}"))
-    with_prev = sum(1 for p in props if p.get("home_value_prev"))
-    out.append(("2025 home values present for >=80% communities", with_prev >= 0.8 * len(props), f"{with_prev}/{len(props)}"))
-    change_bad = [p["code"] for p in props if p.get("home_value_change_pct") is not None and abs(p["home_value_change_pct"]) > 80]
-    out.append(("home-value change within +/-80% or null", not change_bad, f"{len(change_bad)} extreme"))
-    out.append(("senior_score null until a current Diploma file exists",
-                all(p.get("senior_score") is None for p in props), "all null"))
     enrol_bad = [s["name"] for s in schools if s.get("enrolment") is not None and s["enrolment"] < 0]
     out.append(("enrolment non-negative when present", not enrol_bad, f"{len(enrol_bad)} negative"))
     out.append(("enrolment matched for >=100 schools", stats.get("schools_with_enrolment", 0) >= 100,
                 f"{stats.get('schools_with_enrolment')} in {stats.get('enrolment_year')}"))
     dated = [k for k, v in (meta.get("sources") or {}).items() if isinstance(v, dict) and v.get("as_of")]
-    out.append(("every downloaded source has an as-of date", len(dated) >= 11, f"{len(dated)} dated"))
-    out.append(("gaps recorded for sources that were not used", len(meta.get("gaps") or []) >= 6, f"{len(meta.get('gaps') or [])} gaps"))
+    out.append(("every downloaded source has an as-of date", len(dated) >= 7, f"{len(dated)} dated"))
+    leftover = [p["code"] for p in props if "senior_score" in p or "rent" in p]
+    cell_counts = [s["name"] for s in schools for g in ("g6", "g9", "g6_latest", "g9_latest")
+                   if s.get(g) and "n_cells" in s[g]]
+    diploma_rows = [s["name"] for s in schools if s.get("rank_exam") == "diploma" or "g12" in s or "score12" in s]
+    out.append(("no stored diploma, rent, or cohort-count fields",
+                not leftover and not cell_counts and not diploma_rows and not meta.get("gaps"),
+                f"{len(leftover)} communities, {len(cell_counts)} cells, {len(diploma_rows)} schools"))
     zone_path = DATA / "zones.geojson"
     if not zone_path.exists():
         out.append(("CBE attendance zones exist", False, "missing zones.geojson; run scripts/build_zones.py"))
@@ -78,16 +76,20 @@ def run_checks() -> list[tuple[str, bool, str]]:
                        and f["properties"].get("band") == "elem"), None)
         coffin_codes = [p.get("code") for p in (coffin or {}).get("properties", {}).get("places") or []]
         out.append(("Coffin zone includes Brentwood", coffin_codes == ["BRE"], ", ".join(coffin_codes) or "none"))
+        scored_zones = [f["properties"].get("code") for f in zfeats if any(k in f["properties"] for k in ("school_score", "elem_score", "junior_score", "value_score"))]
+        out.append(("zones are not coloured by a score", not scored_zones, f"{len(scored_zones)}"))
     ranked = [s for s in schools if "rank_exam" in s]
     out.append(("every school has a rank exam field", len(ranked) == len(schools), f"{len(ranked)}/{len(schools)}"))
     bad_rank = [s["name"] for s in schools if s.get("rank_score") is not None and not 0 <= s["rank_score"] <= 100]
     out.append(("rank scores within 0-100 or null", not bad_rank, f"{len(bad_rank)} out of range"))
     pat6 = [s for s in schools if s.get("rank_exam") == "pat6"]
     pat9 = [s for s in schools if s.get("rank_exam") == "pat9"]
-    diploma = [s for s in schools if s.get("rank_exam") == "diploma"]
+    high = [s for s in schools if s.get("senior")]
     out.append(("elementary rank is grade 6 only", all(s["elem"] and not s["junior"] and not s["senior"] for s in pat6), f"{len(pat6)}"))
     out.append(("junior rank is grade 9, not high school", all(s["junior"] and not s["senior"] for s in pat9), f"{len(pat9)}"))
-    out.append(("high-school rank is diploma and unscored", all(s["senior"] and s.get("rank_score") is None for s in diploma) and len(diploma) >= 40, f"{len(diploma)}"))
+    out.append(("high schools are not ranked",
+                all(s.get("rank_exam") is None and s.get("rank_score") is None for s in high) and len(high) >= 40,
+                f"{len(high)}"))
     years = set(meta.get("pat_years") or [])
     bad_year = [s["name"] for s in schools if s.get("rank_year") is not None and s["rank_year"] not in years]
     missing_year = [s["name"] for s in schools if s.get("rank_score") is not None and s.get("rank_year") is None]

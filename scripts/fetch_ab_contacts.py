@@ -17,7 +17,7 @@ from build_data import normalize_name
 from store import write_if_changed
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW = ROOT / "data" / "raw" / "authority_and_school.xlsx"
+RAW = ROOT / "data" / "raw" / "ab_contacts" / "authority_and_school.xlsx"
 OUT = ROOT / "web" / "data" / "ab_contacts.json"
 FILE_URL = "https://education.alberta.ca/media/1626669/authority_and_school.xlsx"
 SOURCE = "https://open.alberta.ca/opendata/alberta-education-schools-and-authorities"
@@ -59,7 +59,7 @@ def school_code(value) -> str | None:
 
 
 def download() -> None:
-    """Save the public workbook under data/raw. A failed download reuses the cache."""
+    """Save the public workbook under data/raw/ab_contacts. A failed download reuses the cache."""
     RAW.parent.mkdir(parents=True, exist_ok=True)
     request = urllib.request.Request(FILE_URL, headers={"User-Agent": "school-maps"})
     try:

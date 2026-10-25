@@ -1,5 +1,8 @@
-# Download cache (~50 MB), rebuilt by scripts/build_data.py
+# Download cache. Each script writes only its own directory. Not published.
 data/raw/
+# One-off probes and repairs. Not part of the pipeline.
+scripts/_probe_*.py
+scripts/_repair_*.py
 # Local environments and caches
 .venv/
 __pycache__/

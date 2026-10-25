@@ -5,7 +5,6 @@
   2025
  ],
  "home_value_basis": "2026 property assessment roll, class RE, property type LI",
- "home_value_prev_basis": "2025 historical roll (4ur7-wsgc), same class RE and property type LI filter",
  "stats": {
   "communities_residential": 223,
   "schools_total": 506,
@@ -22,9 +21,7 @@
   "schools_ranked_pat9": 125,
   "cbe_cssd_pat_schools": 322,
   "cbe_cssd_pat_schools_matched": 299,
-  "communities_with_school_score": 218,
   "communities_with_home_value": 215,
-  "communities_with_home_value_prev": 214,
   "communities_with_children_pct": 204,
   "communities_with_families_pct": 204,
   "schools_with_enrolment": 379,
@@ -59,32 +56,6 @@
   ]
  },
  "sources_failed": [],
- "gaps": [
-  {
-   "field": "senior_score",
-   "reason": "No school-level Diploma XLSX newer than 2015/16 is on open.alberta.ca. The alberta.ca current-file URL returns 404. Per-school 2024/25 multiyear PDFs are embargoed for school-authority use until the embargo is lifted, so they are not used."
-  },
-  {
-   "field": "equity_index",
-   "reason": "The 2024 Calgary Equity Index (i6pu-a35d) is a PDF/zip blob, not a community table. hy6b-89wc returns no rows."
-  },
-  {
-   "field": "crime",
-   "reason": "Community Crime Statistics (78gh-n26t) requires a logged-in session. The open table 848s-4m4z ends in 2019 and its methodology was retired, so it is not shown as current safety."
-  },
-  {
-   "field": "rent",
-   "reason": "CMHC publishes rent by zone only. There is no community-to-zone crosswalk, so a zone figure is not shown as a community figure."
-  },
-  {
-   "field": "class_size",
-   "reason": "9qye-mibh is enrolment by grade through 2023-2024, not class size. The CBE 2025-26 enrolment report states it does not include class size."
-  },
-  {
-   "field": "programs",
-   "reason": "CBE programs come from the public school-directory API (web/data/cbe_directory.json). CSSD programs, lottery-only flags, and overflow schools are still not included."
-  }
- ],
  "sources": {
   "communities": {
    "url": "https://data.calgary.ca/d/surr-xmvs",
@@ -108,12 +79,6 @@
    "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa",
    "note": "2026 roll, class RE, property type LI."
   },
-  "parcels_2025": {
-   "url": "https://data.calgary.ca/d/4ur7-wsgc",
-   "as_of": "2026-06-06",
-   "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa",
-   "note": "2025 roll, same RE/LI filter, median by community."
-  },
   "census_age": {
    "url": "https://data.calgary.ca/d/f9wk-wej9",
    "as_of": "2024-09-23",
@@ -130,22 +95,7 @@
    "url": "https://data.calgary.ca/d/9qye-mibh",
    "as_of": "2025-03-06",
    "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa",
-   "note": "Headcount by school for the newest year in the file. Not class size."
-  },
-  "libraries": {
-   "url": "https://data.calgary.ca/d/m9y7-ui7j",
-   "as_of": "2025-02-21",
-   "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa"
-  },
-  "transit": {
-   "url": "https://data.calgary.ca/d/muzh-c9qc",
-   "as_of": "2026-09-30",
-   "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa"
-  },
-  "parks": {
-   "url": "https://data.calgary.ca/d/kami-qbfh",
-   "as_of": "2026-10-01",
-   "licence": "https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa"
+   "note": "Headcount by school for the newest year in the file."
   }
  }
 }

@@ -359,19 +359,20 @@ Mode from `CURSOR_PRIME_CLOUD_MODE` or `.cursor/cursor-prime-cloud-mode` overrid
 <!-- cursor-prime-cloud:end -->
 ## Project: Calgary school ranking (by PAT)
 
-Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the current plan and verify record. The page that opens is the ranking list and school map. Community scores are still written to `web/data/` and are not shown.
+Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the current plan and verify record. The page that opens is the ranking list and school map.
 
 ### Layout
-- `scripts/build_data.py`: official community data is downloaded, joined, and scored. Output goes to `web/data/`.
-- `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, from the public finder KMZ files. The community choropleth uses the regular program. The ranking map draws a zone when a school is clicked. Run it after `build_data.py`.
+- `scripts/build_data.py`: official community data is downloaded, joined, and scored. Cache is `data/raw/build/`. Output goes to `web/data/`.
+- `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, from the public finder KMZ files. The ranking map draws a zone when a school is clicked. Community lists on a zone are stored for the regular program. Run it after `build_data.py`.
 - `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program and grade filters.
-- `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.
+- `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Cache is `data/raw/ab_contacts/`. Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.
 - `scripts/fetch_community_profiles.py`: 2021 census fields from the City's community-profile PDFs. Output is `web/data/community_profiles.json`. The HTML profile pages do not contain the tables. Not part of the weekly school update.
 - `scripts/fetch_assurance.py`: the six Assurance survey measures from each CBE School Improvement Results PDF. Output is `web/data/assurance.json`. The summary table is an image. Not part of the weekly school update, and not mixed into the PAT score.
-- `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values or diploma results. `--install-task` registers a weekly Sunday 09:00 run.
-- `scripts/verify.py`: data sanity checks (exit 1 on failure).
-- `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language.
-- `data/raw/`: download cache. **Do not commit** (about 50 MB). `web/data/` is generated but committed.
+- `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values. `--install-task` registers a weekly Sunday 09:00 run. Its log is `data/raw/logs/update_schools.log`.
+- `scripts/store.py`: writes a generated file only when the text changed. The fetch scripts use it. It does not download.
+- `scripts/verify.py`: data sanity checks (exit 1 on failure). It reads `web/data/` and does not download.
+- `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language. The header pill is Prototype while the page covers Calgary.
+- `data/raw/`: download cache. **Do not commit.** One directory per script: `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, `logs/`. `web/data/` is generated but committed.
 
 ### Conventions
 - Python 3.13 in `.venv`. Dependencies are pinned in `requirements.txt`. Names are snake_case. Every file has a module docstring header, and public functions have docstrings.
@@ -381,9 +382,12 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Verify
 ```bash
-.venv/bin/python scripts/build_data.py && .venv/bin/python scripts/fetch_cbe_directory.py && .venv/bin/python scripts/fetch_ab_contacts.py && .venv/bin/python scripts/verify.py
+.venv/bin/python scripts/verify.py
 ```
+
+A rebuild that also refreshes zones is `build_data.py`, then `fetch_cbe_directory.py`, `fetch_ab_contacts.py`, `build_zones.py`, then `verify.py`. `fetch_community_profiles.py` and `fetch_assurance.py` stay out of that weekly path.
 
 ### Forbidden zones
 - Do not edit the `cursor-prime-cloud` marked section above, or `.cursor/rules/behavior.mdc`, `maintainability.mdc`, or `cloud-overlay.mdc`. Re-run the installer instead.
-- Do not commit `.cursor/cursor-prime-cloud-backups/` or `data/raw/`. Do not add a git remote or push without Noah's approval.
+- Do not commit `.cursor/cursor-prime-cloud-backups/`, `data/raw/`, or `scripts/_probe_*.py` / `scripts/_repair_*.py`. Do not add a git remote or push without Noah's approval.
+- Rule text matches cursor-prime v0.3.3 (`256dd8b`). `.cursor/cursor-prime-cloud-mode` is `interactive`, so Plan Gate waits for `GO`.

@@ -3,7 +3,7 @@
 The profile HTML pages only link to the PDFs. This script downloads each
 community PDF, keeps the parent-facing census fields, and writes
 web/data/community_profiles.json. It does not score schools, and it does not
-invent a field the PDF did not print. Cached PDFs stay in data/raw/.
+invent a field the PDF did not print. Cached PDFs stay in data/raw/community_profiles/.
 """
 import json
 import re

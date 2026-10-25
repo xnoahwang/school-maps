@@ -2,13 +2,12 @@
  * The page that opens is the school ranking list beside the map. Scores come
  * from web/data/ and are displayed, not recalculated, except when a CBE grade
  * range calls for the other exam's latest-year block. Clicking a school draws
- * its CBE zone from zones.geojson. The community choropleth stays in this file
- * and is hidden while body.rank-first is set. Optional URL param: ?lang=fr
+ * its CBE zone from zones.geojson. A school with no CBE zone outlines the
+ * community its point falls in. Optional URL param: ?lang=fr
  */
 (function () {
   "use strict";
   const params = new URLSearchParams(location.search);
-  const RANK_FIRST = document.body.classList.contains("rank-first");
   const LANGS = ["en", "zh", "zh-Hant", "fr", "ja", "ko"];
   const HTML_LANG = { en: "en", zh: "zh-Hans", "zh-Hant": "zh-Hant", fr: "fr", ja: "ja", ko: "ko" };
   function storedLang() {
@@ -18,53 +17,22 @@
     try { localStorage.removeItem("school-maps-lang"); } catch (e) { /* private browsing can block storage */ }
     return "en";
   }
-  const state = { lang: storedLang(), metric: params.get("metric") || "school_score",
-                  sortKey: "school_score", sortAsc: false, selected: params.get("zone") || params.get("community"), query: "",
-                  unit: params.get("unit") === "community" ? "community" : "zone", band: params.get("band") || "elem",
-                  board: "all", grade: "all", program: "all" };
-  let communities = [], schools = [], zones = [], viewFeatures = [], meta = {}, geoLayer, walkLayer, schoolLayer, legend;
+  const state = { lang: storedLang(), query: "", board: "all", grade: "all", program: "all" };
+  let communities = [], schools = [], zones = [], schoolLayer;
   let communityProfiles = {};
   let assuranceByCode = new Map();
   let pickedZoneLayer = null, pickedWalkLayer = null;
-  const NO_DATA_COLOR = "#c8ced6";
-  // Red→yellow→green "risk map" ramp: green = better schools / better value.
-  const RAMP_GOOD = ["#d7191c", "#fdae61", "#ffffbf", "#a6d96a", "#1a9641"];
-  // Price is not good/bad, so it gets a neutral sequential ramp.
-  const RAMP_PRICE = ["#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1", "#54278f"];
-  // Context metrics are not "better/worse" the way a school score is.
-  const NEUTRAL = new Set(["home_value", "home_value_change_pct", "children_pct", "families_with_children_pct"]);
 
   const t = (key) => (I18N[state.lang][key] ?? I18N.en[key] ?? key);
-  const fmtMoney = (v) => v == null ? null : "$" + Math.round(v / 1000).toLocaleString() + "k";
   const fmtScore = (v) => v == null ? null : v.toFixed(1);
-  const fmt = (key, v) => {
-    if (v == null) return null;
-    if (key === "home_value" || key === "home_value_prev") return fmtMoney(v);
-    if (key === "home_value_change_pct") return (v > 0 ? "+" : "") + v.toFixed(1) + "%";
-    if (key === "children_pct" || key === "families_with_children_pct") return v.toFixed(1) + "%";
-    return fmtScore(v);
-  };
   const orNA = (s) => s == null ? `<span class="na">${t("no_data")}</span>` : s;
-
-  /** Quintile breaks over non-null values; returns [] when there is no data. */
-  function breaks(key) {
-    const vals = viewFeatures.map((c) => c.properties[key]).filter((v) => v != null).sort((a, b) => a - b);
-    if (!vals.length) return [];
-    return [0.2, 0.4, 0.6, 0.8].map((q) => vals[Math.floor(q * (vals.length - 1))]);
-  }
-  function colorFor(key, v, brk) {
-    if (v == null || !brk.length) return NO_DATA_COLOR;
-    const ramp = NEUTRAL.has(key) ? RAMP_PRICE : RAMP_GOOD;
-    let i = 0; while (i < brk.length && v > brk[i]) i++;
-    return ramp[i];
-  }
 
   function applyI18n() {
     document.documentElement.lang = HTML_LANG[state.lang] || "en";
     document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
     const scoreSource = document.getElementById("scoreSource");
     if (scoreSource) scoreSource.setAttribute("aria-label", t("score_source_label"));
-    document.getElementById("search").placeholder = RANK_FIRST ? t("search_school") : (state.unit === "zone" ? t("search_zone") : t("search"));
+    document.getElementById("search").placeholder = t("search_school");
     const langSelect = document.getElementById("lang");
     if (langSelect && langSelect.value !== state.lang) langSelect.value = state.lang;
     document.title = t("title");
@@ -82,62 +50,6 @@
     button.hidden = !notesOpen && body.scrollHeight <= body.clientHeight + 1;
     button.textContent = t(notesOpen ? "notes_less" : "notes_more");
     button.setAttribute("aria-expanded", notesOpen ? "true" : "false");
-  }
-
-  function styleFeature(f) {
-    const brk = breaks(state.metric);
-    const sel = f.properties.code === state.selected;
-    return { fillColor: colorFor(state.metric, f.properties[state.metric], brk), fillOpacity: 0.72,
-             color: sel ? "#000" : "#ffffff", weight: sel ? 3 : 0.8 };
-  }
-
-  function renderLegend() {
-    if (legend) legend.remove();
-    legend = L.control({ position: "bottomright" });
-    legend.onAdd = () => {
-      const div = L.DomUtil.create("div", "legend");
-      const brk = breaks(state.metric);
-      const ramp = NEUTRAL.has(state.metric) ? RAMP_PRICE : RAMP_GOOD;
-      if (!brk.length) {
-        div.innerHTML = `<b>${t("m_" + state.metric)}</b><br><i style="background:${NO_DATA_COLOR}"></i>${t("no_data")}`;
-        return div;
-      }
-      const edges = [null, ...brk, null];
-      let html = `<b>${t("m_" + state.metric)}</b><br>`;
-      ramp.forEach((c, i) => {
-        const lo = edges[i] == null ? "" : fmt(state.metric, edges[i]);
-        const hi = edges[i + 1] == null ? "" : fmt(state.metric, edges[i + 1]);
-        html += `<i style="background:${c}"></i>${lo || "≤"} ${lo && hi ? "–" : ""} ${hi || "+"}<br>`;
-      });
-      html += `<i style="background:${NO_DATA_COLOR}"></i>${t("no_data")}`;
-      div.innerHTML = html;
-      return div;
-    };
-    legend.addTo(map);
-  }
-
-  function renderTable() {
-    const tbody = document.querySelector("#commTable tbody");
-    const q = state.query.toLowerCase();
-    const rows = viewFeatures.map((f) => f.properties).filter((p) => {
-      if (!q) return true;
-      const places = (p.places || []).map((x) => x.name).join(" ");
-      return (p.name + " " + places).toLowerCase().includes(q);
-    });
-    const k = state.sortKey, dir = state.sortAsc ? 1 : -1;
-    rows.sort((a, b) => {
-      if (k === "name") return dir * a.name.localeCompare(b.name);
-      if (a[k] == null) return 1; if (b[k] == null) return -1;  // no-data always last
-      return dir * (a[k] - b[k]);
-    });
-    const brk = breaks(state.metric);
-    tbody.innerHTML = rows.map((p) => `<tr data-code="${p.code}" class="${p.code === state.selected ? "sel" : ""}">
-      <td><span class="chip" style="background:${colorFor(state.metric, p[state.metric], brk)}"></span>${p.name}</td>
-      <td class="num">${orNA(fmtScore(p.school_score))}</td><td class="num">${orNA(fmtMoney(p.home_value))}</td>
-      <td class="num">${orNA(fmtScore(p.value_score))}</td></tr>`).join("");
-    document.querySelectorAll("#commTable th").forEach((th) => {
-      th.classList.toggle("sorted", th.dataset.key === k); th.classList.toggle("asc", th.dataset.key === k && state.sortAsc);
-    });
   }
 
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (ch) => ({
@@ -167,9 +79,9 @@
     return school.cbe_name || school.name;
   }
 
-  // Grade 10 and above is high school. Diploma results are not public, so those schools stay off the list.
+  // Grade 10 and above stays off the list. This ranking is elementary and junior high.
   function isHighSchool(school) {
-    if (school.senior || school.rank_exam === "diploma") return true;
+    if (school.senior) return true;
     const span = schoolSpan(school);
     return !!(span && span[1] >= 10);
   }
@@ -482,11 +394,6 @@
     });
   }
 
-  function sourceHref(entry) {
-    if (!entry) return "#";
-    return typeof entry === "string" ? entry : (entry.url || "#");
-  }
-
   // The percent mark follows the number: 达标率 96.5%. A missing rate stays a dash.
   function rateShown(value) {
     return value == null || value === "" ? "–" : `${value}%`;
@@ -494,82 +401,6 @@
 
   function rateText(labelKey, value) {
     return `${t(labelKey)} ${rateShown(value)}`;
-  }
-
-  function patLine(label, r) {
-    if (!r || r.acc == null) return "";
-    const boldRate = (key, value) => `${t(key)} <b>${rateShown(value)}</b>`;
-    return `<div class="pat">${label}: ${boldRate("pat_acc", r.acc)} · ${boldRate("pat_exc", r.exc)}
-      <span class="small">(${r.years.join(", ")})</span></div>`;
-  }
-
-  function renderPanel() {
-    const panel = document.getElementById("panel");
-    const f = viewFeatures.find((c) => c.properties.code === state.selected);
-    if (!f) { panel.innerHTML = `<p class="hint">${t("click_hint")}</p>`; return; }
-    const p = f.properties;
-    if (state.unit === "zone") {
-      const places = (p.places || []).map((pl) => `<div class="school"><b>${pl.name}</b>
-        <span class="small">${orNA(fmtMoney(pl.home_value))} · ${pl.in_walk ? t("in_walk") : t("bus_zone")}</span></div>`).join("");
-      panel.innerHTML = `<h2>${p.name}</h2><div class="small">CBE Regular · ${p.grades || ""}</div>
-        <div class="kpis">
-          <div class="kpi">${t("school_score")}<b>${orNA(fmtScore(p.school_score))}</b></div>
-          <div class="kpi">${t("m_value_score")}<b>${orNA(fmtScore(p.value_score))}</b></div>
-          <div class="kpi" style="grid-column:span 2">${t("home_value")}<b>${orNA(fmtMoney(p.home_value))}</b>
-            <span class="small">${t("zone_home_note")}</span></div>
-        </div>
-        <p class="small">${t("zone_note")}</p>
-        <h3>${t("zone_places")}</h3>${places || `<p class="na">${t("no_data")}</p>`}
-        <p class="small"><a href="https://www.cbe.ab.ca/find-a-school" target="_blank">${t("cbe_finder")}</a></p>`;
-      return;
-    }
-    const schoolHtml = p.nearby.map((n) => {
-      const s = schools[n.id];
-      const pats = (s.elem ? patLine(t("grade6"), s.g6) : "") + (s.junior ? patLine(t("grade9"), s.g9) : "");
-      const needsPat = s.elem || s.junior;
-      const enrol = s.enrolment == null ? "" : `<div class="meta">${t("enrolment")}: ${s.enrolment.toLocaleString()} <span class="small">(${s.enrolment_year || ""})</span></div>`;
-      return `<div class="school"><b>${s.name}</b> <span class="small">· ${t("why_" + n.why)} · ${n.km} ${t("km")}</span>
-        <div class="meta">${t("board")}: ${s.board || "–"} · ${t("grades")}: ${s.grades || "–"}</div>
-        ${enrol}
-        ${pats || (needsPat ? `<div class="pat na">${t("pat_none")}</div>` : `<div class="pat na">${t("senior_note")}</div>`)}</div>`;
-    }).join("");
-    const src = meta.sources || {};
-    panel.innerHTML = `<h2>${p.name}</h2><div class="small">${t("sector")}: ${p.sector} · ${p.code}</div>
-      <div class="kpis">
-        <div class="kpi">${t("school_score")}<b>${orNA(fmtScore(p.school_score))}</b></div>
-        <div class="kpi">${t("m_value_score")}<b>${orNA(fmtScore(p.value_score))}</b></div>
-        <div class="kpi">${t("elem_score")}<b>${orNA(fmtScore(p.elem_score))}</b></div>
-        <div class="kpi">${t("junior_score")}<b>${orNA(fmtScore(p.junior_score))}</b></div>
-        <div class="kpi">${t("senior_score")}<b>${orNA(fmtScore(p.senior_score))}</b>
-          <span class="small">${p.senior_score == null ? t("diploma_gap") : ""}</span></div>
-        <div class="kpi" style="grid-column:span 2">${t("home_value")}<b>${orNA(p.home_value == null ? null : "$" + p.home_value.toLocaleString())}</b>
-          <span class="small">${p.home_accounts ? p.home_accounts.toLocaleString() + " " + t("accounts") : ""}
-          ${p.home_value_change_pct == null ? "" : " · " + t("m_home_value_change_pct") + " " + fmt("home_value_change_pct", p.home_value_change_pct)}</span></div>
-        <div class="kpi">${t("m_children_pct")}<b>${orNA(fmt("children_pct", p.children_pct))}</b></div>
-        <div class="kpi">${t("m_families_with_children_pct")}<b>${orNA(fmt("families_with_children_pct", p.families_with_children_pct))}</b></div>
-        <div class="kpi" style="grid-column:span 2">${t("rent")}: <span class="na">${t("rent_na")}</span></div>
-        <div class="kpi" style="grid-column:span 2">${t("safety")}: <span class="na">${t("safety_na")}</span></div>
-      </div>
-      <p class="small">${t("programs_na")}</p>
-      <div><b>${t("amenities")}</b>: ${t("libraries")} ${orNA(p.libraries)} · ${t("transit")} ${orNA(p.transit_stops)} · ${t("parks")} ${orNA(p.parks)}</div>
-      <h3>${t("nearby")}</h3>${schoolHtml}
-      <p class="small">${t("method").replace("{years}", (meta.pat_years || []).join("–"))}</p>
-      <p class="small"><b>${t("sources")}</b>: <a href="${sourceHref(src.pat)}" target="_blank">Alberta Education PAT</a> ·
-        <a href="${sourceHref(src.schools)}" target="_blank">Calgary Schools</a> · <a href="${sourceHref(src.communities)}" target="_blank">Community boundaries</a> ·
-        <a href="${sourceHref(src.parcels)}" target="_blank">2026 Property Assessments</a> · <a href="${sourceHref(src.parcels_2025)}" target="_blank">2025 assessments</a> ·
-        <a href="${sourceHref(src.census_age)}" target="_blank">2021 census</a> · <a href="${sourceHref(src.enrolment)}" target="_blank">Enrolment</a> ·
-        <a href="${sourceHref(src.libraries)}" target="_blank">Libraries</a> ·
-        <a href="${sourceHref(src.transit)}" target="_blank">Transit stops</a> · <a href="${sourceHref(src.parks)}" target="_blank">Parks</a></p>`;
-  }
-
-  function select(code, zoom) {
-    state.selected = code;
-    geoLayer.setStyle(styleFeature);
-    renderTable(); renderPanel();
-    if (zoom) {
-      const layer = geoLayer.getLayers().find((l) => l.feature.properties.code === code);
-      if (layer) map.fitBounds(layer.getBounds(), { maxZoom: 13, padding: [60, 60] });
-    }
   }
 
   // Same schools as the ranking list. A later filter replaces the points and leaves the view where it is.
@@ -1011,52 +842,9 @@
     }
   }
 
-  function renderSchools() {
-    if (schoolLayer) schoolLayer.remove();
-    if (!document.getElementById("showSchools").checked) return;
-    schoolLayer = L.layerGroup(schools.map((s) => {
-      const sc = s.score6 ?? s.score9;
-      return L.circleMarker([s.lat, s.lon], { radius: 4, weight: 1, color: "#12355b",
-        fillColor: sc == null ? "#ffffff" : "#12355b", fillOpacity: 0.9 })
-        .bindTooltip(`${s.name}<br>${s.board || ""}<br>${s.grades || ""}` +
-          (s.score6 != null ? `<br>${t("grade6")}: ${s.score6}` : "") + (s.score9 != null ? `<br>${t("grade9")}: ${s.score9}` : ""));
-    })).addTo(map);
-  }
-
-  function syncView() {
-    document.getElementById("bandWrap").hidden = state.unit !== "zone";
-    document.getElementById("walkWrap").hidden = state.unit !== "zone";
-    if (state.unit === "zone" && zones.length) {
-      viewFeatures = zones.filter((f) => f.properties.kind === "attendance" && f.properties.band === state.band && (f.properties.program || "Regular") === "Regular");
-    } else {
-      viewFeatures = communities;
-    }
-    const nameTh = document.querySelector('#commTable th[data-key="name"]');
-    if (nameTh) nameTh.dataset.i18n = state.unit === "zone" && zones.length ? "col_zone" : "col_name";
-  }
-
-  function renderGeo(fit) {
-    if (geoLayer) geoLayer.remove();
-    if (walkLayer) walkLayer.remove();
-    geoLayer = L.geoJSON(viewFeatures, { style: styleFeature, onEachFeature: (f, layer) => {
-      layer.on("click", () => select(f.properties.code, false));
-      layer.bindTooltip(() => `${f.properties.name}: ${fmt(state.metric, f.properties[state.metric]) ?? t("no_data")}`, { sticky: true });
-    } }).addTo(map);
-    if (state.unit === "zone" && document.getElementById("showWalk").checked) {
-      const keys = new Set(viewFeatures.map((f) => f.properties.code));
-      const walks = zones.filter((f) => f.properties.kind === "walk" && keys.has(f.properties.code));
-      walkLayer = L.geoJSON(walks, {
-        style: { color: "#12355b", weight: 1.6, fillColor: "#ffffff", fillOpacity: 0.35, dashArray: "5 4" },
-        onEachFeature: (f, layer) => layer.on("click", () => select(f.properties.code, false)),
-      }).addTo(map);
-    }
-    if (fit && viewFeatures.length) map.fitBounds(geoLayer.getBounds());
-  }
-
   function rerenderAll() {
     applyI18n();
-    if (RANK_FIRST) { renderRank(); return; }
-    syncView(); if (geoLayer) geoLayer.setStyle(styleFeature); renderLegend(); renderTable(); renderPanel(); renderSchools();
+    renderRank();
   }
 
   let map;
@@ -1143,15 +931,12 @@
     maxZoom: 19, opacity: 0.6 }).addTo(map);
 
   const dataUrl = (name) => "data/" + name + "?v=20261006d";
-  Promise.all(["communities.geojson", "schools.json", "meta.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
+  Promise.all(["communities.geojson", "schools.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
     if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
-    .then(([fc, sch, m, directory, contacts]) => {
-      communities = fc.features; schools = sch; meta = m;
+    .then(([fc, sch, directory, contacts]) => {
+      communities = fc.features; schools = sch;
       mergeDirectory(directory);
       mergeContacts(contacts);
-      document.getElementById("metric").value = state.metric;
-      document.getElementById("unit").value = state.unit;
-      document.getElementById("band").value = state.band;
       const zonesPromise = fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }));
       const profilesPromise = fetch(dataUrl("community_profiles.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
       const assurancePromise = fetch(dataUrl("assurance.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
@@ -1162,28 +947,14 @@
       zones = (zoneFc && zoneFc.features) || [];
       communityProfiles = (profiles && profiles.communities) || {};
       applyAssurance(assurance);
-      if (state.unit === "zone" && !zones.length) state.unit = "community";
-      if (RANK_FIRST) {
-        rerenderAll();
-      } else {
-        syncView();
-        renderGeo(true);
-        rerenderAll();
-        if (state.selected) select(state.selected, true);
-      }
+      rerenderAll();
       document.body.dataset.ready = "1";
     })
-    .catch((err) => { document.getElementById("panel").innerHTML = `<p class="na">Failed to load data: ${err.message}. Run scripts/build_data.py first.</p>`; });
+    .catch((err) => {
+      const note = document.getElementById("rankNote");
+      if (note) note.textContent = "Failed to load data: " + err.message;
+    });
 
-  document.getElementById("metric").addEventListener("change", (e) => { state.metric = e.target.value; rerenderAll(); });
-  document.getElementById("unit").addEventListener("change", (e) => {
-    state.unit = e.target.value; state.selected = null; syncView(); renderGeo(true); rerenderAll();
-  });
-  document.getElementById("band").addEventListener("change", (e) => {
-    state.band = e.target.value; state.selected = null; syncView(); renderGeo(true); rerenderAll();
-  });
-  document.getElementById("showSchools").addEventListener("change", renderSchools);
-  document.getElementById("showWalk").addEventListener("change", () => { renderGeo(false); renderSchools(); });
   document.getElementById("lang").addEventListener("change", (e) => {
     const next = e.target.value;
     if (!LANGS.includes(next)) return;
@@ -1202,12 +973,10 @@
     state.grade = e.target.value;
     renderRank();
   });
-  if (RANK_FIRST) {
-    document.getElementById("programFilter").addEventListener("change", (e) => {
-      state.program = e.target.value;
-      renderRank();
-    });
-  }
+  document.getElementById("programFilter").addEventListener("change", (e) => {
+    state.program = e.target.value;
+    renderRank();
+  });
   const scoreSource = document.getElementById("scoreSource");
   const scoreSourcePop = document.getElementById("scoreSourcePop");
   function placeScoreSource() {
@@ -1283,7 +1052,7 @@
   document.getElementById("rankScroll").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;
-    if (RANK_FIRST) renderRank(); else renderTable();
+    renderRank();
   });
   document.querySelector("#rankTable tbody").addEventListener("click", (e) => {
     if (e.target.closest("a")) return;
@@ -1292,13 +1061,5 @@
     if (!tr || !tr.dataset.id) return;
     if (more) openZonePanel(tr.dataset.id);
     focusSchool(tr.dataset.id);
-  });
-  document.querySelector("#commTable thead").addEventListener("click", (e) => {
-    const key = e.target.dataset.key; if (!key) return;
-    state.sortAsc = state.sortKey === key ? !state.sortAsc : key === "name";
-    state.sortKey = key; renderTable();
-  });
-  document.querySelector("#commTable tbody").addEventListener("click", (e) => {
-    const tr = e.target.closest("tr"); if (tr) select(tr.dataset.code, true);
   });
 })();

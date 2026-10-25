@@ -1,7 +1,7 @@
 {
  "source": "https://open.alberta.ca/opendata/alberta-education-schools-and-authorities",
  "file": "https://education.alberta.ca/media/1626669/authority_and_school.xlsx",
- "as_of": "2026-10-04",
+ "as_of": "2026-10-17",
  "schools": [
   {
    "code": "12",

@@ -2,8 +2,8 @@
 
 Runs the CBE directory, Alberta contacts, and CBE zones. Each file is
 replaced only when the new text differs. A source that fails or comes back
-empty keeps the file already on disk. High-school diploma results are not
-fetched. Grade 10–12 zones are left out by build_zones.py.
+empty keeps the file already on disk. Grade 10–12 zones are left out by
+build_zones.py.
 
 The page does not run this. Windows Task Scheduler does, weekly on Sunday
 at 09:00 local time, including after a missed start once the computer is on.
@@ -20,7 +20,7 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LOG = ROOT / "data" / "raw" / "update_schools.log"
+LOG = ROOT / "data" / "raw" / "logs" / "update_schools.log"
 TASK = "school-maps-school-update"
 
 

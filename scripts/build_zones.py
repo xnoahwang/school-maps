@@ -4,9 +4,8 @@ Responsibility: turn the KMZ files published by the CBE Find a School tool
 into web/data/zones.geojson, one attendance polygon and one walk zone per
 program that publishes them. A community is included when the overlap is at
 least 10% of the zone or of the community, not only when the community's
-representative point falls inside. Grade 10–12 zones are skipped. The community
-choropleth still uses the regular program only. CSSD zones are not in this
-file. Run after scripts/build_data.py.
+representative point falls inside. Grade 10–12 zones are skipped. Community
+lists are stored on the regular program. Run after scripts/build_data.py.
 """
 from __future__ import annotations
 
@@ -24,7 +23,7 @@ from shapely.ops import unary_union
 from shapely.validation import make_valid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_data import normalize_name, percentile_ranks  # noqa: E402
+from build_data import normalize_name  # noqa: E402
 from store import write_if_changed  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -203,7 +202,7 @@ def main(refresh: bool = False) -> int:
     """CLI entry. Exit 0 when zones.geojson is current, 1 when the API fails.
 
     refresh re-downloads each zone file and keeps it when the bytes match.
-    Grade 10–12 zones are skipped: there is no public diploma score for them.
+    Grade 10–12 zones are not built. The page ranks elementary and junior high.
     """
     schools_path = OUT / "schools.json"
     communities_path = OUT / "communities.geojson"
@@ -279,10 +278,6 @@ def main(refresh: bool = False) -> int:
         walk_path = paths.get(job["walkzone"])
         if walk_path is not None:
             walk = load_kmz(walk_path)
-        matched = by_name.get(normalize_name(job["name"]))
-        score6 = matched.get("score6") if matched else None
-        score9 = matched.get("score9") if matched else None
-        band_score = score6 if job["band"] == "elem" else score9 if job["band"] == "junior" else None
         prepared = attendance if attendance.geom_type == "Polygon" else attendance
         try:
             prepared_geom = prepared.buffer(0) if not prepared.is_valid else prepared
@@ -290,8 +285,8 @@ def main(refresh: bool = False) -> int:
             prepared_geom = attendance
         places = []
         home = None
-        # Community lists feed the panel and the older choropleth. Other programs stay empty
-        # and the panel falls back to this school's regular zone.
+        # Community lists are stored on the regular program. Another program with an
+        # empty list falls back to that school's regular zone.
         if job["program"] == "Regular":
             places = places_for_zone(prepared_geom, walk if walk is not None and not walk.is_empty else None, communities)
             values = sorted(p["home_value"] for p in places if p["home_value"])
@@ -304,8 +299,7 @@ def main(refresh: bool = False) -> int:
             "code": code, "name": job["name"], "school_code": job["school_code"],
             "program": job["program"], "low": job["low"], "high": job["high"], "band": job["band"],
             "grades": f"K-{job['high']}" if job["low"] == 0 else f"{job['low']}-{job['high']}",
-            "school_score": band_score, "elem_score": score6, "junior_score": score9,
-            "senior_score": None, "home_value": home, "places": places,
+            "home_value": home, "places": places,
             "source": "https://www.cbe.ab.ca/find-a-school",
         }
         features.append({"type": "Feature", "properties": {**base, "kind": "attendance"},
@@ -316,16 +310,6 @@ def main(refresh: bool = False) -> int:
 
     attendance = [f for f in features if f["properties"]["kind"] == "attendance"]
     regular = [f for f in attendance if f["properties"]["program"] == "Regular"]
-    for band in ("elem", "junior", "senior"):
-        group = [f for f in regular if f["properties"]["band"] == band]
-        scores = {f["properties"]["code"]: f["properties"]["school_score"] for f in group}
-        prices = {f["properties"]["code"]: f["properties"]["home_value"] for f in group}
-        school_pct = percentile_ranks(scores)
-        price_pct = percentile_ranks(prices)
-        for feat in group:
-            code = feat["properties"]["code"]
-            sp, pp = school_pct[code], price_pct[code]
-            feat["properties"]["value_score"] = None if sp is None or pp is None else round((sp - pp + 100) / 2, 1)
 
     text = json.dumps({"type": "FeatureCollection", "features": features}, separators=(",", ":"), allow_nan=False)
     write_if_changed(OUT / "zones.geojson", text)
