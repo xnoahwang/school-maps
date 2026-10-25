@@ -118,7 +118,8 @@ const LANG_KEYS = {
 
 /**
  * The slide-in panel. deps supplies live data and the translator:
- * zones(), communities(), profiles(), program(), schools(), t(key), orNA(html), closeTerm().
+ * zones(), zonesState(), ensureZones(), communities(), profiles(), program(),
+ * schools(), t(key), orNA(html), closeTerm().
  * Returns open/close/fill. panelSchoolId() is null while the panel is closed.
  */
 export function createZonePanel(deps) {
@@ -199,6 +200,16 @@ export function createZonePanel(deps) {
     if (!school || !title || !body) return;
     deps.closeTerm();
     title.textContent = displayName(school);
+    const status = deps.zonesState();
+    if (status !== "ready") {
+      body.innerHTML = `<p>${esc(t(status === "failed" ? "zone_load_failed" : "zone_loading"))}</p>`;
+      if (status !== "failed") {
+        deps.ensureZones().then(() => {
+          if (panelSchoolId === String(id)) fillZonePanel(id);
+        });
+      }
+      return;
+    }
     const facts = zoneFacts(school, deps.zones(), deps.communities(), deps.program());
     if (!facts.hasZone && !facts.rows.length) {
       const home = homeCommunity(school, deps.communities());

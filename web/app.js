@@ -24,6 +24,8 @@ function storedLang() {
 
 const state = { lang: storedLang(), query: "", board: "all", grade: "all", program: "all" };
 let communities = [], schools = [], zones = [];
+let zonesState = "unloaded";
+let zonesPromise = null;
 let communityProfiles = {};
 let assuranceByCode = new Map();
 
@@ -252,10 +254,12 @@ function schoolPopupHtml(school) {
     ? `<a href="${esc(school.website)}" target="_blank" rel="noopener">${esc(siteHost)}</a>`
     : `<span class="na">${t("no_data")}</span>`;
   const address = school.address ? esc(school.address) : `<span class="na">${t("no_data")}</span>`;
-  const zone = chooseZones(school, zones, state.program);
-  const zoneLine = zone.attendance.length
-    ? ""
-    : `<div><span class="k">${esc(t("attendance_zone"))}</span><span class="na">${t("no_data")}</span></div>`;
+  let zoneLine = "";
+  if (zonesState === "failed") {
+    zoneLine = `<div><span class="k">${esc(t("attendance_zone"))}</span><span class="na">${esc(t("zone_load_failed"))}</span></div>`;
+  } else if (zonesState === "ready" && !chooseZones(school, zones, state.program).attendance.length) {
+    zoneLine = `<div><span class="k">${esc(t("attendance_zone"))}</span><span class="na">${t("no_data")}</span></div>`;
+  }
   const exam = result.exam === "pat9" ? t("grade9") : result.exam === "pat6" ? t("grade6") : "";
   const score = result.score == null
     ? t("no_data")
@@ -275,10 +279,33 @@ function schoolPopupHtml(school) {
     ${enrol}${programLine}${surveyHtml(school)}${official}</div>`;
 }
 
+const dataUrl = (name) => "data/" + name + "?v=" + encodeURIComponent(globalThis.ASSET_VERSION || "");
+
+function ensureZones() {
+  if (zonesState === "ready" || zonesState === "failed") return Promise.resolve(zonesState);
+  if (zonesPromise) return zonesPromise;
+  zonesState = "loading";
+  zonesPromise = fetch(dataUrl("zones.geojson")).then((response) => {
+    if (!response.ok) throw new Error("zones.geojson " + response.status);
+    return response.json();
+  }).then((fc) => {
+    zones = (fc && fc.features) || [];
+    zonesState = "ready";
+    return zonesState;
+  }).catch(() => {
+    zones = [];
+    zonesState = "failed";
+    return zonesState;
+  });
+  return zonesPromise;
+}
+
 const zonePanel = createZonePanel({
   t, orNA,
   schools: () => schools,
   zones: () => zones,
+  zonesState: () => zonesState,
+  ensureZones,
   communities: () => communities,
   profiles: () => communityProfiles,
   program: () => state.program,
@@ -289,6 +316,8 @@ const mapView = createMap({
   t,
   schools: () => schools,
   zones: () => zones,
+  zonesState: () => zonesState,
+  ensureZones,
   communities: () => communities,
   program: () => state.program,
   filter: filterOf,
@@ -342,21 +371,18 @@ function rerenderAll() {
   renderRank();
 }
 
-const dataUrl = (name) => "data/" + name + "?v=20261006d";
 Promise.all(["communities.geojson", "schools.json", "cbe_directory.json", "ab_contacts.json"].map((name) => fetch(dataUrl(name)).then((r) => {
   if (!r.ok) throw new Error(name + " " + r.status); return r.json(); })))
   .then(([fc, sch, directory, contacts]) => {
     communities = fc.features; schools = sch;
     mergeDirectory(directory);
     mergeContacts(contacts);
-    const zonesPromise = fetch(dataUrl("zones.geojson")).then((r) => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }));
     const profilesPromise = fetch(dataUrl("community_profiles.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
     const assurancePromise = fetch(dataUrl("assurance.json")).then((r) => r.ok ? r.json() : null).catch(() => null);
-    return Promise.all([zonesPromise, profilesPromise, assurancePromise]);
+    return Promise.all([profilesPromise, assurancePromise]);
   })
-  .then(([zoneFc, profiles, assurance]) => {
+  .then(([profiles, assurance]) => {
     if (!communities.length) return;
-    zones = (zoneFc && zoneFc.features) || [];
     communityProfiles = (profiles && profiles.communities) || {};
     applyAssurance(assurance);
     rerenderAll();

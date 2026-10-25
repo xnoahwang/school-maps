@@ -8,7 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calgary School Ranking (by PAT)</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=20261024k">
+  <script>
+    // Change this when style.css, the page scripts, or web/data change.
+    globalThis.ASSET_VERSION = "20261024n";
+    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(ASSET_VERSION) + '">');
+  </script>
 </head>
 <body>
   <header>
@@ -82,7 +86,9 @@
   </div>
   <div id="termPop" hidden></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="i18n.js?v=20261024l"></script>
-  <script type="module" src="app.js?v=20261024l"></script>
+  <script>
+    document.write('<script src="i18n.js?v=' + encodeURIComponent(ASSET_VERSION) + '"><\/script>');
+    document.write('<script type="module" src="app.js?v=' + encodeURIComponent(ASSET_VERSION) + '"><\/script>');
+  </script>
 </body>
 </html>

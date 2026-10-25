@@ -39,6 +39,9 @@ MEASURES = (
     ("parental_involvement", ("parentalinvolvement", "parentinvolvement")),
 )
 VALUE = re.compile(r"^(?:n/?a|nla|\*|\d{1,3}(?:\.\d)?)$", re.I)
+# OCR tokens this close vertically are one survey row. The label and its
+# percentages sit on the same band, including a label that wraps once.
+ROW_Y_TOLERANCE_PX = 16
 
 
 def compact(text: str) -> str:
@@ -91,12 +94,26 @@ def find_report(session: requests.Session, website: str) -> str | None:
     return None
 
 
-def rows_from_image(engine: RapidOCR, image: Image.Image) -> list[dict]:
-    """OCR one table image into rows of text with a horizontal position.
+def group_tokens(tokens: list[dict]) -> list[dict]:
+    """Group OCR tokens into survey rows.
 
-    Tokens within 16px vertically are one row. The survey label and its
-    percentages sit on the same band, including a label that wraps once.
+    Each token needs y, x, and text. Tokens within ROW_Y_TOLERANCE_PX of the
+    running row mean join that row. An empty list returns no rows. A token
+    missing y raises KeyError; the OCR step is what builds these dicts.
     """
+    ordered = sorted(tokens, key=lambda token: (token["y"], token["x"]))
+    rows: list[dict] = []
+    for token in ordered:
+        if rows and abs(token["y"] - rows[-1]["y"]) <= ROW_Y_TOLERANCE_PX:
+            rows[-1]["tokens"].append(token)
+            rows[-1]["y"] = sum(item["y"] for item in rows[-1]["tokens"]) / len(rows[-1]["tokens"])
+        else:
+            rows.append({"y": token["y"], "tokens": [token]})
+    return rows
+
+
+def rows_from_image(engine: RapidOCR, image: Image.Image) -> list[dict]:
+    """OCR one table image into rows of text with a horizontal position."""
     result, _ = engine(image)
     tokens = []
     for item in result or []:
@@ -106,15 +123,7 @@ def rows_from_image(engine: RapidOCR, image: Image.Image) -> list[dict]:
             "x": sum(point[0] for point in box) / 4,
             "text": text,
         })
-    tokens.sort(key=lambda token: (token["y"], token["x"]))
-    rows: list[dict] = []
-    for token in tokens:
-        if rows and abs(token["y"] - rows[-1]["y"]) <= 16:
-            rows[-1]["tokens"].append(token)
-            rows[-1]["y"] = sum(item["y"] for item in rows[-1]["tokens"]) / len(rows[-1]["tokens"])
-        else:
-            rows.append({"y": token["y"], "tokens": [token]})
-    return rows
+    return group_tokens(tokens)
 
 
 def measures_from_rows(rows: list[dict]) -> dict[str, float | None]:

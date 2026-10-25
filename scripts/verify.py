@@ -12,6 +12,9 @@ from pathlib import Path
 
 DATA = Path(__file__).resolve().parent.parent / "web" / "data"
 PCT_KEYS = ("children_pct", "families_with_children_pct")
+# Retired community-map fields. They must stay off community properties so the
+# old colouring scores cannot sneak back. Enrolment on a school record is not
+# this check.
 MAP_FIELDS = ("elem_score", "junior_score", "school_score", "value_score", "school_pct", "price_pct",
               "libraries", "transit_stops", "parks", "nearby", "home_value_prev", "home_value_change_pct", "enrolment")
 

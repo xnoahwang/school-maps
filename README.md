@@ -53,6 +53,18 @@ Schools with no published result stay at the bottom and are not numbered. Hover 
 
 The pipeline also stores a three-year average of those rates (2023, 2024, 2025 in the current file). That average is not the rank. The definitions table below separates the two.
 
+## Engineering decisions
+
+The browser only reads files in `web/`. Python joins the public sources first, so opening the page does not download spreadsheets or call a city API. There is no frontend framework and no build step.
+
+Grade 9 is ranked on the Grade 9 PAT. A range that includes grade 6 but not grade 9 is ranked on the Grade 6 PAT. Grade 10 and above is off the list. The rank uses the newest year. The stored three-year average is not the rank.
+
+School names match through `normalize_name`, which drops filler words and rewrites `St.` and `&`. A name that still differs is left unmatched. The Assurance table is an image. OCR tokens within 16 pixels vertically count as one row. A blank cell stays blank.
+
+`zones.geojson` is downloaded the first time a school is selected, not with the list. If that file fails, the map does not draw a community outline in its place. Other limits are listed below.
+
+`index.html` sets `ASSET_VERSION`. Change that one string when `style.css`, the page scripts, or `web/data/` change.
+
 ## Built with AI, on cursor-prime
 
 This app was written with AI in [Cursor](https://cursor.com), following [cursor-prime](https://github.com/xnoahwang/cursor-prime) v0.3.3.
@@ -76,11 +88,12 @@ The log is `data/raw/logs/update_schools.log` and is not committed. `fetch_commu
 ## Verify
 
 ```bash
+.venv/bin/python -m pytest
 .venv/bin/python scripts/verify.py
 node --test web/rank.test.mjs
 ```
 
-`verify.py` reads `web/data/` and exits 0 when the checks pass. It does not download. `rank.test.mjs` checks who is ranked and how ties and missing scores sort.
+Install `requirements-dev.txt` once before `pytest`. `verify.py` reads `web/data/` and exits 0 when the checks pass. It does not download. `rank.test.mjs` checks who is ranked and how ties and missing scores sort. `.github/workflows/ci.yml` runs the same three commands on a push or pull request to `main`.
 
 ## How the numbers are made
 
@@ -142,6 +155,8 @@ scripts/fetch_assurance.py
 scripts/update_schools.py
 scripts/store.py        write a generated file only when its text changed
 scripts/verify.py       data checks
+tests/                  name folding and Assurance row grouping
+.github/workflows/ci.yml
 data/raw/               download cache, gitignored, one directory per script
 docs/preview.png        screenshot used above
 ```

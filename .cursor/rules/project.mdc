@@ -8,7 +8,7 @@ alwaysApply: true
 - **Stack:** Python 3.13 (`.venv`: pandas, openpyxl, requests, shapely) for the data pipeline. Static HTML + vanilla JS + Leaflet 1.9.4 (unpkg CDN) with OSM tiles.
 - **Entry points:** `scripts/build_data.py`, `scripts/build_zones.py`, `scripts/fetch_cbe_directory.py`, `scripts/fetch_ab_contacts.py`, `scripts/fetch_community_profiles.py`, `scripts/fetch_assurance.py`, and `scripts/update_schools.py` write `web/data/`. `scripts/store.py` is the shared writer. `scripts/verify.py` checks `web/data/` and does not download. The page is `web/index.html` plus `app.js`, `rank.js`, `zone.js`, and `map.js`, served by `python3 -m http.server 8765 -d web`.
 - **Cache:** `data/raw/<script>/` — `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, `logs/`.
-- **Verify:** `.venv/bin/python scripts/verify.py` and `node --test web/rank.test.mjs`
+- **Verify:** `.venv/bin/python -m pytest`, `.venv/bin/python scripts/verify.py`, and `node --test web/rank.test.mjs`. CI is `.github/workflows/ci.yml`.
 - **Rules:** cursor-prime v0.3.3 (`256dd8b`). Mode file `.cursor/cursor-prime-cloud-mode` is `interactive`.
 - **Protected paths:** `.cursor/rules/behavior.mdc`, `.cursor/rules/maintainability.mdc`, `.cursor/rules/cloud-overlay.mdc`, the cursor-prime-cloud section of `AGENTS.md`.
 - **Not committed:** `data/raw/`, `.venv/`, `.cursor/cursor-prime-cloud-backups/`, `scripts/_probe_*.py`, `scripts/_repair_*.py`.

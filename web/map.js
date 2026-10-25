@@ -24,8 +24,9 @@ function pointStyle(school, picked) {
 }
 
 /**
- * deps: schools(), zones(), communities(), program(), filter() for the list,
- * t(key), popupHtml(school), openZonePanel(id), panelSchoolId().
+ * deps: schools(), zones(), zonesState(), ensureZones(), communities(),
+ * program(), filter() for the list, t(key), popupHtml(school),
+ * openZonePanel(id), panelSchoolId().
  * Returns render(), focusSchool(id, pinToTop), pickedId(), and the Leaflet map.
  */
 export function createMap(deps) {
@@ -125,6 +126,8 @@ export function createMap(deps) {
   }
   function drawSchoolZone(school) {
     clearSchoolZone();
+    // An empty list before the file loads is not "this school has no zone".
+    if (deps.zonesState() !== "ready") return false;
     const picked = chooseZones(school, deps.zones(), deps.program());
     const box = document.getElementById("zoneKey");
     if (!picked.attendance.length) {
@@ -192,28 +195,40 @@ export function createMap(deps) {
     restylePicked(key);
     revealRankRow(key, pinToTop);
     if (!school || !marker) { clearSchoolZone(); return; }
-    const drawn = drawSchoolZone(school);
-    const bounds = drawn ? schoolZoneBounds() : null;
-    const point = schoolPoint(school);
-    const open = () => { if (token === focusToken && markerById.get(key) === marker) marker.openPopup(); };
-    if (bounds) {
-      const view = map.getBounds();
-      if (view.contains(bounds) && bounds.contains(map.getCenter())) open();
+    // Draw only after the zone file settles. A later click moves focusToken,
+    // so the first school's polygon is dropped.
+    const show = () => {
+      if (token !== focusToken) return;
+      const current = markerById.get(key);
+      const currentSchool = deps.schools().find((s) => String(s.id) === key);
+      if (!current || !currentSchool) return;
+      current.setPopupContent(deps.popupHtml(currentSchool));
+      const drawn = drawSchoolZone(currentSchool);
+      const bounds = drawn ? schoolZoneBounds() : null;
+      const point = schoolPoint(currentSchool);
+      const open = () => { if (token === focusToken && markerById.get(key) === current) current.openPopup(); };
+      if (bounds) {
+        const view = map.getBounds();
+        if (view.contains(bounds) && bounds.contains(map.getCenter())) open();
+        else {
+          map.once("moveend", open);
+          map.flyToBounds(bounds, { padding: [28, 28], maxZoom: 14, duration: 0.45 });
+        }
+        return;
+      }
+      if (!point) return;
+      const latlng = L.latLng(point);
+      const zoom = Math.max(map.getZoom(), 15);
+      const there = map.getZoom() >= 15 && map.getCenter().distanceTo(latlng) < 40;
+      if (there) open();
       else {
         map.once("moveend", open);
-        map.flyToBounds(bounds, { padding: [28, 28], maxZoom: 14, duration: 0.45 });
+        map.flyTo(latlng, zoom, { duration: 0.45 });
       }
-      return;
-    }
-    if (!point) return;
-    const latlng = L.latLng(point);
-    const zoom = Math.max(map.getZoom(), 15);
-    const there = map.getZoom() >= 15 && map.getCenter().distanceTo(latlng) < 40;
-    if (there) open();
-    else {
-      map.once("moveend", open);
-      map.flyTo(latlng, zoom, { duration: 0.45 });
-    }
+    };
+    const status = deps.zonesState();
+    if (status === "ready" || status === "failed") show();
+    else deps.ensureZones().then(show);
   }
   function render() {
     if (!map) return;

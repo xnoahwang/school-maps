@@ -371,7 +371,8 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 - `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values. `--install-task` registers a weekly Sunday 09:00 run. Its log is `data/raw/logs/update_schools.log`.
 - `scripts/store.py`: writes a generated file only when the text changed. The fetch scripts use it. It does not download.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure). It reads `web/data/` and does not download.
-- `web/`: static front end with no build step. `rank.js` decides who is listed and how rows sort. `zone.js` chooses the attendance zone and fills the panel. `map.js` draws points and polygons. `app.js` loads JSON and connects those three. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language. The header pill is Prototype while the page covers Calgary. Ranking rules are checked with `node --test web/rank.test.mjs`.
+- `tests/`: pytest for school-name folding and Assurance row grouping. `requirements-dev.txt` adds pytest. It does not download.
+- `web/`: static front end with no build step. `rank.js` decides who is listed and how rows sort. `zone.js` chooses the attendance zone and fills the panel. `map.js` draws points and polygons. `app.js` loads JSON and connects those three. `zones.geojson` is fetched the first time a school is selected. `index.html` sets `ASSET_VERSION` for CSS, scripts, and `web/data/`. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language. The header pill is Prototype while the page covers Calgary. Ranking rules are checked with `node --test web/rank.test.mjs`.
 - `data/raw/`: download cache. **Do not commit.** One directory per script: `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, `logs/`. `web/data/` is generated but committed.
 
 ### Conventions
@@ -382,9 +383,12 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 
 ### Verify
 ```bash
+.venv/bin/python -m pytest
 .venv/bin/python scripts/verify.py
 node --test web/rank.test.mjs
 ```
+
+`.github/workflows/ci.yml` runs those three on a push or pull request to `main`.
 
 A rebuild that also refreshes zones is `build_data.py`, then `fetch_cbe_directory.py`, `fetch_ab_contacts.py`, `build_zones.py`, then `verify.py`. `fetch_community_profiles.py` and `fetch_assurance.py` stay out of that weekly path.
 

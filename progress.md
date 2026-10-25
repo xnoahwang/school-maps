@@ -2,7 +2,7 @@
 
 ## Now
 
-Calgary school ranking, marked Prototype. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
+Calgary school ranking, marked Prototype. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. The zone file loads the first time a school is selected. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
 
 The page was built with AI in Cursor, using the cursor-prime standard described in the README.
 
@@ -22,4 +22,4 @@ The page was built with AI in Cursor, using the cursor-prime standard described 
 
 ## Check
 
-`.venv\Scripts\python scripts\verify.py` and `node --test web/rank.test.mjs`. The page is `http://127.0.0.1:8765/`. `?lang=zh` switches to simplified Chinese.
+`.venv\Scripts\python -m pytest`, `.venv\Scripts\python scripts\verify.py`, and `node --test web/rank.test.mjs`. The page is `http://127.0.0.1:8765/`. `?lang=zh` switches to simplified Chinese.
