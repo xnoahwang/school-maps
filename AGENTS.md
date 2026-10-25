@@ -376,7 +376,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 - `data/raw/`: download cache. **Do not commit.** One directory per script: `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, `logs/`. `web/data/` is generated but committed.
 
 ### Conventions
-- Python 3.13 in `.venv`. Dependencies are pinned in `requirements.txt`. Names are snake_case. Every file has a module docstring header, and public functions have docstrings.
+- Python 3.12 in `.venv`. `rapidocr-onnxruntime` 1.4.4 does not run on 3.13. Dependencies are pinned in `requirements.txt`. Names are snake_case. Every file has a module docstring header, and public functions have docstrings.
 - Missing or suppressed values are `None`/`null` and appear as "no data". Never coerce them to 0. Do not invent data (for example rent).
 - Error handling: a failure in a required source (boundaries, schools, PAT) exits non-zero. A failure in an optional source sets its fields to null and adds the source to `meta.json → sources_failed`.
 - Code and comments are in English.

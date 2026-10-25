@@ -258,6 +258,7 @@ export function createZonePanel(deps) {
   }
   function openZonePanel(id) {
     panelSchoolId = String(id);
+    if (deps.zonesState() !== "ready") deps.ensureZones();
     fillZonePanel(id);
     const panel = document.getElementById("zonePanel");
     const body = document.getElementById("zonePanelBody");

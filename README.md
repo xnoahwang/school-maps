@@ -18,7 +18,7 @@ Then open http://localhost:8765/ . On Windows the same command is `python -m htt
 
 The page opens in English. The menu also offers 简体中文, 繁體中文, Français, 日本語, and 한국어. `?lang=` accepts `en`, `zh`, `zh-Hant`, `fr`, `ja`, or `ko`.
 
-To rebuild the data files, use Python 3.13 and the pins in `requirements.txt`:
+To rebuild the data files, use Python 3.12 and the pins in `requirements.txt`. The pinned OCR package does not run on Python 3.13:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt

@@ -282,8 +282,8 @@ function schoolPopupHtml(school) {
 const dataUrl = (name) => "data/" + name + "?v=" + encodeURIComponent(globalThis.ASSET_VERSION || "");
 
 function ensureZones() {
-  if (zonesState === "ready" || zonesState === "failed") return Promise.resolve(zonesState);
-  if (zonesPromise) return zonesPromise;
+  if (zonesState === "ready") return Promise.resolve(zonesState);
+  if (zonesState === "loading" && zonesPromise) return zonesPromise;
   zonesState = "loading";
   zonesPromise = fetch(dataUrl("zones.geojson")).then((response) => {
     if (!response.ok) throw new Error("zones.geojson " + response.status);
@@ -295,6 +295,7 @@ function ensureZones() {
   }).catch(() => {
     zones = [];
     zonesState = "failed";
+    zonesPromise = null;
     return zonesState;
   });
   return zonesPromise;
@@ -324,6 +325,10 @@ const mapView = createMap({
   popupHtml: schoolPopupHtml,
   openZonePanel: (id) => zonePanel.openZonePanel(id),
   panelSchoolId: () => zonePanel.panelSchoolId(),
+  syncZonePanel: () => {
+    const id = zonePanel.panelSchoolId();
+    if (id) zonePanel.fillZonePanel(id);
+  },
 });
 
 function renderRank() {
@@ -390,7 +395,9 @@ Promise.all(["communities.geojson", "schools.json", "cbe_directory.json", "ab_co
   })
   .catch((err) => {
     const note = document.getElementById("rankNote");
-    if (note) note.textContent = "Failed to load data: " + err.message;
+    if (!note) return;
+    const detail = err && err.message ? String(err.message) : "";
+    note.textContent = t("load_failed").replace("{detail}", detail).trim();
   });
 
 document.getElementById("lang").addEventListener("change", (e) => {

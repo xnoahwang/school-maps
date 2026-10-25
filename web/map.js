@@ -26,7 +26,7 @@ function pointStyle(school, picked) {
 /**
  * deps: schools(), zones(), zonesState(), ensureZones(), communities(),
  * program(), filter() for the list, t(key), popupHtml(school),
- * openZonePanel(id), panelSchoolId().
+ * openZonePanel(id), panelSchoolId(), syncZonePanel().
  * Returns render(), focusSchool(id, pinToTop), pickedId(), and the Leaflet map.
  */
 export function createMap(deps) {
@@ -226,9 +226,12 @@ export function createMap(deps) {
         map.flyTo(latlng, zoom, { duration: 0.45 });
       }
     };
-    const status = deps.zonesState();
-    if (status === "ready" || status === "failed") show();
-    else deps.ensureZones().then(show);
+    if (deps.zonesState() === "ready") show();
+    else {
+      deps.ensureZones();
+      if (deps.panelSchoolId() === key) deps.syncZonePanel();
+      deps.ensureZones().then(show);
+    }
   }
   function render() {
     if (!map) return;

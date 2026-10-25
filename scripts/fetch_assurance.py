@@ -16,10 +16,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+from typing import TYPE_CHECKING
+
 import requests
 from PIL import Image
 from pypdf import PdfReader
-from rapidocr_onnxruntime import RapidOCR
+
+if TYPE_CHECKING:
+    from rapidocr_onnxruntime import RapidOCR
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from store import write_if_changed
@@ -248,6 +252,8 @@ def main() -> int:
             item = future.result()
             if item:
                 loaded.append(item)
+    # Imported here so name-folding and row-grouping tests do not load OCR.
+    from rapidocr_onnxruntime import RapidOCR
     engine = RapidOCR()
     records = []
     with_measure = 0
