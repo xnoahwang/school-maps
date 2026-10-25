@@ -172,12 +172,14 @@ def pat_school_results(xlsx: Path) -> tuple[dict, list[int]]:
 
 
 def assign_rank_score(school: dict) -> None:
-    """Set the one exam score used to rank this school.
+    """Record the PAT fields `rank_exam`, `rank_score`, and `rank_year`.
 
-    Elementary-only schools use the latest Grade 6 PAT. Schools that continue
-    through grade 9 and do not offer high school use the latest Grade 9 PAT,
-    even when they also have a Grade 6 result. A high school is not ranked.
-    Writes `rank_exam` (`pat6`, `pat9`, or None), `rank_score`, and `rank_year`.
+    The page does not rank from these fields. Elementary uses `g6_latest`,
+    junior high uses `g9_latest`, and high school uses `diploma_latest`.
+    Elementary-only schools store the latest Grade 6 PAT. Schools that
+    continue through grade 9 and do not offer high school store the latest
+    Grade 9 PAT, even when they also have a Grade 6 result. A high school
+    leaves the three rank fields empty so it is not ranked on PAT.
     A missing or suppressed result stays None, never 0.
     """
     if school["senior"]:

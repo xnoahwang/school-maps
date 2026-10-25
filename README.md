@@ -1,6 +1,6 @@
-# Calgary school ranking (by PAT)
+# Calgary school ranking
 
-A prototype for immigrant and newcomer parents in Calgary. It ranks elementary and junior high schools on Alberta's Provincial Achievement Test (PAT) and shows each school's attendance area on a map.
+A prototype for immigrant and newcomer parents in Calgary. It ranks elementary and junior high schools on Alberta's Provincial Achievement Test (PAT), ranks high schools on the diploma exam, and shows each school's attendance area on a map.
 
 The page covers Calgary. The header says Prototype until that changes. The code is [MIT licensed](LICENSE). Data from the City and the province keep their own licences, listed below.
 
@@ -37,7 +37,7 @@ Windows: `.venv\Scripts\python` and `.venv\Scripts\pip`.
 ## What the page does
 
 - The list on the left is the ranking. The switch above the filters chooses elementary, junior high, or high school. The map on the right draws one point per school still in that list. `?level=junior` opens junior high, and `?level=high` opens high school.
-- Filters are board, grade, and program. Each opens on All. Search matches the school name, board, and program.
+- Filters are board, grade, and program. Each opens on All. The grade filter is hidden on the high-school list. Search matches the school name, board, and program. The table shortens Elementary, Junior High, and Senior High to Elem, Jr, and Sr. The school card keeps the full grade phrase.
 - Click a row or a point to move the map and open the card: website, phone, address, board, grades, and score. The school name on the row is plain text. The website link is on the card.
 - » on a row opens the communities in that CBE attendance zone, their 2026 assessed values, and 2021 census figures. A circled ! explains a figure.
 - A school with no CBE zone, including Catholic, charter, and private schools, outlines the community its point falls in. The panel says that outline is the community, not an attendance zone.
@@ -53,7 +53,7 @@ The rank uses one year, the newest year in the file:
 
 **rank score** = (% acceptable + % excellence) / 2
 
-Schools with no published result stay at the bottom and are not numbered. Hover a score to see the two rates.
+Schools with no published result stay at the bottom and are not numbered. The table shows that score and the two rates, Acc and Exc. Click a column header to sort by that number. Click it again to reverse the order. When acceptable is tied, excellence breaks the tie in the same direction. When excellence is tied, acceptable does. A missing rate stays last.
 
 The pipeline also stores a three-year average of those rates (2023, 2024, 2025 in the current file). That average is not the rank. The definitions table below separates the two.
 
@@ -104,7 +104,7 @@ Install `requirements-dev.txt` once before `pytest`. `verify.py` reads `web/data
 | Field | Definition |
 |---|---|
 | Stored PAT % acceptable / % excellence | "% Acc of Enrol" and "% Exc of Enrol" from the Alberta PAT school multi-year file. Averaged over every regular course in the grade (Knowledge & Employability courses excluded) and over the latest **3 years with data (2023, 2024, 2025)**. Suppressed `n/a` cells are skipped and never counted as 0. This average is stored. It is not the rank. |
-| Rank score | The same formula on the **newest year only**, for the exam at the school's top grade: Grade 6 PAT (`rank_exam=pat6`) or Grade 9 PAT (`pat9`). See `rank_score` and `rank_year` on each school. |
+| Rank score | The same formula on the **newest year only**. Elementary uses the Grade 6 PAT (`g6_latest`). Junior high uses the Grade 9 PAT (`g9_latest`). High school uses the diploma exam mark (`diploma_latest`), not the school-awarded mark. `rank_score` is the PAT field and stays empty for a high school. |
 | Home value | Median `assessed_value` of residential accounts with a building (class RE, property type LI) in the 2026 roll. Shown as no data when the community has fewer than 50 such accounts. The zone panel uses this figure. |
 | Children 0–14 | 2021 census share of household population age 0–14 (`f9wk-wej9`). |
 | Families with children | 2021 census: (married with children + common-law with children + one-parent families) / census families (`msjx-5ygv`). |
@@ -119,6 +119,7 @@ Any missing input is "no data", never zero. A real published 0.0 is kept as publ
 | Community boundaries (residential only) | [surr-xmvs Community District Boundaries](https://data.calgary.ca/d/surr-xmvs). The `ab7m-fwn6` map view returns empty features through the API, so its backing dataset is used. | [Open Government Licence – City of Calgary](https://data.calgary.ca/d/Open-Data-Terms/u45n-7awa) |
 | Schools (location, board, grades) | [fd9t-tdn2 Schools](https://data.calgary.ca/d/fd9t-tdn2). `xmep-aasr` "Schools in Communities" is a map view whose API returns empty rows. | same |
 | PAT results by school | [Alberta Education ed-pat-multiyear-sch-list.xlsx](https://www.alberta.ca/system/files/custom_downloaded_images/ed-pat-multiyear-sch-list.xlsx) | [Open Government Licence – Alberta](https://open.alberta.ca/licence) |
+| Diploma exam results by school | [diploma-multiyear-sch-list-annual.xlsx](https://www.alberta.ca/system/files/custom_downloaded_images/diploma-multiyear-sch-list-annual.xlsx). Exam mark only. | OGL – Alberta |
 | Home values | [4bsw-nn7w Current Year Property Assessments (Parcel)](https://data.calgary.ca/d/4bsw-nn7w). `p84b-7zbi` "Assessments by Community" only covers 2016–2017, so it is not used. | OGL – City of Calgary |
 | 2021 census age | [f9wk-wej9 Population and Dwellings by Community](https://data.calgary.ca/d/f9wk-wej9) | OGL – City of Calgary |
 | 2021 census families | [msjx-5ygv Families and Households by Community](https://data.calgary.ca/d/msjx-5ygv) | OGL – City of Calgary |
@@ -128,7 +129,7 @@ Any missing input is "no data", never zero. A real published 0.0 is kept as publ
 | CBE attendance and walk zones | KMZ files loaded by the public [CBE School Finder](https://www.cbe.ab.ca/find-a-school). `scripts/build_zones.py` writes `web/data/zones.geojson`. | CBE public pages |
 | Basemap | © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL), standard tile server. For anything beyond prototype traffic, follow the OSM tile usage policy or self-host. | ODbL |
 
-As-of dates for the Open Calgary and PAT downloads are in `web/data/meta.json` (`sources.*.as_of`).
+As-of dates for the Open Calgary, PAT, and diploma downloads are in `web/data/meta.json` (`sources.*.as_of`).
 
 ## Limitations
 
@@ -136,7 +137,7 @@ As-of dates for the Open Calgary and PAT downloads are in `web/data/meta.json` (
 - PAT match: 372 of 423 elementary or junior-high schools in the City list (87.9%) are matched by board and normalised name. 299 of the 322 CBE/CSSD-named schools in the PAT file (92.9%) are matched. Most unmatched City schools are K–4/K–5 schools or private schools that do not appear in the PAT file. See `web/data/meta.json → stats`.
 - Assessed value is not the market price, and the median mixes houses and condos.
 - 2020 median household income and languages spoken most often at home come from the City's 2021 community-profile PDFs (`web/data/community_profiles.json`). They are not an Open Calgary table. The 2016 income table (`wj3a-wgmh`) is not used.
-- The Assurance survey on a CBE card is the six survey rows from that school's improvement report. Except parental involvement, each percentage combines students, parents, and teachers. A suppressed cell is "no data". It is not part of the exam score. CSSD and private schools are not in those reports.
+- The Assurance survey on a CBE card is the six survey rows from that school's School Improvement Results PDF. Except parental involvement, each percentage combines students, parents, and teachers. A suppressed cell, or a cell the reader cannot confirm, is "no data". It is not part of the exam score. CSSD and private schools are not in those reports.
 - Test scores reflect demographics as much as teaching quality. They are one input for families.
 
 ## Layout

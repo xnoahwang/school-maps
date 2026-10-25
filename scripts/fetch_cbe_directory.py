@@ -90,11 +90,12 @@ def program_index(rows: list) -> dict:
 
 
 def span_rank(high: int | None) -> str | None:
-    """Which rank list a directory-only school belongs on.
+    """PAT list code for a directory-only school, or None.
 
-    Grade 9 and above, but not high school, uses the grade 9 list. Grade 10 or
-    higher is not ranked. Anything else that has a top grade uses the grade 6
-    list, including a school that stops at grade 4 or grade 8.
+    Grade 9 and above, but not high school, is `pat9`. Anything else with a
+    top grade is `pat6`, including a school that stops at grade 4 or grade 8.
+    Grade 10 or higher returns None. The high-school list uses
+    `diploma_latest`, not this field.
     """
     if high is None or high >= 10:
         return None

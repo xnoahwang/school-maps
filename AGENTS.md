@@ -357,17 +357,17 @@ Tier A/B: skip the checklist unless docs became wrong because of your change.
 
 Mode from `CURSOR_PRIME_CLOUD_MODE` or `.cursor/cursor-prime-cloud-mode` overrides any "stop and wait for GO" line above and in `/plan`. `autonomous` writes the plan, records it, and continues. `plan-only` writes the plan and stops. `interactive` waits for `GO`.
 <!-- cursor-prime-cloud:end -->
-## Project: Calgary school ranking (by PAT)
+## Project: Calgary school ranking
 
 Start with `README.md` (what it is, how to run it, data definitions, limitations). `PLAN.md` holds the current plan and verify record. The page that opens is the ranking list and school map.
 
 ### Layout
-- `scripts/build_data.py`: official community data is downloaded, joined, and scored. Cache is `data/raw/build/`. Output goes to `web/data/`.
-- `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, from the public finder KMZ files. The ranking map draws a zone when a school is clicked. Community lists on a zone are stored for the regular program. Run it after `build_data.py`.
+- `scripts/build_data.py`: official community data, PAT results, and diploma exam results are downloaded, joined, and scored. Cache is `data/raw/build/`. Output goes to `web/data/`.
+- `scripts/build_zones.py`: CBE attendance areas and walk zones for each published program, including grade 10–12, from the public finder KMZ files. The ranking map draws a zone when a school is clicked. Community lists on a zone are stored for the regular program. Run it after `build_data.py`.
 - `scripts/fetch_cbe_directory.py`: CBE school directory (name, phone, address, website, grades, programs) from the public fragment API. Output is `web/data/cbe_directory.json`. The page uses it for program and grade filters.
 - `scripts/fetch_ab_contacts.py`: Alberta's public school directory (phone and website). Cache is `data/raw/ab_contacts/`. Output is `web/data/ab_contacts.json`. The page fills a phone or website only when the school does not already have one.
 - `scripts/fetch_community_profiles.py`: 2021 census fields from the City's community-profile PDFs. Output is `web/data/community_profiles.json`. The HTML profile pages do not contain the tables. Not part of the weekly school update.
-- `scripts/fetch_assurance.py`: the six Assurance survey measures from each CBE School Improvement Results PDF. Output is `web/data/assurance.json`. The summary table is an image. Not part of the weekly school update, and not mixed into the PAT score.
+- `scripts/fetch_assurance.py`: the six Assurance survey measures from each CBE School Improvement Results PDF, including a file the school site labels SIRR. Output is `web/data/assurance.json`. The summary table is an image. A broken number cell is read again from that cell. Not part of the weekly school update, and not mixed into the exam score.
 - `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values. `--install-task` registers a weekly Sunday 09:00 run. Its log is `data/raw/logs/update_schools.log`.
 - `scripts/store.py`: writes a generated file only when the text changed. The fetch scripts use it. It does not download.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure). It reads `web/data/` and does not download.
