@@ -371,7 +371,7 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 - `scripts/update_schools.py`: refreshes the CBE directory, Alberta contacts, and CBE zones. Writes a file only when the text changed. Does not download home values. `--install-task` registers a weekly Sunday 09:00 run. Its log is `data/raw/logs/update_schools.log`.
 - `scripts/store.py`: writes a generated file only when the text changed. The fetch scripts use it. It does not download.
 - `scripts/verify.py`: data sanity checks (exit 1 on failure). It reads `web/data/` and does not download.
-- `web/`: static front end with no build step. `app.js` displays precomputed values only. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language. The header pill is Prototype while the page covers Calgary.
+- `web/`: static front end with no build step. `rank.js` decides who is listed and how rows sort. `zone.js` chooses the attendance zone and fills the panel. `map.js` draws points and polygons. `app.js` loads JSON and connects those three. All UI strings live in `i18n.js` (en, zh, zh-Hant, fr, ja, ko), and any new key must be added to every language. The header pill is Prototype while the page covers Calgary. Ranking rules are checked with `node --test web/rank.test.mjs`.
 - `data/raw/`: download cache. **Do not commit.** One directory per script: `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, `logs/`. `web/data/` is generated but committed.
 
 ### Conventions
@@ -383,11 +383,12 @@ Start with `README.md` (what it is, how to run it, data definitions, limitations
 ### Verify
 ```bash
 .venv/bin/python scripts/verify.py
+node --test web/rank.test.mjs
 ```
 
 A rebuild that also refreshes zones is `build_data.py`, then `fetch_cbe_directory.py`, `fetch_ab_contacts.py`, `build_zones.py`, then `verify.py`. `fetch_community_profiles.py` and `fetch_assurance.py` stay out of that weekly path.
 
 ### Forbidden zones
 - Do not edit the `cursor-prime-cloud` marked section above, or `.cursor/rules/behavior.mdc`, `maintainability.mdc`, or `cloud-overlay.mdc`. Re-run the installer instead.
-- Do not commit `.cursor/cursor-prime-cloud-backups/`, `data/raw/`, or `scripts/_probe_*.py` / `scripts/_repair_*.py`. Do not add a git remote or push without Noah's approval.
-- Rule text matches cursor-prime v0.3.3 (`256dd8b`). `.cursor/cursor-prime-cloud-mode` is `interactive`, so Plan Gate waits for `GO`.
+- Do not commit `.cursor/cursor-prime-cloud-backups/`, `data/raw/`, or `scripts/_probe_*.py` / `scripts/_repair_*.py`.
+- Rule text matches cursor-prime v0.3.3 (`256dd8b`). `.cursor/cursor-prime-cloud-mode` is `interactive`.

@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- Calgary school ranking (by PAT): static entry page.
-     Layout only; data loading and rendering are in app.js, strings in i18n.js. -->
+     Layout only. app.js loads the data and connects rank.js, zone.js, and map.js.
+     Strings live in i18n.js. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -81,7 +82,7 @@
   </div>
   <div id="termPop" hidden></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="i18n.js?v=20261024k"></script>
-  <script src="app.js?v=20261024j"></script>
+  <script src="i18n.js?v=20261024l"></script>
+  <script type="module" src="app.js?v=20261024l"></script>
 </body>
 </html>

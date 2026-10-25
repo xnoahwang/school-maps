@@ -1,4 +1,4 @@
-/* UI strings. Rendering lives in app.js.
+/* UI strings. The page reads them from app.js, rank.js, zone.js, and map.js.
  * Languages: en, zh (Simplified), zh-Hant (Traditional), fr, ja, ko. */
 window.I18N = {
   en: {

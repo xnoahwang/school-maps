@@ -1,25 +1,21 @@
-# PLAN.md
+# Decisions
 
-Older plans and verify receipts are in git history. This file keeps the current record only.
+The page is a Calgary school ranking for elementary and junior high, scored on the newest PAT year. The header says Prototype because the page covers Calgary.
 
-The page is the Calgary school ranking. The header pill says Prototype while coverage is Calgary. Community colouring, value for money, amenity counts, and the 2025-to-2026 assessed-value change are gone. Diploma placeholders, market rent, crime, class size, and the equity index are gone. Catholic schools with a PAT stay on the list.
+These choices are already in the code:
 
-## Plan (2026-10-24, align the repo)
+- Grade 10 and above is not ranked. Diploma results are not in the public file this page uses.
+- A missing number stays blank. It is not stored or shown as zero.
+- Catholic, charter, francophone, and private schools stay on the list when they have a grade 6 or grade 9 PAT. Schools outside the CBE have no attendance polygon, so the map outlines the community the school sits in.
+- The old community colouring map is not part of the page. Community school scores, value for money, amenity counts, and the 2025-to-2026 assessed-value change are not built.
+- Market rent, crime, class size, and an equity index are not shown. The zone panel uses the 2026 assessed value and the 2021 census figures that were actually published.
+- The browser only reads files in `web/`. Python scripts build those files beforehand.
 
-Mode: `interactive` after this change. Design notes: skipped. Rule files already match cursor-prime v0.3.3 (`256dd8b`). The mode file is what still said `autonomous`.
+Check the data with:
 
-**Goal.** Docs match the ranking page. Each download script keeps its own cache directory. Probe scripts and unused cache files are gone. Paths that must not be published are in `.gitignore`.
+```bash
+.venv/bin/python scripts/verify.py
+node --test web/rank.test.mjs
+```
 
-**Out of scope.** Rewriting the pipeline, re-downloading, changing `web/data/`, a git commit, and editing the protected cursor-prime rule files by hand.
-
-**Done when.** `data/raw/` has no loose files. `scripts/verify.py` passes. `README.md`, `AGENTS.md`, and `.cursor/rules/project.mdc` name the same cache directories and the same verify command.
-
-**Scale.** single-context
-
-**Pre-flight.** `.cursor/cursor-prime-cloud-mode`, `.cursor/rules/project.mdc`, `.gitignore`, `scripts/build_data.py`, `scripts/fetch_ab_contacts.py`, `scripts/fetch_community_profiles.py`, `scripts/update_schools.py`, `scripts/_probe_acadia.py`, `scripts/_probe_ocr.py`, `scripts/_probe_sir.py`, `scripts/_repair_assurance.py`, `data/raw/`, `README.md`, `AGENTS.md`, `progress.md`, `PLAN.md`.
-
-**Verify.** `.venv\Scripts\python -m py_compile` on the changed scripts, then `.venv\Scripts\python scripts\verify.py`.
-
-## Verify (2026-10-24, align the repo)
-
-`.venv\Scripts\python -m py_compile` on `build_data.py`, `fetch_ab_contacts.py`, `update_schools.py`, `fetch_community_profiles.py`, and `verify.py` exited 0. `.venv\Scripts\python scripts\verify.py` exited 0. Every check PASS, including `communities are boundaries and census figures (0 with map fields)` and `high schools are not ranked (111)`. `data/raw/` now has only `build/`, `ab_contacts/`, `cbe_directory/`, `cbe_kmz/`, `community_profiles/`, `assurance/`, and `logs/`. `git check-ignore` matches `data/raw/build/schools.json` and `scripts/_probe_*.py`. `web/data/` was not rewritten.
+On Windows, use `.venv\Scripts\python`. Open `http://127.0.0.1:8765/` after `python3 -m http.server 8765 -d web`.
