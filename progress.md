@@ -2,7 +2,7 @@
 
 ## Now
 
-Calgary school ranking, marked Prototype. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. The zone file loads the first time a school is selected. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
+Calgary school ranking, marked Prototype. The public page is https://school-maps-beta.vercel.app/. Vercel publishes `web/` when `main` changes. `school-maps-xujun.vercel.app` asks for a Vercel login. The list is on the left and the map is on the right. A row or a point opens the school card and draws the CBE attendance zone and walk zone. The zone file loads the first time a school is selected. A school with no published zone outlines the community where it sits. The » control opens assessed values and 2021 census figures for that zone.
 
 The page was built with AI in Cursor, using the cursor-prime standard described in the README.
 

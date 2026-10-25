@@ -19,4 +19,4 @@ Check the data with:
 node --test web/rank.test.mjs
 ```
 
-On Windows, use `.venv\Scripts\python`. Open `http://127.0.0.1:8765/` after `python3 -m http.server 8765 -d web`.
+On Windows, use `.venv\Scripts\python`. Open `http://127.0.0.1:8765/` after `python3 -m http.server 8765 -d web`. The public page is https://school-maps-beta.vercel.app/. Vercel publishes `web/` from `main`, with no install and no build.

@@ -8,6 +8,10 @@ The page covers Calgary. The header says Prototype until that changes. The code 
 
 ## Open it
 
+The public page is <https://school-maps-beta.vercel.app/>.
+
+Vercel publishes the files in `web/`. `vercel.json` turns off install and build, and sets the output directory to `web`. A push to `main` updates the site. `school-maps.vercel.app` is a different site. `school-maps-xujun.vercel.app` and each long deployment address ask for a Vercel login.
+
 `web/data/` is already in the repo, so a checkout runs with no download:
 
 ```bash
