@@ -14,6 +14,7 @@ These choices are already in the code:
 Check the data with:
 
 ```bash
+.venv/bin/python -m pytest
 .venv/bin/python scripts/verify.py
 node --test web/rank.test.mjs
 ```
