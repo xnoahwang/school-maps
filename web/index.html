@@ -5,13 +5,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calgary school ranking (by PAT)</title>
+  <title>Calgary School Ranking (by PAT)</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=20261006a">
+  <link rel="stylesheet" href="style.css?v=20261024h">
 </head>
 <body class="rank-first">
   <header>
-    <div class="titles"><h1 data-i18n="title"></h1><div class="sub" data-i18n="subtitle"></div></div>
+    <div class="titles"><h1><span data-i18n="title"></span><span class="beta" data-i18n="beta"></span></h1><p class="slogan" data-i18n="slogan"></p><div class="sub" data-i18n="subtitle"></div></div>
     <div class="controls">
       <label><span data-i18n="metric"></span>
         <select id="metric">
@@ -71,9 +71,14 @@
         <label class="dir-program"><span data-i18n="filter_program"></span>
           <select id="programFilter"></select>
         </label>
-        <p id="configNote" class="small" data-i18n="config_note"></p>
       </div>
-      <p id="rankNote" class="small"></p>
+      <div id="listNotes">
+        <div id="listNotesBody">
+          <p id="configNote" class="small" data-i18n="config_note"></p>
+          <p id="rankNote" class="small"></p>
+        </div>
+        <button type="button" id="notesMore" class="notes-more" hidden></button>
+      </div>
       <input id="search" type="search">
       </div>
       <div id="rankScroll">
@@ -115,7 +120,7 @@
   </div>
   <div id="termPop" hidden></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="i18n.js?v=20261006e"></script>
-  <script src="app.js?v=20261006e"></script>
+  <script src="i18n.js?v=20261024h"></script>
+  <script src="app.js?v=20261024f"></script>
 </body>
 </html>

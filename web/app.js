@@ -68,6 +68,20 @@
     const langSelect = document.getElementById("lang");
     if (langSelect && langSelect.value !== state.lang) langSelect.value = state.lang;
     document.title = t("title");
+    syncNotesMore();
+  }
+
+  // The grade and ranking notes are long. Keep about two lines until more is clicked.
+  let notesOpen = false;
+  function syncNotesMore() {
+    const box = document.getElementById("listNotes");
+    const body = document.getElementById("listNotesBody");
+    const button = document.getElementById("notesMore");
+    if (!box || !body || !button) return;
+    box.classList.toggle("open", notesOpen);
+    button.hidden = !notesOpen && body.scrollHeight <= body.clientHeight + 1;
+    button.textContent = t(notesOpen ? "notes_less" : "notes_more");
+    button.setAttribute("aria-expanded", notesOpen ? "true" : "false");
   }
 
   function styleFeature(f) {
@@ -365,6 +379,7 @@
     document.getElementById("rankNote").textContent = t(filtered ? "rank_note_filter" : noteForConfig())
       .replace("{n}", String(rows.length))
       .replace("{scored}", String(scored));
+    syncNotesMore();
     if (panelSchoolId && !shown.some(({ school }) => String(school.id) === panelSchoolId)) closeZonePanel();
     else if (panelSchoolId) fillZonePanel(panelSchoolId);
     renderRankMap();
@@ -842,7 +857,6 @@
       body.innerHTML = `<p class="zone-callout">${esc(t("zone_home_only"))}</p>
         <ul class="zone-places"><li class="place-card"><div class="place-head"><strong>${esc(place.name)}</strong></div><dl class="metrics">${headFacts}${censusFacts(profile, families)}</dl>${censusExtra(profile)}</li></ul>
         ${ethnicityRow}
-        <div class="stat"><span class="term-line"><span>${esc(t("safety"))}</span>${termMark("safety")}</span><b>${esc(t("no_data"))}</b></div>
         ${zoneLinks()}`;
       return;
     }
@@ -872,12 +886,11 @@
       <p class="place-kicker">${esc(t("zone_places"))}</p>
       <ul class="zone-places">${communityRows}</ul>
       ${ethnicityRow}
-      <div class="stat"><span class="term-line"><span>${esc(t("safety"))}</span>${termMark("safety")}</span><b>${esc(t("no_data"))}</b></div>
       ${zoneLinks()}`;
   }
   function zoneLinks() {
-    return `<p><a href="https://www.calgary.ca/communities/profiles.html" target="_blank" rel="noopener">${esc(t("profile_link"))}</a></p>
-      <p><a href="https://www.calgarypolice.ca/transparency-and-accountability/community-safety-dashboard---monthly-snapshot.html" target="_blank" rel="noopener">${esc(t("crime_link"))}</a></p>`;
+    return `<div class="stat"><a href="https://www.calgary.ca/communities/profiles.html" target="_blank" rel="noopener">${esc(t("profile_link"))}</a></div>
+      <p class="note">${esc(t("census_next"))}</p>`;
   }
   function openZonePanel(id) {
     panelSchoolId = String(id);
@@ -1261,6 +1274,12 @@
     closeZonePanel();
   });
   document.getElementById("zonePanelClose").addEventListener("click", () => closeZonePanel());
+  document.getElementById("notesMore").addEventListener("click", (e) => {
+    e.stopPropagation();
+    notesOpen = !notesOpen;
+    syncNotesMore();
+  });
+  window.addEventListener("resize", syncNotesMore);
   document.getElementById("rankScroll").addEventListener("scroll", () => { if (!scoreSourcePop.hidden) placeScoreSource(); });
   document.getElementById("search").addEventListener("input", (e) => {
     state.query = e.target.value;

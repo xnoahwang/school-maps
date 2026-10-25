@@ -2,6 +2,150 @@
 
 Older plans and verify receipts are in git history. This file keeps the current record only.
 
+## Plan (2026-10-24, more on line 2)
+
+Mode: `autonomous`. Design notes: skipped. The more control sits at the end of the second line, the way LinkedIn does, in the page’s navy so it stays easy to see.
+
+**Goal.** Collapsed notes show two lines, with more at the end of the second line. less sits at the end of the full text.
+
+**Out of scope.** A separate row for the button, and a git commit.
+
+**Done when.** The second line ends with more, and clicking it expands the notes.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/style.css`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** Open `http://127.0.0.1:8765/` and read the end of the second line. Click more, then less.
+
+### Verify receipt
+
+At `?v=more3` the second line ends with `…more` on that same line. Clicking it shows the full notes with `less` after the last sentence. Clicking less collapses it again.
+
+## Plan (2026-10-24, notes more)
+
+Mode: `autonomous`. Design notes: skipped. The grade and ranking notes collapse to about two lines, with a visible more button. LinkedIn’s more is only a faint word at the end of the line.
+
+**Goal.** Those two notes start collapsed. more expands them, less collapses them, in all six languages. The button stays hidden when the text already fits.
+
+**Out of scope.** The zone-details » control, and a git commit.
+
+**Done when.** The list shows a more button under the clipped notes, and clicking it reveals the rest.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/index.html`, `web/app.js`, `web/i18n.js`, `web/style.css`.
+
+**Verify.** Open `http://127.0.0.1:8765/`, click more, then less. `node --check web/app.js` and `web/i18n.js`.
+
+### Verify receipt
+
+`node --check` passed. 238 keys, PASS. At `?v=more2` the notes show two lines and a more pill. Clicking it reveals the rest and the button becomes less. Clicking less collapses it. Chinese label is 更多.
+
+## Plan (2026-10-24, census note)
+
+Mode: `autonomous`. Design notes: agreed in chat. One gray sentence under the community-profile link.
+
+**Goal.** The zone panel says the 2026 census was taken this year, results come out through 2027, and these community figures will be updated then. The same sentence exists in all six languages.
+
+**Out of scope.** Changing the 2021 figures, and a git commit.
+
+**Done when.** The English panel shows that sentence under the profile link, and the Chinese sentence matches the agreed wording.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** Open a zone panel at `http://127.0.0.1:8765/` and read the note in English and Chinese. `node --check web/i18n.js`.
+
+### Verify receipt
+
+`node --check` passed. Six languages, 236 keys, PASS. Under the profile link: `The 2026 census was taken this year. Results come out through 2027, and we will update these community figures then.` Chinese: `2026 年人口普查已于今年完成。结果在 2027 年陆续公布，到时我们会更新这些社区数据。`
+
+## Plan (2026-10-24, zone panel ending)
+
+Mode: `autonomous`. Design notes: skipped. The police dashboard and the Safety row go. The last line stays the community-profile link, and that link is the row’s title.
+
+**Goal.** The zone panel no longer shows Safety, “no data”, or the Calgary Police link. It ends with Community profiles (2021 census).
+
+**Out of scope.** The hidden community choropleth, and a git commit.
+
+**Done when.** Opening a school’s zone panel shows the profile link and not the police link.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/app.js`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** Open a zone panel at `http://127.0.0.1:8765/` and read the last lines. `node --check web/app.js` and `web/i18n.js`.
+
+### Verify receipt
+
+`node --check` passed. i18n key check PASS, 235 keys, no `crime_link` or `term_safety`. Briar Hill’s panel ends with `Community profiles (2021 census)`. No Safety row, no “no data”, no police link. Chinese ending is `社区档案（2021 人口普查）`.
+
+## Plan (2026-10-24, slogan wording)
+
+Mode: `autonomous`. Design notes: the user gave the exact English line.
+
+**Goal.** The English slogan is `For Immigrant Parents. By Immigrant Parents.`
+
+**Out of scope.** The other five languages, and a git commit.
+
+**Done when.** The English header shows that line.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/i18n.js`, `web/index.html`.
+
+**Verify.** Open `http://127.0.0.1:8765/` and read the slogan.
+
+### Verify receipt
+
+Header at `http://127.0.0.1:8765/?v=slogan3` shows `For Immigrant Parents. By Immigrant Parents.`
+
+## Plan (2026-10-24, title and slogan)
+
+Mode: `autonomous`. Design notes: agreed in chat. English title uses title case. A short slogan sits under the title, in the current language.
+
+**Goal.** The header reads `Calgary School Ranking (by PAT)` with the line `Made by immigrant parents, for immigrant parents.` under it. The other five languages keep their titles and show their own slogan.
+
+**Out of scope.** README, the beta pill wording, and a git commit.
+
+**Done when.** The English header shows that title and slogan, and switching language changes the slogan.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/index.html`, `web/i18n.js`, `web/style.css`.
+
+**Verify.** Open `http://127.0.0.1:8765/` and switch all six languages. `node --check web/i18n.js`.
+
+### Verify receipt
+
+`node --check web/i18n.js` exited 0. Six languages, 237 keys, PASS. Header at `http://127.0.0.1:8765/?v=slogan2`: title `Calgary School Ranking (by PAT)`, slogan `Made by immigrant parents, for immigrant parents.`, header 68px on a 1000px window. zh, zh-Hant, fr, ja, and ko slogans match the plan. On a 390px window the slogan wraps and stays fully visible.
+
+## Plan (2026-10-06, beta badge)
+
+Mode: `autonomous`. Design notes: skipped. The product title stays as it was. A small pill after it says the closed-beta mark in the current language.
+
+**Goal.** The header shows a designed badge after the title: Beta, 内测版, 內測版, Bêta, ベータ版, 베타.
+
+**Out of scope.** Putting the mark inside the title string, README, and a git commit.
+
+**Done when.** English shows a small pill reading Beta beside the title, and switching language changes only the pill text.
+
+**Scale.** small
+
+**Pre-flight.** `PLAN.md`, `web/index.html`, `web/i18n.js`, `web/style.css`.
+
+**Verify.** Open `http://127.0.0.1:8765/` and switch all six languages. `node --check web/i18n.js`.
+
+### Verify receipt
+
+Header at `http://127.0.0.1:8765/?v=beta2`: title `Calgary school ranking (by PAT)`, pill `Beta` (11px, cream, round). Badge text by language: en Beta, zh 内测版, zh-Hant 內測版, fr Bêta, ja ベータ版, ko 베타.
+
+### Verify receipt
+
+`node --check web/i18n.js` exited 0. Header at `http://127.0.0.1:8765/?v=beta1` is `Calgary school ranking (by PAT) 内测版`. With `?lang=zh` the header is `卡尔加里学校排名（按PAT）内测版`.
+
 ## Plan (2026-10-06, drop reviews)
 
 Mode: `autonomous`. Design notes: skipped. The ranking page does not show Google or Reddit reviews. The script and the README key snippet are leftover.
