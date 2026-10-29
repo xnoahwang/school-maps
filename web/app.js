@@ -7,7 +7,8 @@ import {
   noteForConfig, passesDirectory, rangeEnds, schoolSpan, shortGrades, sortListed, teachesLevel,
 } from "./rank.js";
 import { chooseZones, createZonePanel, esc } from "./zone.js";
-import { createMap } from "./map.js";
+// The query is the cache key. app.js?v= alone does not reload this module.
+import { createMap } from "./map.js?v=20261029i";
 
 const I18N = globalThis.I18N;
 const params = new URLSearchParams(location.search);

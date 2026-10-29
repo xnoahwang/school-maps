@@ -61,6 +61,33 @@ export function createMap(deps) {
     scrollWheelZoom: false,
     wheelPxPerZoomLevel: 60
   }).setView([51.045, -114.07], 11);
+  // Rotation changes the pane size. This redraws into the new box and does not move the view.
+  // A clipped card shows a double arrow until the reader reaches the end.
+  function syncPopupHint(popup) {
+    const root = popup && popup.getElement();
+    if (!root) return;
+    const content = root.querySelector(".leaflet-popup-content");
+    const wrap = root.querySelector(".leaflet-popup-content-wrapper");
+    if (!content || !wrap) return;
+    let hint = wrap.querySelector(".popup-more");
+    if (!hint) {
+      hint = document.createElement("div");
+      hint.className = "popup-more";
+      hint.setAttribute("aria-hidden", "true");
+      wrap.appendChild(hint);
+      content.addEventListener("scroll", () => syncPopupHint(popup));
+    }
+    const overflow = content.scrollHeight > content.clientHeight + 1;
+    const atEnd = content.scrollTop + content.clientHeight >= content.scrollHeight - 1;
+    hint.hidden = !overflow || atEnd;
+  }
+  map.on("popupopen", (event) => {
+    requestAnimationFrame(() => syncPopupHint(event.popup));
+  });
+  window.addEventListener("resize", () => {
+    map.invalidateSize();
+    if (map._popup) requestAnimationFrame(() => syncPopupHint(map._popup));
+  });
   map.createPane("zonePane");
   map.getPane("zonePane").style.zIndex = 350;
   const zoneKey = document.createElement("div");

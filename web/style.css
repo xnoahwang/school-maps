@@ -1,6 +1,6 @@
 /* Layout and colours for the ranking page; no logic here. */
 * { box-sizing: border-box; }
-body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", "PingFang SC", "PingFang TC", "Microsoft YaHei", "Microsoft JhengHei", "Yu Gothic UI", "Malgun Gothic", sans-serif; color: #1c1917; height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #f7f6f3; }
+body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", "PingFang SC", "PingFang TC", "Microsoft YaHei", "Microsoft JhengHei", "Yu Gothic UI", "Malgun Gothic", sans-serif; color: #1c1917; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: #f7f6f3; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
 header { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #fff; color: #1c1917; min-height: 68px; height: auto; padding: 8px 16px; border-bottom: 1px solid #ebe7e0; flex-wrap: nowrap; }
 h1 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; min-width: 0; }
 .titles { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
@@ -11,8 +11,8 @@ h1 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -0.01em; disp
 #lang { background: #fff; color: #1c1917; border: 1px solid #e4e0d8; border-radius: 999px; padding: 6px 28px 6px 12px; font-weight: 600; cursor: pointer; }
 #lang:hover { background: #f6f5f2; }
 main { flex: 1; display: grid; grid-template-columns: clamp(560px, 52vw, 820px) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); min-height: 0; background: #ebe7e0; }
-#map { order: 0; height: 100%; min-height: 0; background: #ebe7e0; }
-#listPane { position: relative; max-width: none; margin: 0; width: auto; height: 100%; min-height: 0; padding: 16px 16px 0; overflow: hidden; display: flex; flex-direction: column; background: #fff; border-right: 0; box-shadow: 1px 0 0 #ebe7e0, 12px 0 32px rgba(28, 25, 23, .05); z-index: 2; }
+#map { order: 0; height: 100%; min-width: 0; min-height: 0; background: #ebe7e0; }
+#listPane { position: relative; max-width: none; margin: 0; width: auto; height: 100%; min-width: 0; min-height: 0; padding: 16px 16px 0; overflow: hidden; display: flex; flex-direction: column; background: #fff; border-right: 0; box-shadow: 1px 0 0 #ebe7e0, 12px 0 32px rgba(28, 25, 23, .05); z-index: 2; }
 table { width: 100%; border-collapse: collapse; }
 td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; } td.num { text-align: right; }
 .na { color: #9aa5b1; font-style: italic; }
@@ -49,7 +49,15 @@ body.level-high .filter-row { grid-template-columns: 1fr; }
 .notes-more[hidden] { display: none; }
 #rankTable th { background: #fff; color: #78716c; font-size: 12px; font-weight: 600; border-bottom: 1px solid #ebe7e0; text-align: center; cursor: default; user-select: none; }
 @media (max-width: 480px) { .filter-row { grid-template-columns: 1fr; } }
-@media (max-width: 900px) { main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(220px, 40vh); } }
+/* Portrait phones are too narrow for two columns. Stack the list over the map. */
+@media (orientation: portrait) and (max-width: 900px) {
+  main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(180px, 34vh); }
+  header { flex-wrap: wrap; min-height: 0; padding: 8px 12px; }
+  #listPane { padding: 10px 10px 0; }
+  #levelSwitch { gap: 4px; }
+  #levelSwitch button { padding: 6px 4px; font-size: 12px; }
+  #levelSwitch .level-by { white-space: normal; font-size: 10px; }
+}
 #rankChrome { flex: none; }
 #rankScroll { flex: 1; min-height: 0; overflow: auto; }
 #rankTable th { position: sticky; top: 0; z-index: 2; white-space: nowrap; }
@@ -78,7 +86,18 @@ body.level-high .filter-row { grid-template-columns: 1fr; }
 /* Leaflet offsets the focus ring by 1px. Edge draws that ring black along the top. */
 .leaflet-container:focus,
 .leaflet-container:focus-visible { outline: none; }
-.leaflet-popup-content-wrapper { border-radius: 12px; }
+.leaflet-popup-content-wrapper { position: relative; border-radius: 12px; }
+.popup-more {
+  position: absolute; right: 6px; bottom: 4px; width: 12px; height: 14px;
+  pointer-events: none; filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
+.popup-more[hidden] { display: none; }
+.popup-more::before, .popup-more::after {
+  content: ""; position: absolute; left: 2px; width: 6px; height: 6px;
+  border-right: 2px solid #12355b; border-bottom: 2px solid #12355b; transform: rotate(45deg);
+}
+.popup-more::before { top: 0; }
+.popup-more::after { top: 5px; }
 .leaflet-popup-content a { color: #12355b; }
 .school-pop .survey { margin-top: 6px; padding-top: 6px; border-top: 1px solid #e4e8ec; }
 .school-pop .official { margin-top: 8px; padding-top: 6px; border-top: 1px solid #e4e8ec; font-size: 12px; }
@@ -128,3 +147,41 @@ body.level-high .filter-row { grid-template-columns: 1fr; }
 .chip-row b { padding: 2px 8px; border-radius: 999px; background: #f6f5f2; color: #1c1917; font-size: 12px; font-weight: 600; }
 .place-card a { display: inline-block; margin-top: 8px; font-size: 12.5px; }
 #zonePanelBody a { color: #12355b; }
+/* A short landscape screen is a phone on its side. Keep the list beside the map.
+   These rules sit last so they win over the desktop table metrics. */
+@media (orientation: landscape) and (max-height: 520px) {
+  header { min-height: 0; padding: 4px 10px; gap: 8px; }
+  .slogan { display: none; }
+  h1 { font-size: 14px; }
+  #lang { padding: 4px 24px 4px 10px; }
+  main { grid-template-columns: minmax(0, 1.15fr) minmax(160px, 1fr); grid-template-rows: minmax(0, 1fr); }
+  #listPane { padding: 6px 8px 0; }
+  #filterRegionTitle { display: none; }
+  #dirFilters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
+  #levelSwitch { grid-column: 1 / -1; gap: 4px; }
+  .filter-row { display: contents; }
+  #levelSwitch button { font-size: 11px; padding: 3px 2px; }
+  #levelSwitch .level-by { font-size: 10px; white-space: normal; }
+  .dir-program select, #search { padding: 3px 8px; }
+  /* The score paragraph costs a school row. The level buttons already name the exam. */
+  #listNotes { display: none; }
+  #search { margin-bottom: 4px; }
+  #rankTable { font-size: 11px; table-layout: fixed; }
+  #rankTable th { font-size: 11px; }
+  #rankTable th.sort-col { white-space: nowrap; }
+  #rankTable td { padding: 3px 1px; }
+  #rankTable td.num, #rankTable td.grades { white-space: nowrap; }
+  #rankTable td:nth-child(2),
+  #rankTable td:nth-child(3) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .more-btn { width: 22px; height: 22px; }
+  /* A long card must leave map the finger can still drag. Zoom sits on that strip, not on the card. */
+  .leaflet-popup-content { max-height: 150px; overflow-y: auto; }
+  .leaflet-top.leaflet-left { top: auto; left: auto; right: 0; bottom: 22px; }
+  #rankTable th:nth-child(1) { width: 22px; }
+  #rankTable th:nth-child(4) { width: 68px; }
+  #rankTable th:nth-child(5),
+  #rankTable th:nth-child(6),
+  #rankTable th:nth-child(7) { width: 44px; }
+  #rankTable th:nth-child(8) { width: 40px; }
+  #rankTable th.more-col, #rankTable td.more { width: 22px; }
+}
