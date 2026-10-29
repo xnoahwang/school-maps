@@ -8,7 +8,7 @@ import {
 } from "./rank.js";
 import { chooseZones, createZonePanel, esc } from "./zone.js";
 // The query is the cache key. app.js?v= alone does not reload this module.
-import { createMap } from "./map.js?v=20261029i";
+import { createMap } from "./map.js?v=20261029m";
 
 const I18N = globalThis.I18N;
 const params = new URLSearchParams(location.search);
@@ -356,6 +356,29 @@ const mapView = createMap({
     if (id) zonePanel.fillZonePanel(id);
   },
 });
+
+// This visit only. Portrait stays on the landscape frame after the first landscape.
+let seenPhoneLandscape = document.documentElement.classList.contains("phone-land");
+const phoneLandQuery = window.matchMedia("(pointer: coarse) and (orientation: landscape) and (max-height: 520px)");
+const phonePortQuery = window.matchMedia("(pointer: coarse) and (orientation: portrait) and (max-width: 900px)");
+function syncPhoneFrame() {
+  if (phoneLandQuery.matches) seenPhoneLandscape = true;
+  const gate = phonePortQuery.matches && !seenPhoneLandscape;
+  const useLand = phoneLandQuery.matches || (phonePortQuery.matches && seenPhoneLandscape);
+  const root = document.documentElement;
+  const changed = root.classList.contains("need-rotate") !== gate || root.classList.contains("phone-land") !== useLand;
+  root.classList.toggle("need-rotate", gate);
+  root.classList.toggle("phone-land", useLand);
+  const header = document.querySelector("header");
+  const main = document.querySelector("main");
+  if (header) header.inert = gate;
+  if (main) main.inert = gate;
+  if (changed) requestAnimationFrame(() => mapView.map.invalidateSize());
+}
+phoneLandQuery.addEventListener("change", syncPhoneFrame);
+phonePortQuery.addEventListener("change", syncPhoneFrame);
+window.addEventListener("resize", syncPhoneFrame);
+syncPhoneFrame();
 
 function renderRank() {
   refreshFilterLabels();

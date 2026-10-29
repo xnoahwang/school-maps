@@ -61,6 +61,51 @@ export function createMap(deps) {
     scrollWheelZoom: false,
     wheelPxPerZoomLevel: 60
   }).setView([51.045, -114.07], 11);
+  // Portrait-after-landscape turns the page 90 degrees clockwise around the
+  // top-left, which sits on the viewport's top-right. Leaflet keeps its own
+  // copy of the pointer math, so the public helper is not enough.
+  function heldPortrait() {
+    return document.documentElement.classList.contains("phone-land")
+      && window.matchMedia("(orientation: portrait)").matches;
+  }
+  function offsetIn(el, ancestor) {
+    let x = 0;
+    let y = 0;
+    let node = el;
+    while (node && node !== ancestor) {
+      x += node.offsetLeft;
+      y += node.offsetTop;
+      node = node.offsetParent;
+    }
+    return { x, y };
+  }
+  const readContainerPoint = L.Map.prototype.mouseEventToContainerPoint;
+  L.Map.prototype.mouseEventToContainerPoint = function (event) {
+    if (!heldPortrait() || !event || event.clientX == null) return readContainerPoint.call(this, event);
+    const off = offsetIn(this._container, document.body);
+    return L.point(event.clientY - off.x, window.innerWidth - event.clientX - off.y);
+  };
+  const readDragMove = L.Draggable.prototype._onMove;
+  L.Draggable.prototype._onMove = function (event) {
+    if (!heldPortrait() || !this._startPoint || !event) return readDragMove.call(this, event);
+    const src = event.touches && event.touches.length === 1 ? event.touches[0] : event;
+    if (!src || src.clientX == null || (event.touches && event.touches.length > 1)) return readDragMove.call(this, event);
+    const dx = src.clientX - this._startPoint.x;
+    const dy = src.clientY - this._startPoint.y;
+    const scale = this._parentScale || { x: 1, y: 1 };
+    const clientX = this._startPoint.x + dy * scale.x;
+    const clientY = this._startPoint.y - dx * scale.y;
+    return readDragMove.call(this, {
+      type: event.type,
+      target: event.target,
+      srcElement: event.srcElement,
+      clientX,
+      clientY,
+      touches: event.touches ? [{ clientX, clientY }] : undefined,
+      preventDefault() { event.preventDefault(); },
+      stopPropagation() { event.stopPropagation(); }
+    });
+  };
   // Rotation changes the pane size. This redraws into the new box and does not move the view.
   // A clipped card shows a double arrow until the reader reaches the end.
   function syncPopupHint(popup) {
@@ -84,9 +129,18 @@ export function createMap(deps) {
   map.on("popupopen", (event) => {
     requestAnimationFrame(() => syncPopupHint(event.popup));
   });
-  window.addEventListener("resize", () => {
+  // A phone rotation reports its final size late. Measure again after it settles,
+  // or a popup opened on the way keeps the portrait height and sits low.
+  let sizeTimer = 0;
+  function settleMapSize() {
     map.invalidateSize();
-    if (map._popup) requestAnimationFrame(() => syncPopupHint(map._popup));
+    if (map._popup && map._popup.isOpen()) map._popup.update();
+    if (map._popup) syncPopupHint(map._popup);
+  }
+  window.addEventListener("resize", () => {
+    settleMapSize();
+    clearTimeout(sizeTimer);
+    sizeTimer = setTimeout(settleMapSize, 350);
   });
   map.createPane("zonePane");
   map.getPane("zonePane").style.zIndex = 350;
@@ -230,6 +284,8 @@ export function createMap(deps) {
       const current = markerById.get(key);
       const currentSchool = deps.schools().find((s) => String(s.id) === key);
       if (!current || !currentSchool) return;
+      // The container can still be the portrait size until the user taps a school.
+      map.invalidateSize();
       current.setPopupContent(deps.popupHtml(currentSchool));
       const drawn = drawSchoolZone(currentSchool);
       const bounds = drawn ? schoolZoneBounds() : null;

@@ -10,11 +10,39 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script>
     // Change this when style.css, the page scripts, or web/data change.
-    globalThis.ASSET_VERSION = "20261029i";
+    globalThis.ASSET_VERSION = "20261029m";
     document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(ASSET_VERSION) + '">');
+  </script>
+  <script>
+    // A phone in portrait is blocked until it is landscape. Set the class
+    // here so the first paint does not wait for app.js.
+    (function () {
+      var phone = window.matchMedia("(pointer: coarse)").matches;
+      var land = phone && window.matchMedia("(orientation: landscape) and (max-height: 520px)").matches;
+      var port = phone && window.matchMedia("(orientation: portrait) and (max-width: 900px)").matches;
+      if (land) document.documentElement.classList.add("phone-land");
+      if (port) document.documentElement.classList.add("need-rotate");
+    })();
   </script>
 </head>
 <body>
+  <div id="rotateGate" role="dialog" aria-modal="true" aria-labelledby="rotateGateText">
+    <!-- Tabler Icons (MIT): device-mobile, arrow-right, device-mobile-rotated. -->
+    <svg class="rotate-phone" viewBox="0 0 88 24" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+        <path d="M11 4h2" />
+        <path d="M12 17v.01" />
+        <path d="M33 12h14" />
+        <path d="M41 18l6 -6" />
+        <path d="M41 6l6 6" />
+        <path d="M67 6m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+        <path d="M84 11v2" />
+        <path d="M71 12h-.01" />
+      </g>
+    </svg>
+    <p id="rotateGateText" data-i18n="rotate_gate">Turn your phone sideways to use this page.</p>
+  </div>
   <header>
     <div class="titles"><h1><span data-i18n="title"></span><span class="prototype" data-i18n="prototype"></span></h1><p class="slogan" data-i18n="slogan"></p></div>
     <div class="controls">

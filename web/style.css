@@ -147,41 +147,56 @@ body.level-high .filter-row { grid-template-columns: 1fr; }
 .chip-row b { padding: 2px 8px; border-radius: 999px; background: #f6f5f2; color: #1c1917; font-size: 12px; font-weight: 600; }
 .place-card a { display: inline-block; margin-top: 8px; font-size: 12.5px; }
 #zonePanelBody a { color: #12355b; }
-/* A short landscape screen is a phone on its side. Keep the list beside the map.
-   These rules sit last so they win over the desktop table metrics. */
-@media (orientation: landscape) and (max-height: 520px) {
-  header { min-height: 0; padding: 4px 10px; gap: 8px; }
-  .slogan { display: none; }
-  h1 { font-size: 14px; }
-  #lang { padding: 4px 24px 4px 10px; }
-  main { grid-template-columns: minmax(0, 1.15fr) minmax(160px, 1fr); grid-template-rows: minmax(0, 1fr); }
-  #listPane { padding: 6px 8px 0; }
-  #filterRegionTitle { display: none; }
-  #dirFilters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
-  #levelSwitch { grid-column: 1 / -1; gap: 4px; }
-  .filter-row { display: contents; }
-  #levelSwitch button { font-size: 11px; padding: 3px 2px; }
-  #levelSwitch .level-by { font-size: 10px; white-space: normal; }
-  .dir-program select, #search { padding: 3px 8px; }
-  /* The score paragraph costs a school row. The level buttons already name the exam. */
-  #listNotes { display: none; }
-  #search { margin-bottom: 4px; }
-  #rankTable { font-size: 11px; table-layout: fixed; }
-  #rankTable th { font-size: 11px; }
-  #rankTable th.sort-col { white-space: nowrap; }
-  #rankTable td { padding: 3px 1px; }
-  #rankTable td.num, #rankTable td.grades { white-space: nowrap; }
-  #rankTable td:nth-child(2),
-  #rankTable td:nth-child(3) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .more-btn { width: 22px; height: 22px; }
-  /* A long card must leave map the finger can still drag. Zoom sits on that strip, not on the card. */
-  .leaflet-popup-content { max-height: 150px; overflow-y: auto; }
-  .leaflet-top.leaflet-left { top: auto; left: auto; right: 0; bottom: 22px; }
-  #rankTable th:nth-child(1) { width: 22px; }
-  #rankTable th:nth-child(4) { width: 68px; }
-  #rankTable th:nth-child(5),
-  #rankTable th:nth-child(6),
-  #rankTable th:nth-child(7) { width: 44px; }
-  #rankTable th:nth-child(8) { width: 40px; }
-  #rankTable th.more-col, #rankTable td.more { width: 22px; }
+#rotateGate { display: none; }
+html.need-rotate #rotateGate {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  position: fixed; inset: 0; z-index: 5000; background: #f7f6f3; padding: 24px; text-align: center;
 }
+#rotateGate p { margin: 0; max-width: 16em; font-size: 18px; font-weight: 650; line-height: 1.45; }
+.rotate-phone { width: 196px; height: 54px; color: #12355b; }
+/* After a phone has been landscape once, portrait keeps that frame.
+   The box is swapped and turned so the landscape layout still fills the screen. */
+@media (orientation: portrait) {
+  html.phone-land { overflow: hidden; background: #f7f6f3; }
+  html.phone-land body {
+    position: fixed; width: 100dvh; height: 100dvw; overflow: hidden;
+    top: 0; left: 100dvw; transform: rotate(90deg); transform-origin: top left;
+  }
+}
+/* A short landscape screen is a phone on its side. Keep the list beside the map.
+   These rules sit last so they win over the desktop table metrics.
+   html.phone-land is also set when portrait is held in that same frame. */
+html.phone-land header { min-height: 0; padding: 4px 10px; gap: 8px; }
+html.phone-land .slogan { display: none; }
+html.phone-land h1 { font-size: 14px; }
+html.phone-land #lang { padding: 4px 24px 4px 10px; }
+html.phone-land main { grid-template-columns: minmax(0, 1.15fr) minmax(160px, 1fr); grid-template-rows: minmax(0, 1fr); }
+html.phone-land #listPane { padding: 6px 8px 0; }
+html.phone-land #filterRegionTitle { display: none; }
+html.phone-land #dirFilters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
+html.phone-land #levelSwitch { grid-column: 1 / -1; gap: 4px; }
+html.phone-land .filter-row { display: contents; }
+html.phone-land #levelSwitch button { font-size: 11px; padding: 3px 2px; }
+html.phone-land #levelSwitch .level-by { font-size: 10px; white-space: normal; }
+html.phone-land .dir-program select, html.phone-land #search { padding: 3px 8px; }
+/* The score paragraph costs a school row. The level buttons already name the exam. */
+html.phone-land #listNotes { display: none; }
+html.phone-land #search { margin-bottom: 4px; }
+html.phone-land #rankTable { font-size: 11px; table-layout: fixed; }
+html.phone-land #rankTable th { font-size: 11px; }
+html.phone-land #rankTable th.sort-col { white-space: nowrap; }
+html.phone-land #rankTable td { padding: 3px 1px; }
+html.phone-land #rankTable td.num, html.phone-land #rankTable td.grades { white-space: nowrap; }
+html.phone-land #rankTable td:nth-child(2),
+html.phone-land #rankTable td:nth-child(3) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html.phone-land .more-btn { width: 22px; height: 22px; }
+/* A long card must leave map the finger can still drag. Zoom sits on that strip, not on the card. */
+html.phone-land .leaflet-popup-content { max-height: 150px; overflow-y: auto; }
+html.phone-land .leaflet-top.leaflet-left { top: auto; left: auto; right: 0; bottom: 22px; }
+html.phone-land #rankTable th:nth-child(1) { width: 22px; }
+html.phone-land #rankTable th:nth-child(4) { width: 68px; }
+html.phone-land #rankTable th:nth-child(5),
+html.phone-land #rankTable th:nth-child(6),
+html.phone-land #rankTable th:nth-child(7) { width: 44px; }
+html.phone-land #rankTable th:nth-child(8) { width: 40px; }
+html.phone-land #rankTable th.more-col, html.phone-land #rankTable td.more { width: 22px; }
