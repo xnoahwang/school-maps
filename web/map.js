@@ -1,6 +1,8 @@
 /* School points, attendance polygons, and wheel zoom.
  * A short touch selects the nearest school. A mouse click still uses the marker.
- * Scales the tiles already on screen. Does not rank schools or fill the panel.
+ * Scales the tiles already on screen. The zoom control sits at the bottom right.
+ * A score is drawn beside a point only once the map is zoomed in.
+ * Does not rank schools or fill the panel.
  * Leaflet is loaded by index.html as globalThis.L before this module runs.
  */
 import { inConfig, listedResult, passesDirectory } from "./rank.js";
@@ -60,8 +62,10 @@ export function createMap(deps) {
     zoomSnap: 0,
     zoomDelta: 1,
     scrollWheelZoom: false,
-    wheelPxPerZoomLevel: 60
+    wheelPxPerZoomLevel: 60,
+    zoomControl: false
   }).setView([51.045, -114.07], 11);
+  L.control.zoom({ position: "bottomright" }).addTo(map);
   // Portrait-after-landscape turns the page 90 degrees clockwise around the
   // top-left, which sits on the viewport's top-right. Leaflet keeps its own
   // copy of the pointer math, so the public helper is not enough.
@@ -364,6 +368,24 @@ export function createMap(deps) {
       deps.ensureZones().then(show);
     }
   }
+  // A city-wide view has hundreds of schools. Numbers appear only once a neighbourhood fits.
+  function syncScoreLabels() {
+    const show = map.getZoom() >= 14;
+    for (const [id, marker] of markerById) {
+      if (!show) {
+        if (marker.getTooltip()) marker.unbindTooltip();
+        continue;
+      }
+      if (marker.getTooltip()) continue;
+      const school = deps.schools().find((s) => String(s.id) === id);
+      const result = school ? listedResult(school, deps.filter().level) : null;
+      if (!result || result.score == null) continue;
+      marker.bindTooltip(result.score.toFixed(1), {
+        permanent: true, direction: "right", className: "score-pin", opacity: 1, offset: [6, 0],
+      });
+    }
+  }
+  map.on("zoomend", syncScoreLabels);
   function render() {
     if (!map) return;
     map.invalidateSize();
@@ -379,6 +401,7 @@ export function createMap(deps) {
       markerById.set(String(s.id), marker);
       return marker;
     })).addTo(map);
+    syncScoreLabels();
     if (!rankMapFitted && rows.length) {
       rankMapFitted = true;
       map.fitBounds(L.latLngBounds(rows.map((s) => schoolPoint(s))), { padding: [28, 28], maxZoom: 13 });

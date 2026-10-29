@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script>
     // Change this when style.css, the page scripts, or web/data change.
-    globalThis.ASSET_VERSION = "20261029o";
+    globalThis.ASSET_VERSION = "20261029ad";
     document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(ASSET_VERSION) + '">');
   </script>
   <script>
@@ -47,7 +47,8 @@
     <p id="rotateGateText" data-i18n="rotate_gate">Turn your phone sideways to use this page.</p>
   </div>
   <header>
-    <div class="titles"><h1><span data-i18n="title"></span><span class="prototype" data-i18n="prototype"></span></h1><p class="slogan" data-i18n="slogan"></p></div>
+    <div class="titles"><h1><span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10 12 5l10 5-10 5L2 10z"/><path d="M6 12.2V16c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-3.8"/><path d="M22 10v6"/></svg></span><span data-i18n="title"></span><span class="prototype" data-i18n="prototype"></span></h1></div>
+    <p class="slogan" data-i18n="slogan"></p>
     <div class="controls">
       <select id="lang" aria-label="Language">
         <option value="en" selected>English</option>
@@ -62,7 +63,7 @@
   <main>
     <section id="listPane">
       <div id="rankChrome">
-      <h2 id="filterRegionTitle" data-i18n="filter_region"></h2>
+      <h2 id="filterRegionTitle" class="visually-hidden" data-i18n="filter_region"></h2>
       <div id="dirFilters">
         <div id="levelSwitch" role="group">
           <button type="button" id="levelElem" data-level="elem" aria-pressed="true"><span data-i18n="level_elem"></span> <span class="level-by"><span data-i18n="level_by_pat_before"></span><span class="level-exam" data-exam="pat" data-i18n="level_exam_pat"></span><span data-i18n="level_by_pat_after"></span></span></button>
@@ -76,10 +77,10 @@
           <label class="dir-program" id="gradeFilterWrap"><span data-i18n="filter_grade_layer"></span>
             <select id="gradeFilter"></select>
           </label>
+          <label class="dir-program"><span data-i18n="filter_program"></span>
+            <select id="programFilter"></select>
+          </label>
         </div>
-        <label class="dir-program"><span data-i18n="filter_program"></span>
-          <select id="programFilter"></select>
-        </label>
       </div>
       <div id="listNotes">
         <div id="listNotesBody">
@@ -88,20 +89,24 @@
         </div>
         <button type="button" id="notesMore" class="notes-more" hidden></button>
       </div>
-      <input id="search" type="search">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="search" type="search">
+      </div>
       </div>
       <div id="rankScroll">
       <table id="rankTable"><thead><tr>
         <th data-i18n="col_rank"></th>
         <th data-i18n="col_school_name"></th>
-        <th data-i18n="col_board"></th>
-        <th data-i18n="col_grades"></th>
         <th class="sort-col" data-sort="score" aria-sort="descending"><button type="button" data-i18n="col_score"></button></th>
         <th class="sort-col" data-sort="acc" aria-sort="none"><button type="button" data-i18n="col_acc" data-i18n-title="pat_acc"></button></th>
         <th class="sort-col" data-sort="exc" aria-sort="none"><button type="button" data-i18n="col_exc" data-i18n-title="pat_exc"></button></th>
-        <th data-i18n="col_year"></th>
         <th class="more-col"><span class="visually-hidden" data-i18n="more_zone"></span></th>
       </tr></thead><tbody></tbody></table>
+      </div>
+      <div id="scoreLegend">
+        <p class="legend-acc" data-explain="score_source_acc" tabindex="0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg><span><b data-i18n="pat_acc"></b> <span data-i18n="legend_acc"></span></span></p>
+        <p class="legend-exc" data-explain="score_source_exc" tabindex="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.7 5.6 6.2.9-4.5 4.3 1.1 6.1L12 16.6 6.5 19.5l1.1-6.1L3.1 9.1l6.2-.9z"/></svg><span><b data-i18n="pat_exc"></b> <span data-i18n="legend_exc"></span></span></p>
       </div>
       <aside id="zonePanel" aria-hidden="true">
         <div class="zone-panel-bar">

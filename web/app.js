@@ -6,11 +6,11 @@
  */
 import {
   boardGroup, contactCode, contactKey, displayName, inConfig, listedResult,
-  noteForConfig, passesDirectory, rangeEnds, schoolSpan, shortGrades, sortListed, teachesLevel,
+  noteForConfig, passesDirectory, rangeEnds, schoolSpan, sortListed, teachesLevel,
 } from "./rank.js";
 import { chooseZones, createZonePanel, esc } from "./zone.js";
 // The query is the cache key. app.js?v= alone does not reload this module.
-import { createMap } from "./map.js?v=20261029n";
+import { createMap } from "./map.js?v=20261029ad";
 
 const I18N = globalThis.I18N;
 const params = new URLSearchParams(location.search);
@@ -401,11 +401,22 @@ function renderRank() {
       rank = String(placeByExam.one);
     }
     const name = withBreak(displayName(s));
-    const grades = shortGrades(s.cbe_grades || s.grades) || "–";
+    const group = boardGroup(s);
+    const gradeLabel = s.cbe_grades || s.grades || "";
+    const metaPlain = [
+      group ? t("group_" + group) : "",
+      gradeLabel,
+      result.year ? String(result.year) : "",
+    ].filter(Boolean).join(" · ");
+    const meta = [
+      group ? esc(t("group_" + group)) : "",
+      gradeLabel ? esc(gradeLabel.replaceAll("/", " / ")) : "",
+      result.year ? esc(String(result.year)) : "",
+    ].filter(Boolean).join(" · ");
+    const place = metric != null ? String(placeByExam.one).padStart(2, "0") : rank;
     const rate = (value) => orNA(fmtScore(value));
-    return `<tr data-id="${esc(s.id)}" class="${String(s.id) === picked ? "sel" : ""}"><td class="num">${rank}</td><td>${name}</td>
-      <td>${esc(s.board || "–")}</td><td class="grades">${withBreak(grades)}</td>
-      <td class="num score">${rate(result.score)}</td><td class="num">${rate(detail && detail.acc)}</td><td class="num">${rate(detail && detail.exc)}</td><td class="num">${result.year || "–"}</td>
+    return `<tr data-id="${esc(s.id)}" class="${String(s.id) === picked ? "sel" : ""}"><td class="num">${place}</td><td class="school"><span class="school-name" title="${esc(displayName(s))}">${name}</span>${meta ? `<span class="school-meta" title="${esc(metaPlain)}">${meta}</span>` : ""}</td>
+      <td class="num score">${rate(result.score)}</td><td class="num">${rate(detail && detail.acc)}</td><td class="num">${rate(detail && detail.exc)}</td>
       <td class="more"><button type="button" class="more-btn" data-more="${esc(s.id)}" aria-label="${esc(t("more_zone"))}">»</button></td></tr>`;
   }).join("");
   const allPrograms = document.querySelector("#programFilter option[value=all]");
@@ -562,14 +573,16 @@ let termButton = null;
 function closeTerm() {
   if (!termPop) return;
   termPop.hidden = true;
+  termPop.classList.remove("wide");
   if (termButton) termButton.setAttribute("aria-expanded", "false");
   termButton = null;
 }
-function openTerm(button) {
+function openTerm(button, text) {
   setScoreSource(false);
   if (termButton && termButton !== button) termButton.setAttribute("aria-expanded", "false");
   termButton = button;
-  termPop.textContent = t("term_" + button.dataset.term);
+  termPop.textContent = text || t("term_" + button.dataset.term);
+  termPop.classList.toggle("wide", Boolean(text));
   termPop.hidden = false;
   button.setAttribute("aria-expanded", "true");
   const mark = button.getBoundingClientRect();
@@ -582,6 +595,44 @@ function openTerm(button) {
   if (top + pop.height > window.innerHeight - 8) top = Math.max(8, mark.top - pop.height - 6);
   termPop.style.left = left + "px";
   termPop.style.top = top + "px";
+}
+const scoreLegend = document.getElementById("scoreLegend");
+let legendTimer = 0;
+function openLegend(chip) {
+  window.clearTimeout(legendTimer);
+  openTerm(chip, t(chip.dataset.explain));
+}
+if (scoreLegend) {
+  scoreLegend.addEventListener("click", (e) => {
+    const chip = e.target.closest("[data-explain]");
+    if (!chip) return;
+    e.stopPropagation();
+    if (termButton === chip) closeTerm();
+    else openLegend(chip);
+  });
+}
+if (scoreSourceHovers && scoreLegend) {
+  scoreLegend.addEventListener("mouseover", (e) => {
+    const chip = e.target.closest("[data-explain]");
+    if (!chip) return;
+    window.clearTimeout(legendTimer);
+    if (termButton === chip && !termPop.hidden) return;
+    openLegend(chip);
+  });
+  scoreLegend.addEventListener("mouseout", (e) => {
+    const chip = e.target.closest("[data-explain]");
+    if (!chip) return;
+    const next = e.relatedTarget;
+    if (next && (chip.contains(next) || termPop.contains(next))) return;
+    window.clearTimeout(legendTimer);
+    legendTimer = window.setTimeout(closeTerm, 150);
+  });
+  termPop.addEventListener("mouseenter", () => window.clearTimeout(legendTimer));
+  termPop.addEventListener("mouseleave", () => {
+    if (!termButton || !termButton.dataset.explain) return;
+    window.clearTimeout(legendTimer);
+    legendTimer = window.setTimeout(closeTerm, 150);
+  });
 }
 document.getElementById("zonePanelBody").addEventListener("click", (e) => {
   const button = e.target.closest("[data-term]");

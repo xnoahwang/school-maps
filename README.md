@@ -2,7 +2,7 @@
 
 A prototype for immigrant and newcomer parents in Calgary. It ranks elementary and junior high schools on Alberta's Provincial Achievement Test (PAT), ranks high schools on the diploma exam, and shows each school's attendance area on a map.
 
-The page covers Calgary. The header says Prototype until that changes. The code is [MIT licensed](LICENSE). Data from the City and the province keep their own licences, listed below.
+The page covers Calgary. The header has a graduation-cap mark, the title, and a Prototype pill until that changes. On a wide window the slogan sits in the center. It is hidden when the window is narrow. The code is [MIT licensed](LICENSE). Data from the City and the province keep their own licences, listed below.
 
 ![The ranking list beside the Calgary map](docs/preview.png)
 
@@ -39,8 +39,9 @@ Windows: `.venv\Scripts\python` and `.venv\Scripts\pip`.
 ## What the page does
 
 - The list on the left is the ranking. The switch above the filters chooses elementary, junior high, or high school. The map on the right draws one point per school still in that list. `?level=junior` opens junior high, and `?level=high` opens high school.
-- Filters are board, grade, and program. Each opens on All. With the board on All, the grade filter stays hidden on every list, because All is the only grade choice. Choosing CBE shows grades on the elementary and junior-high lists. The high-school list never shows the grade filter. Search matches the school name, board, and program. The table shortens Elementary, Junior High, and Senior High to Elem, Jr, and Sr. The school card keeps the full grade phrase.
-- Click a row or a point to move the map and open the card: website, phone, address, board, grades, and score. The school name on the row is plain text. The website link is on the card.
+- Filters are board, grade, and program. Each opens on All. With the board on All, the grade filter stays hidden on every list, because All is the only grade choice. Choosing CBE shows grades on the elementary and junior-high lists. The high-school list never shows the grade filter. When that filter is hidden, board and program sit side by side. Search matches the school name, board, and program. Under the school name, the row shows the board, the grade range written in full, and the exam year. The school card keeps that same grade phrase.
+- The columns are rank, school, score, acceptable, and excellence. English and French label the last two Acc. and Exc. The rank and school headers are centered. The three number headers are right-aligned, with the numbers. In each row the rank stays on the right and the school name stays on the left. Under the table, Acceptable and Excellence each have a one-line description. Hovering either one with a mouse opens the province's explanation: neither rate is a fixed 60 or 90.
+- Click a row or a point to move the map and open the card: website, phone, address, board, grades, and score. The school name on the row is plain text. The website link is on the card. The zoom control sits at the bottom right. Zooming in shows that score beside the point. The city-wide view stays as dots, because hundreds of numbers would cover the map.
 - » on a row opens the communities in that CBE attendance zone, their 2026 assessed values, and 2021 census figures. A circled ! explains a figure.
 - A school with no CBE zone, including Catholic, charter, and private schools, outlines the community its point falls in. The panel says that outline is the community, not an attendance zone.
 - A missing website, phone, address, zone, or score is "no data".
@@ -67,7 +68,7 @@ The rank uses one year, the newest year in the file:
 
 **rank score** = (% acceptable + % excellence) / 2
 
-Schools with no published result stay at the bottom and are not numbered. The table shows that score and the two rates, Acc and Exc. Click a column header to sort by that number. Click it again to reverse the order. When acceptable is tied, excellence breaks the tie in the same direction. When excellence is tied, acceptable does. A missing rate stays last.
+Schools with no published result stay at the bottom and are not numbered. The table shows that score and the two rates, Acc. and Exc. Click a column header to sort by that number. Click it again to reverse the order. When acceptable is tied, excellence breaks the tie in the same direction. When excellence is tied, acceptable does. A missing rate stays last.
 
 The pipeline also stores a three-year average of those rates (2023, 2024, 2025 in the current file). That average is not the rank. The definitions table below separates the two.
 
