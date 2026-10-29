@@ -10,6 +10,7 @@ These choices are already in the code:
 - The old community colouring map is not part of the page. Community school scores, value for money, amenity counts, and the 2025-to-2026 assessed-value change are not built.
 - Market rent, crime, class size, and an equity index are not shown. The zone panel uses the 2026 assessed value and the 2021 census figures that were actually published.
 - The browser only reads files in `web/`. Python scripts build those files beforehand.
+- A phone in portrait is asked to turn sideways before the page can be used. The page cannot lock the phone. After the first landscape in a visit, turning back keeps the landscape layout. A short touch near a map point selects that school. Refreshing while the phone is upright shows the prompt again.
 
 Check the data with:
 

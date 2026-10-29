@@ -49,7 +49,8 @@ body.level-high .filter-row { grid-template-columns: 1fr; }
 .notes-more[hidden] { display: none; }
 #rankTable th { background: #fff; color: #78716c; font-size: 12px; font-weight: 600; border-bottom: 1px solid #ebe7e0; text-align: center; cursor: default; user-select: none; }
 @media (max-width: 480px) { .filter-row { grid-template-columns: 1fr; } }
-/* Portrait phones are too narrow for two columns. Stack the list over the map. */
+/* A narrow portrait window stacks the list over the map.
+   A phone does not stay on this layout: it is asked to turn sideways, then html.phone-land keeps two columns. */
 @media (orientation: portrait) and (max-width: 900px) {
   main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(180px, 34vh); }
   header { flex-wrap: wrap; min-height: 0; padding: 8px 12px; }

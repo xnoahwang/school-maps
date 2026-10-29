@@ -1,4 +1,5 @@
 /* School points, attendance polygons, and wheel zoom.
+ * A short touch selects the nearest school. A mouse click still uses the marker.
  * Scales the tiles already on screen. Does not rank schools or fill the panel.
  * Leaflet is loaded by index.html as globalThis.L before this module runs.
  */
@@ -142,6 +143,52 @@ export function createMap(deps) {
     clearTimeout(sizeTimer);
     sizeTimer = setTimeout(settleMapSize, 350);
   });
+  // A fingertip does not produce the click a canvas dot listens for, and the
+  // dot is smaller than the finger. A short touch picks the nearest school.
+  let tapStart = null;
+  let openedTap = "";
+  let openedAt = 0;
+  function openSchool(id) {
+    const key = String(id);
+    if (key === openedTap && Date.now() - openedAt < 400) return;
+    openedTap = key;
+    openedAt = Date.now();
+    focusSchool(id, true);
+  }
+  function schoolUnder(containerPoint) {
+    let bestId = null;
+    let best = Infinity;
+    for (const [id, marker] of markerById) {
+      const at = map.latLngToContainerPoint(marker.getLatLng());
+      const reach = marker.getRadius() + 16;
+      const dist = at.distanceTo(containerPoint);
+      if (dist <= reach && dist < best) {
+        best = dist;
+        bestId = id;
+      }
+    }
+    return bestId;
+  }
+  function pickTouchedSchool(event, start) {
+    if (event.target.closest && event.target.closest(".leaflet-control, .leaflet-popup, a, button")) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (dx * dx + dy * dy > 20 * 20) return;
+    const id = schoolUnder(map.mouseEventToContainerPoint(event));
+    if (id) openSchool(id);
+  }
+  const mapEl = map.getContainer();
+  mapEl.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse") return;
+    tapStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+  });
+  mapEl.addEventListener("pointerup", (event) => {
+    if (!tapStart || event.pointerId !== tapStart.id || event.pointerType === "mouse") return;
+    const start = tapStart;
+    tapStart = null;
+    pickTouchedSchool(event, start);
+  });
+  mapEl.addEventListener("pointercancel", () => { tapStart = null; });
   map.createPane("zonePane");
   map.getPane("zonePane").style.zIndex = 350;
   const zoneKey = document.createElement("div");
@@ -284,7 +331,7 @@ export function createMap(deps) {
       const current = markerById.get(key);
       const currentSchool = deps.schools().find((s) => String(s.id) === key);
       if (!current || !currentSchool) return;
-      // The container can still be the portrait size until the user taps a school.
+      // Rotation can leave the container on its old size, which pins the card low.
       map.invalidateSize();
       current.setPopupContent(deps.popupHtml(currentSchool));
       const drawn = drawSchoolZone(currentSchool);
@@ -328,7 +375,7 @@ export function createMap(deps) {
       const marker = L.circleMarker(schoolPoint(s), pointStyle(s, String(s.id) === pickedId, filter.level))
         .bindPopup(deps.popupHtml(s), { maxWidth: 300, autoPan: true, autoPanPadding: [12, 12] });
       marker.off("click");
-      marker.on("click", () => focusSchool(s.id, true));
+      marker.on("click", () => openSchool(s.id));
       markerById.set(String(s.id), marker);
       return marker;
     })).addTo(map);

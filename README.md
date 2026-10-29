@@ -6,6 +6,8 @@ The page covers Calgary. The header says Prototype until that changes. The code 
 
 ![The ranking list beside the Calgary map](docs/preview.png)
 
+The picture is the desktop page. A phone is asked to turn sideways first.
+
 ## Open it
 
 The public page is <https://school-maps-beta.vercel.app/>.
@@ -47,6 +49,18 @@ Elementary uses the latest Grade 6 PAT. Junior high uses the latest Grade 9 PAT.
 
 Confirm a designated school with the [CBE School Finder](https://www.cbe.ab.ca/find-a-school). The page does not call CBE when you open it.
 
+## On a phone
+
+A phone in portrait shows a prompt to turn sideways. A browser tab cannot force that turn. The prompt stays up while the phone's rotation lock keeps the browser in portrait. The prompt uses the same language as the page. `?lang=` applies before the turn. The language menu is behind the prompt until then.
+
+After the phone has been landscape once in that visit, turning it back keeps the landscape layout by rotating the page. That lasts until a refresh. Refreshing while the phone is upright shows the prompt again.
+
+The list stays beside the map. Padding stays at the left and right edges so the camera does not cover the page. The score note under the filters is hidden, because the level buttons already name the exam. Zoom sits at the bottom right of the map.
+
+A short touch near a point selects that school, the same way a click does with a mouse. Dragging the map does not change the selection. The school card is kept short enough that the map can still be dragged. When the card is cut off, a double arrow at its bottom right means there is more. The arrow goes away at the end of the card.
+
+The drawing on the prompt is three marks from [Tabler Icons](https://tabler.io/icons) (MIT): a phone, an arrow, and a phone on its side.
+
 ## How the score works
 
 The rank uses one year, the newest year in the file:
@@ -67,7 +81,7 @@ School names match through `normalize_name`, which drops filler words and rewrit
 
 `zones.geojson` is downloaded the first time a school is selected, not with the list. If that file fails, the map does not draw a community outline in its place. Other limits are listed below.
 
-`index.html` sets `ASSET_VERSION`. Change that one string when `style.css`, the page scripts, or `web/data/` change.
+`index.html` sets `ASSET_VERSION`. Change that string when `style.css`, `app.js`, `i18n.js`, or `web/data/` change. `app.js` imports `map.js` with its own query. Change that query when `map.js` changes. The stylesheet query does not reload `map.js`.
 
 ## Built with AI, on cursor-prime
 
@@ -140,15 +154,16 @@ As-of dates for the Open Calgary, PAT, and diploma downloads are in `web/data/me
 - 2020 median household income and languages spoken most often at home come from the City's 2021 community-profile PDFs (`web/data/community_profiles.json`). They are not an Open Calgary table. The 2016 income table (`wj3a-wgmh`) is not used.
 - The Assurance survey on a CBE card is the six survey rows from that school's School Improvement Results PDF. Except parental involvement, each percentage combines students, parents, and teachers. A suppressed cell, or a cell the reader cannot confirm, is "no data". A second read keeps a number only when that cell comes back as a clean percentage. The reports were not checked school by school by hand. It is not part of the exam score. CSSD and private schools are not in those reports.
 - Test scores reflect demographics as much as teaching quality. They are one input for families.
+- A phone must be turned sideways. The page cannot lock the phone's orientation. Refreshing while the phone is upright shows the prompt again.
 
 ## Layout
 
 ```
 web/index.html          page shell
-web/app.js              load data, translate, connect controls
+web/app.js              load data, translate, connect controls, phone orientation
 web/rank.js             who is listed, which exam, sort order
 web/zone.js             attendance zone and the zone panel
-web/map.js              school points, polygons, zoom
+web/map.js              school points, polygons, zoom, phone tap near a point
 web/i18n.js             UI strings in six languages
 web/style.css           layout
 web/data/               generated, committed so the site runs without a rebuild

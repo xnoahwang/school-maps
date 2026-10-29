@@ -1,6 +1,8 @@
 /* Wires the ranking page: load the JSON, translate, and connect the controls.
  * Who is listed lives in rank.js. The zone panel lives in zone.js.
  * Points and zoom live in map.js. This file does not recompute PAT scores.
+ * On a phone, portrait is blocked until landscape. After that, turning back
+ * keeps the landscape frame for the rest of the visit.
  */
 import {
   boardGroup, contactCode, contactKey, displayName, inConfig, listedResult,
@@ -8,7 +10,7 @@ import {
 } from "./rank.js";
 import { chooseZones, createZonePanel, esc } from "./zone.js";
 // The query is the cache key. app.js?v= alone does not reload this module.
-import { createMap } from "./map.js?v=20261029m";
+import { createMap } from "./map.js?v=20261029n";
 
 const I18N = globalThis.I18N;
 const params = new URLSearchParams(location.search);
