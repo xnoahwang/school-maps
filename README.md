@@ -2,7 +2,7 @@
 
 A prototype for immigrant and newcomer parents in Calgary. It ranks elementary and junior high schools on Alberta's Provincial Achievement Test (PAT), ranks high schools on the diploma exam, and shows each school's attendance area on a map.
 
-The page covers Calgary. The header has a graduation-cap mark, the title, and a Prototype pill until that changes. On a wide window the slogan sits in the center. It is hidden when the window is narrow. The code is [MIT licensed](LICENSE). Data from the City and the province keep their own licences, listed below.
+The page covers Calgary. The header has a graduation-cap mark, the title, and a Prototype pill until that changes. On a wide window the slogan sits in the center. It is hidden when the window is narrow. The language menu stays on the right either way. The code is [MIT licensed](LICENSE). Data from the City and the province keep their own licences, listed below.
 
 ![The ranking list beside the Calgary map](docs/preview.png)
 
@@ -56,7 +56,7 @@ A phone in portrait shows a prompt to turn sideways. A browser tab cannot force 
 
 After the phone has been landscape once in that visit, turning it back keeps the landscape layout by rotating the page. That lasts until a refresh. Refreshing while the phone is upright shows the prompt again.
 
-The list stays beside the map. Padding stays at the left and right edges so the camera does not cover the page. The score note under the filters is hidden, because the level buttons already name the exam. Zoom sits at the bottom right of the map.
+The list stays beside the map. The language menu stays at the right of the header. Each level button puts the name on one line and the exam on the next. Padding stays at the left and right edges so the camera does not cover the page. The score note under the filters is hidden, because the level buttons already name the exam. Zoom sits at the bottom right of the map.
 
 A short touch near a point selects that school, the same way a click does with a mouse. Dragging the map does not change the selection. The school card is kept short enough that the map can still be dragged. When the card is cut off, a double arrow at its bottom right means there is more. The arrow goes away at the end of the card.
 

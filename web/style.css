@@ -8,7 +8,8 @@ h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; disp
 .slogan { margin: 0; justify-self: center; font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", "PMingLiU", serif; font-size: 22px; line-height: 1.2; font-weight: 500; font-style: italic; color: #8d99a8; white-space: nowrap; }
 .slogan::before { content: "\201C"; }
 .slogan::after { content: "\201D"; }
-.controls { justify-self: end; }
+/* Column 3, not auto-placement. Hiding the slogan must not move the language menu into the center. */
+.controls { justify-self: end; grid-column: 3; }
 @media (max-width: 1240px) { .slogan { display: none; } }
 .prototype { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px 1px 6px; border-radius: 999px; background: #f4e7c8; color: #7a4e0d; font-size: 11px; font-weight: 700; line-height: 18px; letter-spacing: 0.02em; white-space: nowrap; }
 .prototype::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #c4841d; box-shadow: 0 0 0 2px rgba(196, 132, 29, .28); }
@@ -205,9 +206,12 @@ html.phone-land #filterRegionTitle { display: none; }
 html.phone-land #dirFilters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
 html.phone-land #levelSwitch { grid-column: 1 / -1; gap: 4px; }
 html.phone-land .filter-row { display: contents; }
-html.phone-land #levelSwitch button { font-size: 11px; padding: 3px 2px; }
-html.phone-land #levelSwitch .level-by { font-size: 10px; white-space: normal; }
-html.phone-land .dir-program select, html.phone-land #search { padding: 3px 8px; }
+html.phone-land #levelSwitch button { display: flex; flex-direction: column; align-items: center; font-size: 11px; line-height: 1.15; padding: 3px 2px; }
+html.phone-land #levelSwitch .level-by { font-size: 10px; white-space: nowrap; }
+html.phone-land .dir-program select { padding: 3px 8px; }
+html.phone-land #search { padding: 3px 8px 3px 28px; }
+html.phone-land .search-wrap svg { left: 8px; width: 14px; height: 14px; }
+html.phone-land h1 > span[data-i18n="title"] { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* The score paragraph costs a school row. The level buttons already name the exam. */
 html.phone-land #listNotes { display: none; }
 html.phone-land .search-wrap { margin-bottom: 4px; }
